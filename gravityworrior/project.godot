@@ -8,14 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "Planet",
+"language": "GDScript",
+"path": "res://Planet.gd"
+} ]
 _global_script_class_icons={
-
+"Planet": ""
 }
 
 [application]
 
 config/name="gravityworrior"
+run/main_scene="res://src/Main.tscn"
 config/icon="res://icon.png"
 
 [rendering]
