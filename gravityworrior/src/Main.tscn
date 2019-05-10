@@ -12,3 +12,21 @@ position = Vector2( 200, 100 )
 
 [node name="Planet" parent="." instance=ExtResource( 3 )]
 position = Vector2( 200, 200 )
+
+[node name="Planet2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 376, 147 )
+
+[node name="Planet3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 246, 369 )
+
+[node name="Planet4" parent="." instance=ExtResource( 3 )]
+position = Vector2( 413, 435 )
+
+[node name="Planet5" parent="." instance=ExtResource( 3 )]
+position = Vector2( 582, 367 )
+
+[node name="Planet6" parent="." instance=ExtResource( 3 )]
+position = Vector2( 564.315, 206.476 )
+
+[node name="Planet7" parent="." instance=ExtResource( 3 )]
+position = Vector2( 720.758, 264.972 )

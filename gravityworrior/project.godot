@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Planet",
 "language": "GDScript",
 "path": "res://Planet.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://src/Player.gd"
 } ]
 _global_script_class_icons={
-"Planet": ""
+"Planet": "",
+"Player": ""
 }
 
 [application]

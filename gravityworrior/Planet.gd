@@ -2,7 +2,7 @@ extends Node2D
 
 class_name Planet
 
-var gravity: float = 9.81
+var gravity: float = 100
 var radius: float = 0
 
 var _planet_points: PoolVector2Array
@@ -15,6 +15,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	_create_collision_shape()
+	$Area2D.connect("body_entered", self, "_on_Body_entered")
 
 func _draw() -> void:
 	if self._initialized:
@@ -49,17 +50,10 @@ func _calculate_planet_points() -> PoolVector2Array:
 func _create_collision_shape():
 	$CollisionBody/CollisionPolygon.polygon = self._planet_points
 	
-	# var shape = ConvexPolygonShape2D.new()
-	#shape.resource_name = "ConvexPolygonShape2D"
-	#shape.set_point_cloud(self._planet_points)
-	#var collision: CollisionShape2D = CollisionShape2D.new()
-	#collision.shape = shape
-	#print(collision.shape)
-	#collision.name = "CollisionShape2D"
-	#add_child(collision)
-	
 func _draw_planet(points: Array) -> void:
 	draw_polygon(points, PoolColorArray([Color.burlywood]))
 	draw_polyline(points, Color.black, 2)
 	
-	
+func _on_Body_entered(body: PhysicsBody2D) -> void:
+	if body.name == "Player":
+		body.closest_planet = self
