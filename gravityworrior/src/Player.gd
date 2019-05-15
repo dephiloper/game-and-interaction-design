@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal hit
+
 var closest_planet: Planet = null
 var previous_planet: Planet = null
 var speed: Vector2 = Vector2()
@@ -8,6 +10,8 @@ const MAX_SPEED = 10000
 const JUMP_FORCE = 6000
 
 class_name Player
+
+
 
 func _ready() -> void:
 	closest_planet = get_node("/root/Main/Planet")
@@ -42,3 +46,11 @@ func _get_player_rotation():
 	
 func _get_gravity_vector(planet: Planet):
 	return (planet.position - self.position).normalized()
+
+	
+func start(pos):
+    position = pos
+    show()
+    $CollisionShape2D.disabled = false
+
+	
