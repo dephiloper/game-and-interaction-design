@@ -1,59 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/Main.gd" type="Script" id=1]
-[ext_resource path="res://Enemies.tscn" type="PackedScene" id=2]
-[ext_resource path="res://src/Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Planet.tscn" type="PackedScene" id=4]
-
-[sub_resource type="Curve2D" id=1]
-_data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 3.7912, 8.2095, 0, 0, 0, 0, 1021.12, 8.2095, 0, 0, 0, 0, 1017.78, 592.881, 0, 0, 0, 0, 8.80267, 586.199, 0, 0, 0, 0, 8.80267, 18.2324, 0, 0, 0, 0, 3.7912, 8.2095, 0, 0, 0, 0, 10.4732, 24.9144 )
-}
+[ext_resource path="res://src/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Planet.tscn" type="PackedScene" id=3]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
-Enemies = ExtResource( 2 )
 
-[node name="Player" parent="." instance=ExtResource( 3 )]
+[node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 200, 100 )
 
-[node name="Planet" parent="." instance=ExtResource( 4 )]
+[node name="Planet" parent="." instance=ExtResource( 3 )]
 position = Vector2( 200, 200 )
-
-[node name="Planet2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 376, 147 )
-
-[node name="Planet3" parent="." instance=ExtResource( 4 )]
-position = Vector2( 246, 369 )
-
-[node name="Planet4" parent="." instance=ExtResource( 4 )]
-position = Vector2( 413, 435 )
-
-[node name="Planet5" parent="." instance=ExtResource( 4 )]
-position = Vector2( 582, 367 )
-
-[node name="Planet6" parent="." instance=ExtResource( 4 )]
-position = Vector2( 564.315, 206.476 )
-
-[node name="Planet7" parent="." instance=ExtResource( 4 )]
-position = Vector2( 720.758, 264.972 )
-
-[node name="EnemyTimer" type="Timer" parent="."]
-wait_time = 0.5
-
-[node name="ScoreTimer" type="Timer" parent="."]
-
-[node name="StartTimer" type="Timer" parent="."]
-wait_time = 2.0
-one_shot = true
-
-[node name="StartPosition" type="Position2D" parent="."]
-position = Vector2( 199, 100 )
-
-[node name="EnemyPath" type="Path2D" parent="."]
-editor/display_folded = true
-curve = SubResource( 1 )
-
-[node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath"]
-position = Vector2( 3.7912, 8.2095 )
-[connection signal="timeout" from="EnemyTimer" to="." method="_on_EnemyTimer_timeout"]

@@ -30,6 +30,10 @@ config/name="gravityworrior"
 run/main_scene="res://src/Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+GameManager="*res://src/GameManager.gd"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
