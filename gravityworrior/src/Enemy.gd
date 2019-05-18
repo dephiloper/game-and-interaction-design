@@ -18,6 +18,6 @@ func _physics_process(delta: float) -> void:
 	if collision:
 		_velocity = _velocity.bounce(collision.normal)
 		if collision.collider.is_in_group("Player"):
-			#collision.colider.hit()
+			collision.collider.hit()
 			queue_free()
 	_velocity *= DRAG

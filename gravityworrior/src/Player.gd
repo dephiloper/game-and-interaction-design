@@ -10,13 +10,18 @@ const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.98
 const OFF_PLANET_MAX__velocity: int = 300
 
+var health: int = 100
+
+var _bullet_scene = preload("res://src/Bullet.tscn")
+
 var _velocity = Vector2()
 var _closest_planet = null
 var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _last_shoot_dir = Vector2.RIGHT
 
-var _bullet_scene = preload("res://src/Bullet.tscn")
+func hit() -> void:
+	health -= 10
 
 func _init() -> void:
 	add_to_group("Player")
