@@ -2,6 +2,8 @@ extends Node2D
 
 class_name Planet
 
+const GRAVITY_MULTIPLIER: float = 2000.0
+
 var gravity: float = 0
 
 var _radius: float = 0
@@ -9,9 +11,9 @@ var _planet_points: PoolVector2Array
 var _num_points: int = 0
 var _offset: float = 0
 var _initialized: bool = false
-const GRAVITY_MULTIPLIER: float = 2000.0
 
 func _init() -> void:
+	add_to_group("Planet")
 	generate(self.position)
 	GameManager.add_planet(self)
 
@@ -49,7 +51,7 @@ func _calculate_planet_points() -> PoolVector2Array:
 	return points
 	
 func _create_collision_shape():
-	$CollisionBody/CollisionPolygon.polygon = self._planet_points
+	$CollisionPolygon.polygon = self._planet_points
 	
 func _draw_planet(points: Array) -> void:
 	draw_polygon(points, PoolColorArray([Color.burlywood]))
