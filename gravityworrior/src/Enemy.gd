@@ -7,7 +7,7 @@ var _velocity: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	_target = GameManager.players[randi() % GameManager.players.size()]
-
+	
 func hit() -> void:
 	queue_free()
 	

@@ -4,11 +4,13 @@ class_name Player
 
 const MOVEMENT_SPEED: int = 10
 const JUMP_SPEED_MULTIPLIER: float = 2.5
-
 const ON_PLANET_DRAG: float = 0.9
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.98
-const OFF_PLANET_MAX__velocity: int = 300
+const OFF_PLANET_MAX_velocity: int = 300
+
+export(int) var input_device_id = -1
+export(Texture) var texture
 
 var health: int = 100
 
@@ -19,22 +21,36 @@ var _closest_planet = null
 var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _last_shoot_dir = Vector2.RIGHT
+var _controls: Dictionary = {}
 
 func hit() -> void:
 	health -= 10
 
 func _init() -> void:
+	_controls["ui_right"] = 0.0
+	_controls["ui_left"] = 0.0
+	_controls["ui_down"] = 0.0
+	_controls["ui_up"] = 0.0
+	_controls["aim_right"] = 0.0
+	_controls["aim_left"] = 0.0
+	_controls["aim_down"] = 0.0
+	_controls["aim_up"] = 0.0
+	_controls["jump"] = 0.0
+	_controls["shoot"] = 0.0
 	add_to_group("Player")
 	GameManager.add_player(self)
-
+	
+func _ready() -> void:
+	$PlayerSprite.texture = texture
+	
 func _physics_process(delta: float) -> void:
 	if _is_on_planet == true:
 		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
 		_velocity = move_and_slide_with_snap(_velocity, diff, -diff)
-		# _velocity = _velocity.slide(diff.normalized())
-		# _velocity = _velocity.slide(-diff.normalized())
+		_velocity = _velocity.slide(diff.normalized())
+		_velocity = _velocity.slide(-diff.normalized())
 	else:
 		_velocity += _calculate_player_movement()
 		_velocity *= OFF_PLANET_DRAG
@@ -45,10 +61,10 @@ func _physics_process(delta: float) -> void:
 		else:
 			_velocity += _calculate_gravitational_pull()
 			
-		var max__velocity: float = OFF_PLANET_MAX__velocity
+		var max_velocity: float = OFF_PLANET_MAX_velocity
 		if _is_boosting:
-			max__velocity *= JUMP_SPEED_MULTIPLIER
-		_velocity = _velocity.clamped(max__velocity)
+			max_velocity *= JUMP_SPEED_MULTIPLIER
+		_velocity = _velocity.clamped(max_velocity)
 
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
@@ -65,8 +81,8 @@ func _calculate_gravitational_pull() -> Vector2:
 	return pull
 	
 func _calculate_player_movement() -> Vector2:
-	var horizontal: float = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
-	var vertical: float = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
+	var horizontal: float = _controls["ui_right"] - _controls["ui_left"]
+	var vertical: float = _controls["ui_down"] - _controls["ui_up"]
 	_is_boosting = false
 	
 	var movement_speed: float = MOVEMENT_SPEED
@@ -77,7 +93,8 @@ func _calculate_player_movement() -> Vector2:
 		
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
 		
-	if Input.is_action_just_pressed("shoot"):
+	if _controls["shoot"] > 0:
+		_controls["shoot"] = 0.0
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = movement_dir
 		if shoot_dir == Vector2.ZERO:
@@ -87,7 +104,7 @@ func _calculate_player_movement() -> Vector2:
 		_last_shoot_dir = shoot_dir
 		
 	
-	if Input.is_action_pressed("jump"):
+	if _controls["jump"] > 0:
 		_is_on_planet = false
 		_is_boosting = true
 		movement_dir *= JUMP_SPEED_MULTIPLIER
@@ -95,14 +112,22 @@ func _calculate_player_movement() -> Vector2:
 	return movement_dir
 	
 func _caculate_cross_hair_direction() -> Vector2:
-	var horizontal: float = Input.get_action_strength("aim_right") - Input.get_action_strength("aim_left")
-	var vertical: float = Input.get_action_strength("aim_down") - Input.get_action_strength("aim_up")
+	var horizontal: float = _controls["aim_right"] - _controls["aim_left"]
+	var vertical: float = _controls["aim_down"] - _controls["aim_up"]
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
 	$CrossHairSprite.position = direction * 128
 	
 	return direction
+
+func _input(event: InputEvent) -> void:
+		if event.device == input_device_id:
+			print(event.device)
+			for action in _controls.keys():
+				if event.is_action(action):
+					_controls[action] = event.get_action_strength(action)
 	
+
 func shoot(dir: Vector2) -> void:
 	var b: Bullet = _bullet_scene.instance()
 	b.init(dir)
