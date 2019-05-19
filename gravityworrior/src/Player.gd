@@ -122,7 +122,6 @@ func _caculate_cross_hair_direction() -> Vector2:
 
 func _input(event: InputEvent) -> void:
 		if event.device == input_device_id:
-			print(event.device)
 			for action in _controls.keys():
 				if event.is_action(action):
 					_controls[action] = event.get_action_strength(action)
