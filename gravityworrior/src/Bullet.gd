@@ -5,7 +5,7 @@ class_name Bullet
 const RADIUS: int = 6
 const SPEED: int = 1000
 const GRAVITATION_IMPACT_FACTOR: float = 3.0
-const DRAG: float = 0.99
+const DRAG: float = 0.995
 
 var _velocity = Vector2.ZERO
 var _bounce_count: int = 0
