@@ -25,6 +25,8 @@ var _controls: Dictionary = {}
 
 func hit() -> void:
 	health -= 10
+	Input.start_joy_vibration(input_device_id, 1, 0, 0.5)
+	print("hit")
 
 func _init() -> void:
 	_controls["ui_right"] = 0.0
@@ -42,6 +44,7 @@ func _init() -> void:
 	
 func _ready() -> void:
 	$PlayerSprite.texture = texture
+	$Trail.texture = texture
 	
 func _physics_process(delta: float) -> void:
 	if _is_on_planet == true:
@@ -63,7 +66,10 @@ func _physics_process(delta: float) -> void:
 			
 		var max_velocity: float = OFF_PLANET_MAX_velocity
 		if _is_boosting:
+			$Trail.emitting = true
 			max_velocity *= JUMP_SPEED_MULTIPLIER
+		else:
+			$Trail.emitting = false
 		_velocity = _velocity.clamped(max_velocity)
 
 func _calculate_gravitational_pull() -> Vector2:
