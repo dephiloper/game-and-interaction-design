@@ -27,6 +27,7 @@ orbit_velocity_random = 0.0
 scale = 0.05
 scale_curve = SubResource( 6 )
 color_ramp = SubResource( 3 )
+hue_variation_random = 1.0
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
