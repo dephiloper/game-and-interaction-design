@@ -7,20 +7,19 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12.5, 12.5 )
 
-[sub_resource type="Gradient" id=3]
+[sub_resource type="Gradient" id=2]
 colors = PoolColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=4]
-gradient = SubResource( 3 )
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
 
-[sub_resource type="ParticlesMaterial" id=2]
+[sub_resource type="ParticlesMaterial" id=4]
 flag_disable_z = true
 gravity = Vector3( 0, 0, 0 )
-angular_velocity = 0.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.05
-color_ramp = SubResource( 4 )
+color_ramp = SubResource( 3 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -43,5 +42,8 @@ shape = SubResource( 1 )
 amount = 10
 speed_scale = 2.0
 local_coords = false
-process_material = SubResource( 2 )
+process_material = SubResource( 4 )
 texture = ExtResource( 2 )
+
+[node name="CooldownTimer" type="Timer" parent="."]
+wait_time = 2.0

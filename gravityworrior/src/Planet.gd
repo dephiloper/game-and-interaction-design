@@ -13,6 +13,7 @@ var _offset: float = 0
 var _initialized: bool = false
 
 func _init() -> void:
+	randomize()
 	add_to_group("Planet")
 	generate(self.position)
 	GameManager.add_planet(self)

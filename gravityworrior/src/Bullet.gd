@@ -9,6 +9,7 @@ const DRAG: float = 0.995
 
 var _velocity = Vector2.ZERO
 var _bounce_count: int = 0
+var _damage: float = 10.0
 
 func _draw() -> void:
 	draw_circle(Vector2(0,0), RADIUS, Color.black)
@@ -19,9 +20,9 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta)
 	if collision:
 		if collision.collider.has_method("hit"):
-			collision.collider.hit()
+			collision.collider.hit(_damage)
 			queue_free()
-		if _bounce_count == 3:
+		if _bounce_count == 1:
 			queue_free()
 		_velocity = _velocity.bounce(collision.normal)
 		_bounce_count += 1

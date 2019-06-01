@@ -2,13 +2,15 @@ extends KinematicBody2D
 
 const SPEED: int = 10
 const DRAG: float = 0.95
+
 var _target: Player = null
 var _velocity: Vector2 = Vector2.ZERO
+var _damage: float = 10.0
 
 func _ready() -> void:
 	_target = GameManager.players[randi() % GameManager.players.size()]
 	
-func hit() -> void:
+func hit(damage: float) -> void:
 	queue_free()
 	
 func _physics_process(delta: float) -> void:
@@ -17,7 +19,7 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta)
 	if collision:
 		_velocity = _velocity.bounce(collision.normal)
-		if collision.collider.is_in_group("Player"):
-			collision.collider.hit()
+		if collision.collider.has_method("hit"):
+			collision.collider.hit(_damage)
 			queue_free()
 	_velocity *= DRAG
