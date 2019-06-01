@@ -11,7 +11,7 @@ const ON_PLANET_DRAG: float = 0.9
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 300
-const INITIAL_BOOST_VALUE: float = 1.0
+const INITIAL_BOOST_VALUE: float = 0.5
 const BOOST_REDUCTION: float = 1.0
 
 const CROSS_HAIR_DISTANCE: int = 128
@@ -27,19 +27,14 @@ var _velocity = Vector2()
 var _closest_planet: Planet = null
 var _is_on_planet: bool = false
 var _is_boosting: bool = false
-var _boost: float = 1.0
+var _boost: float = INITIAL_BOOST_VALUE
 var _last_shoot_dir = Vector2.RIGHT
 var _controls: Dictionary = {}
 
+# public methods
 func hit(damage: float) -> void:
 	health -= damage
 	Input.start_joy_vibration(input_device_id, 1, 0, 0.5)
-
-func shoot(dir: Vector2) -> void:
-	var b: Bullet = BULLET_SCENE.instance()
-	b.init(dir)
-	b.position = global_position
-	$"/root/Main".add_child(b)
 
 func _init() -> void:
 	_controls["ui_right"] = 0.0
@@ -54,7 +49,7 @@ func _init() -> void:
 	_controls["shoot"] = 0.0
 	add_to_group("Player")
 	GameManager.add_player(self)
-	
+
 func _ready() -> void:
 	$PlayerSprite.texture = texture
 	$Trail.texture = texture
@@ -133,7 +128,7 @@ func _calculate_player_movement() -> Vector2:
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = _last_shoot_dir
 			
-		shoot(shoot_dir.normalized())
+		_shoot(shoot_dir.normalized())
 		_last_shoot_dir = shoot_dir
 		
 	
@@ -152,6 +147,12 @@ func _caculate_cross_hair_direction() -> Vector2:
 	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE
 	
 	return direction
+
+func _shoot(dir: Vector2) -> void:
+	var b: Bullet = BULLET_SCENE.instance()
+	b.init(dir)
+	b.position = global_position
+	$"/root/Main".add_child(b)
 
 func _on_CooldownTimer_timeout() -> void:
 	_boost = INITIAL_BOOST_VALUE
