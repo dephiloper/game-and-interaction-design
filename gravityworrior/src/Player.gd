@@ -12,7 +12,8 @@ const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 300
 const INITIAL_BOOST_VALUE: float = 0.5
-const BOOST_REDUCTION: float = 1.0
+const BOOST_REDUCTION_VALUE: float = 1.0
+const BOOST_RECHARGE_VALUE: float = 0.2
 
 const CROSS_HAIR_DISTANCE: int = 128
 
@@ -78,15 +79,21 @@ func _physics_process(delta: float) -> void:
 			_velocity += _calculate_gravitational_pull()
 			
 		var max_velocity: float = OFF_PLANET_MAX_VELOCITY
-		if _is_boosting and _boost >= 0.0:
-			$Trail.emitting = true
-			max_velocity *= JUMP_SPEED_MULTIPLIER
-			_boost -= BOOST_REDUCTION * delta
-			if _boost <= 0.0:
-				$CooldownTimer.start()
-		else:
-			$Trail.emitting = false
+		$Trail.emitting = false
+		
+		if _is_boosting:  # we press boost key
+			if _boost > 0.0:  # there is boost left
+				$Trail.emitting = true
+				max_velocity *= JUMP_SPEED_MULTIPLIER
+				_boost = max(_boost - BOOST_REDUCTION_VALUE * delta, 0.0)
+				if _boost == 0.0:  # we boosted and now there is no boost left 
+					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
+		
+	# we are not boosting and the cooldown timer is not started
+	if not _is_boosting and $CooldownTimer.is_stopped():
+			# recharge boost
+			_boost = min(_boost + BOOST_RECHARGE_VALUE * delta, 1.0)
 
 # implementation of "own" input event system
 func _input(event: InputEvent) -> void:
