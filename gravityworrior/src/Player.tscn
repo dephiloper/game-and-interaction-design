@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/Player.gd" type="Script" id=1]
 [ext_resource path="res://img/player0.png" type="Texture" id=2]
@@ -13,13 +13,21 @@ colors = PoolColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
 [sub_resource type="GradientTexture" id=3]
 gradient = SubResource( 2 )
 
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0.112106, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.989822, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
 [sub_resource type="ParticlesMaterial" id=4]
 flag_disable_z = true
 gravity = Vector3( 0, 0, 0 )
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.05
+scale_curve = SubResource( 6 )
 color_ramp = SubResource( 3 )
+hue_variation_random = 1.0
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -39,6 +47,7 @@ texture = ExtResource( 3 )
 shape = SubResource( 1 )
 
 [node name="Trail" type="Particles2D" parent="."]
+emitting = false
 amount = 10
 speed_scale = 2.0
 local_coords = false
@@ -47,3 +56,4 @@ texture = ExtResource( 2 )
 
 [node name="CooldownTimer" type="Timer" parent="."]
 wait_time = 2.0
+one_shot = true
