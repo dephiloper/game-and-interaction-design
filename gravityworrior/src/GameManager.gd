@@ -6,5 +6,6 @@ var players: Array = []
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
 	
-func add_player(player: Player) -> void:
+func register_player(player: Player) -> int:
 	players.append(player)
+	return len(players) - 1

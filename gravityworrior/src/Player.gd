@@ -7,23 +7,26 @@ const BULLET_SCENE = preload("res://src/Bullet.tscn")
 
 const MOVEMENT_SPEED: int = 10
 const JUMP_SPEED_MULTIPLIER: float = 2.5
+
 const ON_PLANET_DRAG: float = 0.9
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 300
+
 const INITIAL_BOOST_VALUE: float = 0.5
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 
 const CROSS_HAIR_DISTANCE: int = 128
 
-export(int) var input_device_id = -1
 export(Texture) var texture
 
 # properties
 var health: int = 100
 
 # fields
+var _input_map: Dictionary = {}  # provides pressed actions of the player
+
 var _velocity = Vector2()
 var _closest_planet: Planet = null
 var _is_on_planet: bool = false
@@ -31,26 +34,19 @@ var _is_boosting: bool = false
 var _is_cooldown: bool = false
 var _boost: float = INITIAL_BOOST_VALUE
 var _last_shoot_dir = Vector2.RIGHT
-var _controls: Dictionary = {}
 
 # public methods
 func hit(damage: float) -> void:
 	health -= damage
-	Input.start_joy_vibration(input_device_id, 1, 0, 0.5)
+	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
 
 func _init() -> void:
-	_controls["ui_right"] = 0.0
-	_controls["ui_left"] = 0.0
-	_controls["ui_down"] = 0.0
-	_controls["ui_up"] = 0.0
-	_controls["aim_right"] = 0.0
-	_controls["aim_left"] = 0.0
-	_controls["aim_down"] = 0.0
-	_controls["aim_up"] = 0.0
-	_controls["jump"] = 0.0
-	_controls["shoot"] = 0.0
 	add_to_group("Player")
-	GameManager.add_player(self)
+	var device_id = GameManager.register_player(self)
+	var controls = Controls.new()
+	add_child(controls)
+	controls.set_device_id(device_id)
+	_input_map = controls.input_map
 
 func _ready() -> void:
 	$PlayerSprite.texture = texture
@@ -102,13 +98,6 @@ func _physics_process(delta: float) -> void:
 			# recharge boost
 			_boost = min(_boost + BOOST_RECHARGE_VALUE * delta, 1.0)
 
-# implementation of "own" input event system
-func _input(event: InputEvent) -> void:
-		if event.device == input_device_id:  # only recognize input entered on specified controller
-			for action in _controls.keys():
-				if event.is_action(action):
-					_controls[action] = event.get_action_strength(action)
-
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
 	var closest_distance: float = INF
@@ -124,8 +113,8 @@ func _calculate_gravitational_pull() -> Vector2:
 	return pull
 
 func _calculate_player_movement() -> Vector2:
-	var horizontal: float = _controls["ui_right"] - _controls["ui_left"]
-	var vertical: float = _controls["ui_down"] - _controls["ui_up"]
+	var horizontal: float = _input_map["ui_right"] - _input_map["ui_left"]
+	var vertical: float = _input_map["ui_down"] - _input_map["ui_up"]
 	_is_boosting = false
 	
 	var movement_speed: float = MOVEMENT_SPEED
@@ -135,8 +124,8 @@ func _calculate_player_movement() -> Vector2:
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
 		
-	if _controls["shoot"] > 0:
-		_controls["shoot"] = 0.0
+	if _input_map["shoot"] > 0:
+		_input_map["shoot"] = 0.0
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = movement_dir
 		if shoot_dir == Vector2.ZERO:
@@ -146,7 +135,7 @@ func _calculate_player_movement() -> Vector2:
 		_last_shoot_dir = shoot_dir
 		
 	
-	if _controls["jump"] > 0:
+	if _input_map["jump"] > 0:
 		_is_on_planet = false
 		_is_boosting = true
 		movement_dir *= JUMP_SPEED_MULTIPLIER
@@ -154,8 +143,8 @@ func _calculate_player_movement() -> Vector2:
 	return movement_dir
 
 func _caculate_cross_hair_direction() -> Vector2:
-	var horizontal: float = _controls["aim_right"] - _controls["aim_left"]
-	var vertical: float = _controls["aim_down"] - _controls["aim_up"]
+	var horizontal: float = _input_map["aim_right"] - _input_map["aim_left"]
+	var vertical: float = _input_map["aim_down"] - _input_map["aim_up"]
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
 	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE

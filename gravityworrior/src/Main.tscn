@@ -14,11 +14,9 @@ script = ExtResource( 1 )
 
 [node name="Player0" parent="." instance=ExtResource( 3 )]
 position = Vector2( 200, 100 )
-input_device_id = 1
 
 [node name="Player1" parent="." instance=ExtResource( 3 )]
 position = Vector2( 1030, 100 )
-input_device_id = 0
 texture = ExtResource( 4 )
 
 [node name="Planet" parent="." instance=ExtResource( 5 )]
