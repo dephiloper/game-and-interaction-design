@@ -25,6 +25,7 @@ export(Texture) var texture
 
 # properties
 var health: int = 100
+var boost: float = INITIAL_BOOST_VALUE
 var is_inactive: bool = false
 
 # fields
@@ -35,7 +36,6 @@ var _closest_planet: Planet = null
 var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _is_cooldown: bool = false
-var _boost: float = INITIAL_BOOST_VALUE
 var _last_shoot_dir = Vector2.RIGHT
 
 # public methods
@@ -93,11 +93,11 @@ func _physics_process(delta: float) -> void:
 		var max_velocity: float = OFF_PLANET_MAX_VELOCITY
 		
 		if _is_boosting:  # we press boost key
-			if _boost > 0.0:  # there is boost left
+			if boost > 0.0:  # there is boost left
 				$Trail.emitting = true
 				max_velocity *= JUMP_SPEED_MULTIPLIER
-				_boost = max(_boost - BOOST_REDUCTION_VALUE * delta, 0.0)
-				if _boost == 0.0:  # we boosted and now there is no boost left 
+				boost = max(boost - BOOST_REDUCTION_VALUE * delta, 0.0)
+				if boost == 0.0:  # we boosted and now there is no boost left 
 					_is_cooldown = true
 					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
@@ -105,7 +105,7 @@ func _physics_process(delta: float) -> void:
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
 			# recharge boost
-			_boost = min(_boost + BOOST_RECHARGE_VALUE * delta, 1.0)
+			boost = min(boost + BOOST_RECHARGE_VALUE * delta, INITIAL_BOOST_VALUE)
 
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
@@ -170,7 +170,7 @@ func _shoot(dir: Vector2) -> void:
 	$"/root/Main".add_child(b)
 
 func _on_CooldownTimer_timeout() -> void:
-	_boost = INITIAL_BOOST_VALUE
+	boost = INITIAL_BOOST_VALUE
 	_is_cooldown = false
 	$PlayerSprite.self_modulate.a = 1.0
 	
