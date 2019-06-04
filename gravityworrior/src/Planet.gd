@@ -2,7 +2,7 @@ extends Node2D
 
 class_name Planet
 
-const GRAVITY_EXPONENT: float = 2.8
+const GRAVITY_EXPONENT: float = 2.95
 
 var gravity: float = 0
 
