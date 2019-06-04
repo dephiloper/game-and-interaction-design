@@ -28,6 +28,7 @@ var _velocity = Vector2()
 var _closest_planet: Planet = null
 var _is_on_planet: bool = false
 var _is_boosting: bool = false
+var _is_cooldown: bool = false
 var _boost: float = INITIAL_BOOST_VALUE
 var _last_shoot_dir = Vector2.RIGHT
 var _controls: Dictionary = {}
@@ -81,7 +82,7 @@ func _physics_process(delta: float) -> void:
 			if collision.collider.is_in_group("Planet"):
 				_is_on_planet = true
 		# applying pull only when player is not boosting!
-		elif not _is_boosting: 
+		elif not _is_boosting or _is_cooldown: 
 			_velocity += pull
 			
 		var max_velocity: float = OFF_PLANET_MAX_VELOCITY
@@ -92,6 +93,7 @@ func _physics_process(delta: float) -> void:
 				max_velocity *= JUMP_SPEED_MULTIPLIER
 				_boost = max(_boost - BOOST_REDUCTION_VALUE * delta, 0.0)
 				if _boost == 0.0:  # we boosted and now there is no boost left 
+					_is_cooldown = true
 					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
 		
@@ -169,3 +171,4 @@ func _shoot(dir: Vector2) -> void:
 func _on_CooldownTimer_timeout() -> void:
 	_boost = INITIAL_BOOST_VALUE
 	$PlayerSprite.self_modulate.a = 1.0
+	_is_cooldown = false
