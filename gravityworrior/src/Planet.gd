@@ -2,7 +2,7 @@ extends Node2D
 
 class_name Planet
 
-const GRAVITY_MULTIPLIER: float = 2000.0
+const GRAVITY_EXPONENT: float = 2.8
 
 var gravity: float = 0
 
@@ -48,7 +48,7 @@ func _calculate_planet_points() -> PoolVector2Array:
 	points.append(points[0])
 	
 	self.gravity /= self._num_points
-	self.gravity *= GRAVITY_MULTIPLIER
+	self.gravity = pow(self.gravity, GRAVITY_EXPONENT)
 	return points
 	
 func _create_collision_shape():

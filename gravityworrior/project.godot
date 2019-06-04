@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Controls",
 "language": "GDScript",
-"path": "res://Controls.gd"
+"path": "res://src/Controls.gd"
 }, {
 "base": "Node2D",
 "class": "Planet",

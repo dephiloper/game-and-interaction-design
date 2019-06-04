@@ -4,6 +4,7 @@ class_name Player
 
 # preloaded scenes
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
+const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
 
 const MOVEMENT_SPEED: int = 10
 const JUMP_SPEED_MULTIPLIER: float = 2.5
@@ -23,7 +24,7 @@ export(Texture) var texture
 
 # properties
 var health: int = 100
-var is_disabled: bool = false
+var is_inactive: bool = false
 
 # fields
 var _input_map: Dictionary = {}  # provides pressed actions of the player
@@ -38,7 +39,11 @@ var _last_shoot_dir = Vector2.RIGHT
 
 # public methods
 func hit(damage: float) -> void:
-	health -= damage
+	if health > 0:
+		health -= damage
+	else:
+		is_inactive = true
+		$PlayerSprite.texture = INACTIVE_TEXTURE
 	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
 
 func _init() -> void:
@@ -55,16 +60,12 @@ func _ready() -> void:
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 
 func _process(delta: float) -> void:
-	$PlayerSprite.self_modulate.a = 1.0
-	
-	if is_disabled:
-		pass
-	elif _is_cooldown:
+	if not is_inactive and _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
 func _physics_process(delta: float) -> void:
 	$Trail.emitting = false
-
+	
 	# we are on planet
 	if _is_on_planet == true:
 		_velocity += _calculate_player_movement()
@@ -119,6 +120,9 @@ func _calculate_gravitational_pull() -> Vector2:
 	return pull
 
 func _calculate_player_movement() -> Vector2:
+	if is_inactive:
+		return Vector2.ZERO
+	
 	var horizontal: float = _input_map["ui_right"] - _input_map["ui_left"]
 	var vertical: float = _input_map["ui_down"] - _input_map["ui_up"]
 	_is_boosting = false
@@ -141,7 +145,7 @@ func _calculate_player_movement() -> Vector2:
 		_last_shoot_dir = shoot_dir
 		
 	
-	if _input_map["jump"] > 0:
+	if _input_map["jump"] > 0 and not _is_cooldown:
 		_is_on_planet = false
 		_is_boosting = true
 		movement_dir *= JUMP_SPEED_MULTIPLIER
@@ -166,3 +170,4 @@ func _shoot(dir: Vector2) -> void:
 func _on_CooldownTimer_timeout() -> void:
 	_boost = INITIAL_BOOST_VALUE
 	_is_cooldown = false
+	$PlayerSprite.self_modulate.a = 1.0

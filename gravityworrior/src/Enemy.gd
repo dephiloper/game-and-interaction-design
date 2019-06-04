@@ -18,8 +18,9 @@ func _physics_process(delta: float) -> void:
 	_velocity += (_target.position - position).normalized() * SPEED
 	var collision = move_and_collide(_velocity * delta)
 	if collision:
+		var collider = collision.collider
 		_velocity = _velocity.bounce(collision.normal)
-		if collision.collider.has_method("hit"):
-			collision.collider.hit(_damage)
+		if collider.is_in_group("Player") and collider.has_method("hit"):
+			collider.hit(_damage)
 			queue_free()
 	_velocity *= DRAG
