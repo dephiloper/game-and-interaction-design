@@ -14,6 +14,7 @@ const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 300
 
+const INITIAL_HEALTH: int = 100
 const INITIAL_BOOST_VALUE: float = 0.5
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
@@ -58,6 +59,7 @@ func _ready() -> void:
 	$PlayerSprite.texture = texture
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
+	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
 func _process(delta: float) -> void:
 	if not is_inactive and _is_cooldown:
@@ -171,3 +173,10 @@ func _on_CooldownTimer_timeout() -> void:
 	_boost = INITIAL_BOOST_VALUE
 	_is_cooldown = false
 	$PlayerSprite.self_modulate.a = 1.0
+	
+func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
+	if is_inactive and body.is_in_group("Player"):
+		if not (body as Player).is_inactive:
+			is_inactive = false
+			health = INITIAL_HEALTH
+			$PlayerSprite.texture = texture
