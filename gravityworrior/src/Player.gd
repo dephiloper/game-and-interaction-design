@@ -23,6 +23,7 @@ export(Texture) var texture
 
 # properties
 var health: int = 100
+var is_disabled: bool = false
 
 # fields
 var _input_map: Dictionary = {}  # provides pressed actions of the player
@@ -54,15 +55,19 @@ func _ready() -> void:
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 
 func _process(delta: float) -> void:
-	if _boost <= 0.0:
+	$PlayerSprite.self_modulate.a = 1.0
+	
+	if is_disabled:
+		pass
+	elif _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
 func _physics_process(delta: float) -> void:
-	_velocity += _calculate_player_movement()
 	$Trail.emitting = false
-	
+
 	# we are on planet
 	if _is_on_planet == true:
+		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
 		_velocity = move_and_slide_with_snap(_velocity, diff, -diff)
@@ -71,6 +76,7 @@ func _physics_process(delta: float) -> void:
 	
 	# not on planet
 	else:
+		_velocity += _calculate_player_movement()
 		_velocity *= OFF_PLANET_DRAG
 		var pull: Vector2 = _calculate_gravitational_pull()
 		var collision = move_and_collide(_velocity * delta)
@@ -159,5 +165,4 @@ func _shoot(dir: Vector2) -> void:
 
 func _on_CooldownTimer_timeout() -> void:
 	_boost = INITIAL_BOOST_VALUE
-	$PlayerSprite.self_modulate.a = 1.0
 	_is_cooldown = false
