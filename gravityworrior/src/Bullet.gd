@@ -31,8 +31,9 @@ func _physics_process(delta: float) -> void:
 	if not $VisibilityNotifier2D.is_on_screen():
 		queue_free()
 		
-func init(dir: Vector2):
+func init(dir: Vector2, damage: float):
 	_velocity = dir * SPEED
+	_damage = damage
 	($CollisionShape2D.shape as CircleShape2D).radius = RADIUS
 	
 func _calculate_gravitational_pull() -> Vector2:

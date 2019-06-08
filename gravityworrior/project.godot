@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "Buff",
+"language": "GDScript",
+"path": "res://src/Buff.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Bullet",
 "language": "GDScript",
@@ -30,6 +35,7 @@ _global_script_classes=[ {
 "path": "res://src/Player.gd"
 } ]
 _global_script_class_icons={
+"Buff": "",
 "Bullet": "",
 "Controls": "",
 "Planet": "",

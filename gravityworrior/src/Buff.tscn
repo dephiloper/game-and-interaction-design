@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://src/Buff.gd" type="Script" id=1]
+[ext_resource path="res://img/player_inactive.png" type="Texture" id=2]
+[ext_resource path="res://img/player0.png" type="Texture" id=3]
+[ext_resource path="res://img/player1.png" type="Texture" id=4]
+[ext_resource path="res://img/icon.png" type="Texture" id=5]
+[ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 6 )
+
+[node name="Buff" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="BuffSprite" type="Sprite" parent="."]
+position = Vector2( 0, -11 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 2 )
+
+[node name="Player0Selection" type="Sprite" parent="BuffSprite"]
+visible = false
+position = Vector2( -250, -250 )
+scale = Vector2( 0.3, 0.3 )
+z_index = 1
+texture = ExtResource( 3 )
+
+[node name="Player1Selection" type="Sprite" parent="BuffSprite"]
+visible = false
+position = Vector2( 250, -250 )
+scale = Vector2( 0.3, 0.3 )
+z_index = 1
+texture = ExtResource( 4 )
+
+[node name="Player2Selection" type="Sprite" parent="BuffSprite"]
+visible = false
+position = Vector2( -250, 250 )
+scale = Vector2( 0.3, 0.3 )
+z_index = 1
+texture = ExtResource( 2 )
+
+[node name="Player3Selection" type="Sprite" parent="BuffSprite"]
+visible = false
+position = Vector2( 250, 250 )
+scale = Vector2( 0.3, 0.3 )
+z_index = 1
+texture = ExtResource( 2 )
+
+[node name="InnerBuffSprite" type="Sprite" parent="."]
+position = Vector2( 0, -11 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -50.0
+margin_top = 29.0
+margin_right = 50.0
+margin_bottom = 69.0
+custom_fonts/font = SubResource( 1 )
+text = "Buff"
+align = 1
+autowrap = true

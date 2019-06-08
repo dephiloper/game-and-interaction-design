@@ -6,16 +6,16 @@ class_name Player
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
 
-const MOVEMENT_SPEED: int = 10
-const JUMP_SPEED_MULTIPLIER: float = 2.5
+var _movement_speed: float = 10.0
+var _boost_speed_multiplier: float = 2.5
+var _initial_boost_value: float = 0.5
+var max_health: float = 100.0
+var _damage: float = 10.0
 
 const ON_PLANET_DRAG: float = 0.9
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 300
-
-const INITIAL_HEALTH: int = 100
-const INITIAL_BOOST_VALUE: float = 0.5
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 
@@ -24,13 +24,12 @@ const CROSS_HAIR_DISTANCE: int = 128
 export(Texture) var texture
 
 # properties
+var controls: Controls # provides pressed actions of the player
 var health: int = 100
-var boost: float = INITIAL_BOOST_VALUE
+var boost: float = _initial_boost_value
 var is_inactive: bool = false
 
 # fields
-var _input_map: Dictionary = {}  # provides pressed actions of the player
-
 var _velocity = Vector2()
 var _closest_planet: Planet = null
 var _is_on_planet: bool = false
@@ -47,13 +46,34 @@ func hit(damage: float) -> void:
 		$PlayerSprite.texture = INACTIVE_TEXTURE
 	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
 
+func apply_buff(buff_type: String) -> void:
+	match Buff.Types[buff_type]:
+		Buff.Types.MovementSpeed:
+			_movement_speed *= 1.2
+		Buff.Types.BoostSpeed:
+			_boost_speed_multiplier *= 1.1
+		Buff.Types.BoostTime:
+			_initial_boost_value *= 1.2
+			boost = _initial_boost_value
+		Buff.Types.Health:
+			max_health *= 1.1
+		Buff.Types.Damage:
+			_damage *= 1.2
+		Buff.Types.Ammo:
+			pass
+		Buff.Types.Kamikaze:
+			pass
+		Buff.Types.BiggerBullets:
+			pass
+		Buff.Types.AttackSpeed:
+			pass
+
 func _init() -> void:
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
-	var controls = Controls.new()
+	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
-	_input_map = controls.input_map
 
 func _ready() -> void:
 	$PlayerSprite.texture = texture
@@ -66,6 +86,9 @@ func _process(delta: float) -> void:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
 func _physics_process(delta: float) -> void:
+	if GameManager.current_game_state != GameManager.GameState.Fight:
+		return
+	
 	$Trail.emitting = false
 	
 	# we are on planet
@@ -95,7 +118,7 @@ func _physics_process(delta: float) -> void:
 		if _is_boosting:  # we press boost key
 			if boost > 0.0:  # there is boost left
 				$Trail.emitting = true
-				max_velocity *= JUMP_SPEED_MULTIPLIER
+				max_velocity *= _boost_speed_multiplier
 				boost = max(boost - BOOST_REDUCTION_VALUE * delta, 0.0)
 				if boost == 0.0:  # we boosted and now there is no boost left 
 					_is_cooldown = true
@@ -105,7 +128,7 @@ func _physics_process(delta: float) -> void:
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
 			# recharge boost
-			boost = min(boost + BOOST_RECHARGE_VALUE * delta, INITIAL_BOOST_VALUE)
+			boost = min(boost + BOOST_RECHARGE_VALUE * delta, _initial_boost_value)
 
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
@@ -125,19 +148,18 @@ func _calculate_player_movement() -> Vector2:
 	if is_inactive:
 		return Vector2.ZERO
 	
-	var horizontal: float = _input_map["ui_right"] - _input_map["ui_left"]
-	var vertical: float = _input_map["ui_down"] - _input_map["ui_up"]
+	var horizontal: float = controls.pressed("ui_right") - controls.pressed("ui_left")
+	var vertical: float = controls.pressed("ui_down") - controls.pressed("ui_up")
 	_is_boosting = false
 	
-	var movement_speed: float = MOVEMENT_SPEED
+	var movement_speed: float = _movement_speed
 	if _is_on_planet:
 		movement_speed *= ON_PLANET_SPEED_MULTIPLIER
 		
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
 		
-	if _input_map["shoot"] > 0:
-		_input_map["shoot"] = 0.0
+	if controls.just_pressed("shoot") > 0:
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = movement_dir
 		if shoot_dir == Vector2.ZERO:
@@ -147,16 +169,16 @@ func _calculate_player_movement() -> Vector2:
 		_last_shoot_dir = shoot_dir
 		
 	
-	if _input_map["jump"] > 0 and not _is_cooldown:
+	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
 		_is_boosting = true
-		movement_dir *= JUMP_SPEED_MULTIPLIER
+		movement_dir *= _boost_speed_multiplier
 		
 	return movement_dir
 
 func _caculate_cross_hair_direction() -> Vector2:
-	var horizontal: float = _input_map["aim_right"] - _input_map["aim_left"]
-	var vertical: float = _input_map["aim_down"] - _input_map["aim_up"]
+	var horizontal: float = controls.pressed("aim_right") - controls.pressed("aim_left")
+	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
 	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE
@@ -165,12 +187,12 @@ func _caculate_cross_hair_direction() -> Vector2:
 
 func _shoot(dir: Vector2) -> void:
 	var b: Bullet = BULLET_SCENE.instance()
-	b.init(dir)
+	b.init(dir, _damage)
 	b.position = global_position
 	$"/root/Main".add_child(b)
 
 func _on_CooldownTimer_timeout() -> void:
-	boost = INITIAL_BOOST_VALUE
+	boost = _initial_boost_value
 	_is_cooldown = false
 	$PlayerSprite.self_modulate.a = 1.0
 	
@@ -178,5 +200,5 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 	if is_inactive and body.is_in_group("Player"):
 		if not (body as Player).is_inactive:
 			is_inactive = false
-			health = INITIAL_HEALTH
+			health = max_health
 			$PlayerSprite.texture = texture
