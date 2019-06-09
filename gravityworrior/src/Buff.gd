@@ -11,9 +11,8 @@ const Types: Dictionary = {
 	Health = "More Health",
 	Damage = "More Damage",
 	Ammo = "More Ammo",
-	Kamikaze = "Dadly Dash",
 	BiggerBullets = "Bigger Bullets",
-	AttackSpeed = "Faster Bullets"
+	AttackSpeed = "Faster Bullets",
 }
 
 func select(player: int) -> void:

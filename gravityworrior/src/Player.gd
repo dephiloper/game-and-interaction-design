@@ -11,6 +11,8 @@ var _boost_speed_multiplier: float = 2.5
 var _initial_boost_value: float = 0.5
 var max_health: float = 100.0
 var _damage: float = 10.0
+var _bullet_size_multiplier: float = 1.0
+var _attack_speed_multiplier: float = 1.0
 
 const ON_PLANET_DRAG: float = 0.9
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
@@ -25,7 +27,7 @@ export(Texture) var texture
 
 # properties
 var controls: Controls # provides pressed actions of the player
-var health: int = 100
+var health: float = 100
 var boost: float = _initial_boost_value
 var is_inactive: bool = false
 
@@ -60,13 +62,12 @@ func apply_buff(buff_type: String) -> void:
 		Buff.Types.Damage:
 			_damage *= 1.2
 		Buff.Types.Ammo:
-			pass
-		Buff.Types.Kamikaze:
+			# todo when ammo is available / implemented
 			pass
 		Buff.Types.BiggerBullets:
-			pass
+			_bullet_size_multiplier *= 1.2
 		Buff.Types.AttackSpeed:
-			pass
+			_attack_speed_multiplier *= 1.2
 
 func _init() -> void:
 	add_to_group("Player")
@@ -187,7 +188,7 @@ func _caculate_cross_hair_direction() -> Vector2:
 
 func _shoot(dir: Vector2) -> void:
 	var b: Bullet = BULLET_SCENE.instance()
-	b.init(dir, _damage)
+	b.init(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
 	b.position = global_position
 	$"/root/Main".add_child(b)
 

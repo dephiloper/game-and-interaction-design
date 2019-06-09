@@ -1,6 +1,6 @@
 extends Node
 
-var current_game_state = GameState.Fight
+var current_game_state = GameState.Vote
 var planets: Array = []
 var players: Array = []
 
