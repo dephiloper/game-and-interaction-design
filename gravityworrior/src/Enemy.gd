@@ -3,6 +3,7 @@ extends KinematicBody2D
 const SPEED: int = 10
 const DRAG: float = 0.95
 
+var health: float = 10.0
 var _target: Player = null
 var _velocity: Vector2 = Vector2.ZERO
 var _damage: float = 10.0
@@ -11,7 +12,9 @@ func _ready() -> void:
 	_target = GameManager.players[randi() % GameManager.players.size()]
 	
 func hit(damage: float) -> void:
-	queue_free()
+	health -= damage
+	if health <= 0.0:
+		queue_free()
 	
 func _physics_process(delta: float) -> void:
 	look_at(_target.position)

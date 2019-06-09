@@ -6,29 +6,30 @@ class_name Player
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
 
-var _movement_speed: float = 10.0
-var _boost_speed_multiplier: float = 2.5
-var _initial_boost_value: float = 0.5
-var max_health: float = 100.0
-var _damage: float = 10.0
-var _bullet_size_multiplier: float = 1.0
-var _attack_speed_multiplier: float = 1.0
-
+const INITIAL_ON_PLANET_SPEED_MULTIPLIER: float = 3.0
+const REDUCED_ON_PLANET_SPEED_MULTIPLIER: float = 2.0
 const ON_PLANET_DRAG: float = 0.9
-const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 300
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
-
 const CROSS_HAIR_DISTANCE: int = 128
+
+var _movement_speed: float = 10.0
+var _on_planet_speed_multiplier: float = INITIAL_ON_PLANET_SPEED_MULTIPLIER
+var _boost_speed_multiplier: float = 2.5
+var _max_boost: float = 0.5
+var max_health: float = 100.0
+var _damage: float = 10.0
+var _bullet_size_multiplier: float = 1.0
+var _attack_speed_multiplier: float = 1.0
 
 export(Texture) var texture
 
 # properties
 var controls: Controls # provides pressed actions of the player
 var health: float = 100
-var boost: float = _initial_boost_value
+var boost: float = _max_boost
 var is_inactive: bool = false
 
 # fields
@@ -41,11 +42,7 @@ var _last_shoot_dir = Vector2.RIGHT
 
 # public methods
 func hit(damage: float) -> void:
-	if health > 0:
-		health -= damage
-	else:
-		is_inactive = true
-		$PlayerSprite.texture = INACTIVE_TEXTURE
+	health -= damage
 	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
 
 func apply_buff(buff_type: String) -> void:
@@ -55,8 +52,8 @@ func apply_buff(buff_type: String) -> void:
 		Buff.Types.BoostSpeed:
 			_boost_speed_multiplier *= 1.1
 		Buff.Types.BoostTime:
-			_initial_boost_value *= 1.2
-			boost = _initial_boost_value
+			_max_boost *= 1.2
+			boost = _max_boost
 		Buff.Types.Health:
 			max_health *= 1.1
 		Buff.Types.Damage:
@@ -83,6 +80,9 @@ func _ready() -> void:
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
 func _process(delta: float) -> void:
+	if health <= 0.0:
+		is_inactive = true
+		$PlayerSprite.texture = INACTIVE_TEXTURE
 	if not is_inactive and _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
@@ -97,10 +97,10 @@ func _physics_process(delta: float) -> void:
 		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
+		_apply_planet_ability(delta)
 		_velocity = move_and_slide_with_snap(_velocity, diff, -diff)
 		_velocity = _velocity.slide(diff.normalized())
 		_velocity = _velocity.slide(-diff.normalized())
-	
 	# not on planet
 	else:
 		_velocity += _calculate_player_movement()
@@ -129,7 +129,7 @@ func _physics_process(delta: float) -> void:
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
 			# recharge boost
-			boost = min(boost + BOOST_RECHARGE_VALUE * delta, _initial_boost_value)
+			boost = min(boost + BOOST_RECHARGE_VALUE * delta, _max_boost)
 
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
@@ -155,7 +155,7 @@ func _calculate_player_movement() -> Vector2:
 	
 	var movement_speed: float = _movement_speed
 	if _is_on_planet:
-		movement_speed *= ON_PLANET_SPEED_MULTIPLIER
+		movement_speed *= _on_planet_speed_multiplier
 		
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
@@ -192,8 +192,19 @@ func _shoot(dir: Vector2) -> void:
 	b.position = global_position
 	$"/root/Main".add_child(b)
 
+func _apply_planet_ability(delta: float) -> void:
+	_on_planet_speed_multiplier = INITIAL_ON_PLANET_SPEED_MULTIPLIER
+	
+	match (_closest_planet.type):
+		Planet.Type.HEALTH_REGENERATION:
+			health += delta
+		Planet.Type.HAZARD:
+			health -= delta
+		Planet.Type.FREEZE:
+			_on_planet_speed_multiplier = REDUCED_ON_PLANET_SPEED_MULTIPLIER
+			
 func _on_CooldownTimer_timeout() -> void:
-	boost = _initial_boost_value
+	boost = _max_boost
 	_is_cooldown = false
 	$PlayerSprite.self_modulate.a = 1.0
 	

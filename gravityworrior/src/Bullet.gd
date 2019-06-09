@@ -9,8 +9,8 @@ var _velocity = Vector2.ZERO
 var _bounce_count: int = 0
 
 var _damage: float = 10.0
-var _radius: int = 6
-var _speed: int = 1000
+var _radius: float = 6
+var _speed: float = 1000
 
 func _draw() -> void:
 	draw_circle(Vector2(0,0), _radius, Color.black)
