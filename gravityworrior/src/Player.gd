@@ -197,7 +197,7 @@ func _apply_planet_ability(delta: float) -> void:
 	
 	match (_closest_planet.type):
 		Planet.Type.HEALTH_REGENERATION:
-			health += delta
+			health = min(health + delta, 100) 
 		Planet.Type.HAZARD:
 			health -= delta
 		Planet.Type.FREEZE:
