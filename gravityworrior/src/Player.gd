@@ -3,8 +3,8 @@ extends KinematicBody2D
 class_name Player
 
 # preloaded scenes
-const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
+const BULLET_SCENE = preload("res://src/Bullet.tscn")
 
 var _movement_speed: float = 10.0
 var _boost_speed_multiplier: float = 2.5
@@ -36,6 +36,7 @@ var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _is_cooldown: bool = false
 var _last_shoot_dir = Vector2.RIGHT
+onready var gun = get_node("Gun")
 
 # public methods
 func hit(damage: float) -> void:
@@ -81,7 +82,7 @@ func _ready() -> void:
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
-func _process(delta: float) -> void:
+func _process(delta: float) -> void: 
 	if not is_inactive and _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
@@ -165,8 +166,8 @@ func _calculate_player_movement() -> Vector2:
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = _last_shoot_dir
 			
-		_shoot(shoot_dir.normalized())
-		_last_shoot_dir = shoot_dir
+	_shoot(shoot_dir.normalized())
+	_last_shoot_dir = shoot_dir
 		
 	
 	if controls.pressed("jump") > 0 and not _is_cooldown:
@@ -181,15 +182,13 @@ func _caculate_cross_hair_direction() -> Vector2:
 	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
-	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE
+	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE 
+	$Gun.rotation = direction.angle()
 	
 	return direction
 
 func _shoot(dir: Vector2) -> void:
-	var b: Bullet = BULLET_SCENE.instance()
-	b.init(dir, _damage)
-	b.position = global_position
-	$"/root/Main".add_child(b)
+	$Gun.shoot(dir);
 
 func _on_CooldownTimer_timeout() -> void:
 	boost = _initial_boost_value
