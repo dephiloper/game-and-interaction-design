@@ -4,7 +4,6 @@ class_name Player
 
 # preloaded scenes
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
-const BULLET_SCENE = preload("res://src/Bullet.tscn")
 
 var _movement_speed: float = 10.0
 var _boost_speed_multiplier: float = 2.5
@@ -36,7 +35,6 @@ var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _is_cooldown: bool = false
 var _last_shoot_dir = Vector2.RIGHT
-onready var gun = get_node("Gun")
 
 # public methods
 func hit(damage: float) -> void:
@@ -166,8 +164,8 @@ func _calculate_player_movement() -> Vector2:
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = _last_shoot_dir
 			
-	_shoot(shoot_dir.normalized())
-	_last_shoot_dir = shoot_dir
+		_shoot(shoot_dir.normalized())
+		_last_shoot_dir = shoot_dir
 		
 	
 	if controls.pressed("jump") > 0 and not _is_cooldown:
