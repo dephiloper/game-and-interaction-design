@@ -1,12 +1,15 @@
-extends CanvasLayer
+extends Node2D
 
-var labels: Array = []
+var huds: Array = []
 
 func _ready() -> void:
-	labels.append($Label)
-	labels.append($Label2)
-	labels.append($Label3)
-	labels.append($Label4)
+	huds.append($HudP0)
+	huds.append($HudP1)
+	huds.append($HudP2)
+	huds.append($HudP3)
+	
+	$HudP1.rotate_bars()
+	$HudP3.rotate_bars()
 	$BuffSelection.position = get_viewport().size / 2
 
 func _process(delta: float) -> void:
@@ -18,6 +21,6 @@ func _process(delta: float) -> void:
 	var i = 0
 	for player in GameManager.players:
 		if is_instance_valid(player):
-			labels[i].text = str(int(player.health * 100) / 100.0) + "/" + str(player.max_health)
-			labels[i+1].text = str(int(player.boost * 100) / 100.0)
-			i += 2
+			huds[i].set_health_value(player.health, player.max_health)
+			huds[i].set_boost_value(player.boost, player.max_boost)
+			i+=1
