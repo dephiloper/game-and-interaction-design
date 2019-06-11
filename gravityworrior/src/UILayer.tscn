@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/UILayer.gd" type="Script" id=1]
 [ext_resource path="res://src/BuffSelection.tscn" type="PackedScene" id=2]
 [ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://src/HealthBar.tscn" type="PackedScene" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -51,3 +52,5 @@ custom_fonts/font = SubResource( 1 )
 text = "1.0"
 align = 2
 valign = 1
+
+[node name="HealthBar" parent="." instance=ExtResource( 4 )]
