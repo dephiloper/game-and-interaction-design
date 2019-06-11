@@ -8,6 +8,13 @@ func _ready() -> void:
 	huds.append($HudP2)
 	huds.append($HudP3)
 	
+	var i = 0
+	for hud in huds:
+		if len(GameManager.players) <= i:
+			hud.visible = false
+			
+		i+=1
+	
 	$HudP1.rotate_bars()
 	$HudP3.rotate_bars()
 	$BuffSelection.position = get_viewport().size / 2
