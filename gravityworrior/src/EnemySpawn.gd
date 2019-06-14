@@ -8,10 +8,11 @@ func _ready() -> void:
 	
 func on_SpawnTimer_timeout() -> void:
 	if has_spawned:
-		return
+		# return
+		pass
 
 	if GameManager.current_game_state == GameManager.GameState.Fight:
-		for i in range (1):
+		for i in range (5):
 			$SpawnPath/SpawnPathLocation.set_offset(randi())
 			var enemy = _enemy_scene.instance()
 			add_child(enemy)

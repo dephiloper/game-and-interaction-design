@@ -4,13 +4,18 @@ const SPEED: int = 10
 const ATTACK_SPEED: float = 450.0
 const DRAG: float = 0.92
 const GO_INTO_PLANET_SPEED = 50
+const MOVE_AWAY_FROM_PLANET_SPEED = 10
 
 const SQUARED_ATTACK_RANGE: int = 20000
 const SQUARED_PLANET_DISTANCE: int = 15000
+const LURK_ON_PLANET_TARGET_POINT_DIFF: int = 100
+
 const ATTACK_CHANNEL_TIME: float = 0.5
 const ATTACK_TIME: float = 2.0 / 3.0
 const GO_INTO_PLANET_TIME = 0.7
-const LURK_ON_PLANET_TARGET_POINT_DIFF: int = 100
+const LURK_ON_PLANET_TIME = 4.0
+const MOVE_AWAY_FROM_PLANET_TIME = 0.8
+const MOVE_TO_PLANET_COOLDOWN_TIME = 2
 
 enum ASSASSIN_STATE {
 	FlyToPlayer,
@@ -18,12 +23,12 @@ enum ASSASSIN_STATE {
 	FlyToPlanet,
 	GoIntoPlanet,
 	LurkOnPlanet,
+	MoveAwayFromPlanet,
 	Tumble,
 	AttackPlayer
 }
 
 var state = ASSASSIN_STATE.FlyToPlayer
-var last_state = null
 
 var health: float = 10.0
 var _target_player: Player = null
@@ -32,6 +37,9 @@ var _velocity: Vector2 = Vector2.ZERO
 var _damage: float = 10.0
 var _channel_time = 0
 var _attack_velocity = Vector2.ZERO
+var _lurk_target_point = null
+var _lurk_direction = null
+var _move_to_planet_cooldown = 0
 
 func state_to_str(s):
 	match s:
@@ -53,8 +61,8 @@ func state_to_str(s):
 			return 'Unknown ' + str(value)
 
 func _ready() -> void:
-	_target_player = GameManager.players[randi() % GameManager.players.size()]
-	
+	_start_fly_to_player()
+
 func hit(damage: float) -> void:
 	health -= damage
 	if health <= 0.0:
@@ -74,6 +82,10 @@ func _get_planet_in_range():
 			return planet
 	return null
 
+func _start_fly_to_player():
+	_target_player = GameManager.players[randi() % GameManager.players.size()]
+	state = ASSASSIN_STATE.FlyToPlayer
+
 func _start_channel_attack(target_player):
 	_target_player = target_player
 	state = ASSASSIN_STATE.ChannelAttack
@@ -82,11 +94,13 @@ func _start_channel_attack(target_player):
 func _start_attack_player():
 	state = ASSASSIN_STATE.AttackPlayer
 	_attack_velocity = (_target_player.position - position).normalized() * ATTACK_SPEED
+	look_at(_target_player.position)
 	_channel_time = ATTACK_TIME
 
 func _start_fly_to_planet(target_planet):
 	state = ASSASSIN_STATE.FlyToPlanet
 	_target_planet = target_planet
+	set_collision_mask_bit(0, true)
 
 func _start_go_into_planet():
 	state = ASSASSIN_STATE.GoIntoPlanet
@@ -96,8 +110,16 @@ func _start_go_into_planet():
 func _start_lurk_on_planet():
 	state = ASSASSIN_STATE.LurkOnPlanet
 	_velocity = Vector2.ZERO
+	_channel_time = LURK_ON_PLANET_TIME + randf()*(LURK_ON_PLANET_TIME / 2)
+	_lurk_target_point = null
+	_target_planet = null
 
-func _process_fly_to_player():
+func _start_move_away_from_planet():
+	state = ASSASSIN_STATE.MoveAwayFromPlanet
+	_channel_time = MOVE_AWAY_FROM_PLANET_TIME
+	_move_to_planet_cooldown = MOVE_TO_PLANET_COOLDOWN_TIME
+
+func _process_fly_to_player(delta):
 	look_at(_target_player.position)
 	_velocity += (_target_player.position - position).normalized() * SPEED
 
@@ -105,9 +127,12 @@ func _process_fly_to_player():
 	if player_in_range:
 		_start_channel_attack(player_in_range)
 
-	var planet_in_range = _get_planet_in_range()
-	if planet_in_range:
-		_start_fly_to_planet(planet_in_range)
+	if _move_to_planet_cooldown <= 0:
+		var planet_in_range = _get_planet_in_range()
+		if planet_in_range:
+			_start_fly_to_planet(planet_in_range)
+	else:
+		_move_to_planet_cooldown -= delta
 
 func _process_channel_attack(delta: float):
 	look_at(_target_player.position)
@@ -120,19 +145,34 @@ func _process_fly_to_planet():
 	_velocity += (_target_planet.position - position).normalized() * SPEED
 
 func _process_go_into_planet(delta):
+	_channel_time -= delta
 	if _channel_time > 0:
-		_channel_time -= delta
 		_velocity = (_target_planet.position - position).normalized() * GO_INTO_PLANET_SPEED
 	else:
-		var target_point = _target_planet.position + (position - _target_planet.position).normalized() * _target_planet._radius
-		if (position - target_point).length_squared() < LURK_ON_PLANET_TARGET_POINT_DIFF:
+		if _lurk_target_point == null:
+			_lurk_direction = (position - _target_planet.position).normalized()
+			_lurk_target_point = _target_planet.position + _lurk_direction * _target_planet._radius
+
+		if (position - _lurk_target_point).length_squared() < LURK_ON_PLANET_TARGET_POINT_DIFF:
 			_start_lurk_on_planet()
 		else:
-			_velocity = (target_point - position).normalized() * GO_INTO_PLANET_SPEED
-			look_at(target_point)
+			_velocity = (_lurk_target_point - position).normalized() * GO_INTO_PLANET_SPEED
+			look_at(position + _lurk_direction)
 
-func _process_lurk_on_planet():
-	pass
+func _process_lurk_on_planet(delta):
+	var player_in_range = _get_player_in_range()
+	if player_in_range:
+		_start_channel_attack(player_in_range)
+
+	_channel_time -= delta
+	if _channel_time < 0:
+		_start_move_away_from_planet()
+
+func _process_move_away_from_planet(delta):
+	_velocity += _lurk_direction * MOVE_AWAY_FROM_PLANET_SPEED
+	_channel_time -= delta
+	if _channel_time < 0:
+		_start_fly_to_player()
 
 func _process_tumble():
 	pass
@@ -145,36 +185,25 @@ func _process_attack_player(delta):
 		state = ASSASSIN_STATE.FlyToPlayer
 
 func _physics_process(delta: float) -> void:
-	var do_process_physics = true
 	match state:
 		ASSASSIN_STATE.FlyToPlayer:
-			_process_fly_to_player()
-
+			_process_fly_to_player(delta)
 		ASSASSIN_STATE.ChannelAttack:
 			_process_channel_attack(delta)
-			do_process_physics = false
-
 		ASSASSIN_STATE.FlyToPlanet:
 			_process_fly_to_planet()
-
 		ASSASSIN_STATE.GoIntoPlanet:
 			_process_go_into_planet(delta)
-
 		ASSASSIN_STATE.LurkOnPlanet:
-			_process_lurk_on_planet()
-			do_process_physics = false
-
+			_process_lurk_on_planet(delta)
+		ASSASSIN_STATE.MoveAwayFromPlanet:
+			_process_move_away_from_planet(delta)
 		ASSASSIN_STATE.Tumble:
 			_process_tumble()
-
 		ASSASSIN_STATE.AttackPlayer:
 			_process_attack_player(delta)
 
 	_process_movement(delta)
-
-	if last_state != state:
-		print('new state: ' + state_to_str(state))
-		last_state = state
 
 func _process_movement(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta)
