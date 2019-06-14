@@ -7,15 +7,19 @@ const GO_INTO_PLANET_SPEED = 50
 const MOVE_AWAY_FROM_PLANET_SPEED = 10
 
 const SQUARED_ATTACK_RANGE: int = 20000
+const SQUARED_SIGNAL_ATTACK_RANGE: int = 40000
 const SQUARED_PLANET_DISTANCE: int = 15000
 const LURK_ON_PLANET_TARGET_POINT_DIFF: int = 100
 
 const ATTACK_CHANNEL_TIME: float = 0.5
-const ATTACK_TIME: float = 2.0 / 3.0
+const ATTACK_TIME: float = 0.5
 const GO_INTO_PLANET_TIME = 0.7
 const LURK_ON_PLANET_TIME = 4.0
 const MOVE_AWAY_FROM_PLANET_TIME = 0.8
 const MOVE_TO_PLANET_COOLDOWN_TIME = 2
+const DIE_TIME = 0.2
+
+signal attack_player
 
 enum ASSASSIN_STATE {
 	FlyToPlayer,
@@ -25,10 +29,12 @@ enum ASSASSIN_STATE {
 	LurkOnPlanet,
 	MoveAwayFromPlanet,
 	Tumble,
-	AttackPlayer
+	AttackPlayer,
+	Dead
 }
 
 var state = ASSASSIN_STATE.FlyToPlayer
+var old_state = null
 
 var health: float = 10.0
 var _target_player: Player = null
@@ -53,10 +59,14 @@ func state_to_str(s):
 			return 'GoIntoPlanet'
 		ASSASSIN_STATE.LurkOnPlanet:
 			return 'LurkOnPlanet'
+		ASSASSIN_STATE.MoveAwayFromPlanet:
+			return 'MoveAwayFromPlanet'
 		ASSASSIN_STATE.Tumble:
 			return 'Tumble'
 		ASSASSIN_STATE.AttackPlayer:
 			return 'AttackPlayer'
+		ASSASSIN_STATE.Dead:
+			return 'Dead'
 		var value:
 			return 'Unknown ' + str(value)
 
@@ -66,7 +76,22 @@ func _ready() -> void:
 func hit(damage: float) -> void:
 	health -= damage
 	if health <= 0.0:
-		queue_free()
+		die()
+
+func die():
+	state = ASSASSIN_STATE.Dead
+	_channel_time = DIE_TIME
+	collision_mask = 0
+	collision_layer = 0
+
+func is_dead():
+	return state == ASSASSIN_STATE.Dead
+
+func attack_player_by_signal(player):
+	if state == ASSASSIN_STATE.FlyToPlayer or state == ASSASSIN_STATE.LurkOnPlanet:
+		var dist = player.position.distance_squared_to(position)
+		if dist < SQUARED_SIGNAL_ATTACK_RANGE:
+			_start_channel_attack(player, false)
 
 func _get_player_in_range():
 	for player in GameManager.players:
@@ -86,10 +111,12 @@ func _start_fly_to_player():
 	_target_player = GameManager.players[randi() % GameManager.players.size()]
 	state = ASSASSIN_STATE.FlyToPlayer
 
-func _start_channel_attack(target_player):
+func _start_channel_attack(target_player, do_emit):
 	_target_player = target_player
 	state = ASSASSIN_STATE.ChannelAttack
 	_channel_time = ATTACK_CHANNEL_TIME
+	if do_emit:
+		emit_signal("attack_player", _target_player)
 
 func _start_attack_player():
 	state = ASSASSIN_STATE.AttackPlayer
@@ -125,7 +152,7 @@ func _process_fly_to_player(delta):
 
 	var player_in_range = _get_player_in_range()
 	if player_in_range:
-		_start_channel_attack(player_in_range)
+		_start_channel_attack(player_in_range, true)
 
 	if _move_to_planet_cooldown <= 0:
 		var planet_in_range = _get_planet_in_range()
@@ -162,7 +189,7 @@ func _process_go_into_planet(delta):
 func _process_lurk_on_planet(delta):
 	var player_in_range = _get_player_in_range()
 	if player_in_range:
-		_start_channel_attack(player_in_range)
+		_start_channel_attack(player_in_range, true)
 
 	_channel_time -= delta
 	if _channel_time < 0:
@@ -184,6 +211,14 @@ func _process_attack_player(delta):
 	if _channel_time < 0:
 		state = ASSASSIN_STATE.FlyToPlayer
 
+func _process_dead(delta):
+	_channel_time -= delta
+	var alpha = _channel_time / DIE_TIME
+	if _channel_time < 0:
+		queue_free()
+	else:
+		$Sprite.modulate = Color(1, 1, 1, alpha)
+
 func _physics_process(delta: float) -> void:
 	match state:
 		ASSASSIN_STATE.FlyToPlayer:
@@ -202,8 +237,15 @@ func _physics_process(delta: float) -> void:
 			_process_tumble()
 		ASSASSIN_STATE.AttackPlayer:
 			_process_attack_player(delta)
+		ASSASSIN_STATE.Dead:
+			_process_dead(delta)
+			return
 
 	_process_movement(delta)
+	
+	if state != old_state:
+		print('state: ', state_to_str(state))
+		old_state = state
 
 func _process_movement(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta)
@@ -216,7 +258,7 @@ func _process_collision(collision):
 	var collider = collision.collider
 	if collider.is_in_group("Player") and collider.has_method("hit"):
 		collider.hit(_damage)
-		queue_free()
+		die()
 
 	var do_bounce = true
 
