@@ -19,7 +19,7 @@ func _ready() -> void:
 	$HudP3.rotate_bars()
 	$BuffSelection.position = get_viewport().size / 2
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if GameManager.current_game_state == GameManager.GameState.Vote:
 		$BuffSelection.visible = true
 	else:

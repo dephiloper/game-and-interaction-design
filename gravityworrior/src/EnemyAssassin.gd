@@ -35,9 +35,9 @@ enum ASSASSIN_STATE {
 }
 
 var state = ASSASSIN_STATE.FlyToPlayer
-var old_state = null
+# var old_state = null
 
-var health: float = 10.0
+var health: float = 20.0
 var _target_player: Player = null
 var _target_planet: Planet = null
 var _velocity: Vector2 = Vector2.ZERO
@@ -69,8 +69,6 @@ func state_to_str(s):
 			return 'AttackPlayer'
 		ASSASSIN_STATE.Dead:
 			return 'Dead'
-		var value:
-			return 'Unknown ' + str(value)
 
 func _ready() -> void:
 	_start_fly_to_player()
@@ -176,6 +174,10 @@ func _process_fly_to_planet():
 	look_at(_target_planet.position)
 	_velocity += (_target_planet.position - position).normalized() * SPEED
 
+	var player_in_range = _get_player_in_range()
+	if player_in_range:
+		_start_channel_attack(player_in_range, true)
+
 func _process_go_into_planet(delta):
 	_channel_time -= delta
 	if _channel_time > 0:
@@ -205,6 +207,10 @@ func _process_move_away_from_planet(delta):
 	_channel_time -= delta
 	if _channel_time < 0:
 		_start_fly_to_player()
+
+	var player_in_range = _get_player_in_range()
+	if player_in_range:
+		_start_channel_attack(player_in_range, true)
 
 func _process_tumble():
 	pass

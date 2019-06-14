@@ -74,13 +74,14 @@ func _init() -> void:
 	add_child(controls)
 	controls.set_device_id(device_id)
 
+#warning-ignore-all:return_value_discarded
 func _ready() -> void:
 	$PlayerSprite.texture = texture
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if health <= 0.0:
 		is_inactive = true
 		$PlayerSprite.texture = INACTIVE_TEXTURE

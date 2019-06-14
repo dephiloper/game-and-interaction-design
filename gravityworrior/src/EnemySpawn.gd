@@ -8,10 +8,11 @@ func _on_attack_player(player):
 	for assassin in assassin_list:
 		assassin.attack_player_by_signal(player)
 
+#warning-ignore:return_value_discarded
 func _ready() -> void:
 	$SpawnTimer.connect("timeout", self, "on_SpawnTimer_timeout")
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var index = 0
 	while index < assassin_list.size():
 		if assassin_list[index].is_dead():
@@ -26,7 +27,7 @@ func on_SpawnTimer_timeout() -> void:
 		pass
 
 	if GameManager.current_game_state == GameManager.GameState.Fight:
-		for i in range (5):
+		for _i in range (5):
 			$SpawnPath/SpawnPathLocation.set_offset(randi())
 			var assassin = _assassin_scene.instance()
 			assassin.connect("attack_player", self, "_on_attack_player")
