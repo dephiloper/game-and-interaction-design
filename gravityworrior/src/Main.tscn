@@ -33,3 +33,4 @@ position = Vector2( 642.488, 416.686 )
 position = Vector2( 1136.67, 638.145 )
 
 [node name="EnemySpawn" parent="." instance=ExtResource( 5 )]
+

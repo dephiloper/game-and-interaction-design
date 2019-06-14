@@ -1,6 +1,6 @@
 extends Node2D
 
-var _enemy_scene = preload("res://src/Enemy.tscn")
+var _enemy_scene = preload("res://src/EnemyAssassin.tscn")
 
 func _ready() -> void:
 	$SpawnTimer.connect("timeout", self, "on_SpawnTimer_timeout")
