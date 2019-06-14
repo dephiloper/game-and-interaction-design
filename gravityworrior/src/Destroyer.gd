@@ -1,9 +1,16 @@
 extends Node2D
 
 const SPEED = 20.0
+const FOLLOW_SPEED = 35.0
+const ATTACK_SPEED = 170.0
+
 const MAX_HEALTH = 50
 const FOLLOW_PLAYER_TIME = 5
 const FOLLOW_PROBABILITY: float = 0.33
+const SQUARED_ATTACK_RANGE = 20000
+
+const ATTACK_CHANNEL_TIME = 0.7
+const ATTACK_DURATION = 1
 
 enum DestroyerState {
 	FlyToSender,
@@ -17,6 +24,7 @@ enum DestroyerState {
 var health = MAX_HEALTH
 var state
 var _velocity = Vector2.ZERO
+var _attack_velocity = null
 var _has_to_be_removed = false
 var _target_point = Vector2(400, 400)
 var _target_player = null
@@ -49,6 +57,9 @@ func _get_nearest_player():
 
 	return nearest_player
 
+func _sender_in_range():
+	return _target_point.distance_squared_to(position) < SQUARED_ATTACK_RANGE
+
 func _start_fly_to_sender():
 	state = DestroyerState.FlyToSender
 
@@ -58,26 +69,52 @@ func _start_follow_player():
 	
 	_channel_time = FOLLOW_PLAYER_TIME
 
+func _start_channel_attack():
+	state = DestroyerState.ChannelAttack
+	_channel_time = ATTACK_CHANNEL_TIME
+	_velocity = Vector2.ZERO
+
+func _start_attack():
+	state = DestroyerState.Attack
+	
+	_attack_velocity = (_target_point - position).normalized() * ATTACK_SPEED
+	_channel_time = ATTACK_DURATION
+
 func _process_fly_to_sender():
 	_velocity = (_target_point - position).normalized() * SPEED
 	look_at(_target_point)
 
+	if _sender_in_range():
+		_start_channel_attack()
+
 func _process_follow_player(delta):
-	_velocity = (_target_player.position - position).normalized() * SPEED
+	_velocity = (_target_player.position - position).normalized() * FOLLOW_SPEED
 	look_at(_target_player.position)
 
 	_channel_time -= delta
 	if _channel_time <= 0:
 		_start_fly_to_sender()
 
+func _process_channel_attack(delta):
+	_channel_time -= delta
+	if _channel_time < 0:
+		_start_attack()
+
+func _process_attack(delta):
+	_channel_time -= delta
+	if _channel_time < 0:
+		_start_follow_player()
+
+	_velocity = _attack_velocity
+
 func _physics_process(delta: float) -> void:
 	match state:
 		DestroyerState.FlyToSender:
 			_process_fly_to_sender()
 		DestroyerState.ChannelAttack:
-			pass
+			_process_channel_attack(delta)
 		DestroyerState.Attack:
-			pass
+			_process_attack(delta)
 		DestroyerState.FollowPlayer:
 			_process_follow_player(delta)
 		DestroyerState.CircleSender:
