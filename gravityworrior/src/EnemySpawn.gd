@@ -55,6 +55,6 @@ func on_SpawnTimer_timeout() -> void:
 	if GameManager.current_game_state == GameManager.GameState.Fight:
 		for _i in range (1):
 			_create_destroyer()
-		for _i in range(5):
-			_create_assassin()
+		#for _i in range(5):
+		#	_create_assassin()
 		has_spawned = true
