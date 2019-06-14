@@ -16,8 +16,9 @@ const ATTACK_TIME: float = 0.5
 const GO_INTO_PLANET_TIME = 0.7
 const LURK_ON_PLANET_TIME = 4.0
 const MOVE_AWAY_FROM_PLANET_TIME = 0.8
-const MOVE_TO_PLANET_COOLDOWN_TIME = 2
 const DIE_TIME = 0.2
+const MOVE_TO_PLANET_COOLDOWN_TIME = 2
+const ATTACK_COOLDOWN_TIME = 1.5
 
 signal attack_player
 
@@ -46,6 +47,7 @@ var _attack_velocity = Vector2.ZERO
 var _lurk_target_point = null
 var _lurk_direction = null
 var _move_to_planet_cooldown = 0
+var _attack_cooldown = 0
 
 func state_to_str(s):
 	match s:
@@ -112,6 +114,8 @@ func _start_fly_to_player():
 	state = ASSASSIN_STATE.FlyToPlayer
 
 func _start_channel_attack(target_player, do_emit):
+	if _attack_cooldown > 0:
+		return
 	_target_player = target_player
 	state = ASSASSIN_STATE.ChannelAttack
 	_channel_time = ATTACK_CHANNEL_TIME
@@ -123,6 +127,7 @@ func _start_attack_player():
 	_attack_velocity = (_target_player.position - position).normalized() * ATTACK_SPEED
 	look_at(_target_player.position)
 	_channel_time = ATTACK_TIME
+	_attack_cooldown = ATTACK_COOLDOWN_TIME
 
 func _start_fly_to_planet(target_planet):
 	state = ASSASSIN_STATE.FlyToPlanet
@@ -220,6 +225,8 @@ func _process_dead(delta):
 		$Sprite.modulate = Color(1, 1, 1, alpha)
 
 func _physics_process(delta: float) -> void:
+	_attack_cooldown -= delta
+
 	match state:
 		ASSASSIN_STATE.FlyToPlayer:
 			_process_fly_to_player(delta)
@@ -242,10 +249,10 @@ func _physics_process(delta: float) -> void:
 			return
 
 	_process_movement(delta)
-	
-	if state != old_state:
-		print('state: ', state_to_str(state))
-		old_state = state
+
+	#if state != old_state:
+	#	print('state: ', state_to_str(state))
+	#	old_state = state
 
 func _process_movement(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta)
