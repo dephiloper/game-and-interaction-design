@@ -4,6 +4,7 @@ class_name Player
 
 # preloaded scenes
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
+const GUN_SCENE = preload("res://src/Gun.tscn")
 
 const INITIAL_ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const REDUCED_ON_PLANET_SPEED_MULTIPLIER: float = 2.0
@@ -24,6 +25,10 @@ var _bullet_size_multiplier: float = 1.0
 var _attack_speed_multiplier: float = 1.0
 
 export(Texture) var texture
+
+enum gun_type {
+	MACHINE, GATLING, RIFLE, LAUNCHER
+}
 
 # properties
 var controls: Controls # provides pressed actions of the player
@@ -66,6 +71,9 @@ func apply_buff(buff_type: String) -> void:
 			_attack_speed_multiplier *= 1.2
 
 func _init() -> void:
+	var gun = GUN_SCENE.instance();
+	gun.gear_up(gun_type.MACHINE)
+	add_child(gun)
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
 	controls = Controls.new()
@@ -159,7 +167,7 @@ func _calculate_player_movement() -> Vector2:
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
 		
-	if controls.just_pressed("shoot") > 0:
+	if controls.pressed("shoot") > 0:
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = movement_dir
 		if shoot_dir == Vector2.ZERO:
