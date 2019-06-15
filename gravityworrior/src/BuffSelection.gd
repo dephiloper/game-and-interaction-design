@@ -71,5 +71,5 @@ func _select_buff(index: int, player: int) -> void:
 	
 	(_buffs[index] as Buff).select(player)
 	
-func _on_selection_done( object: Object, key: NodePath) -> void:
+func _on_selection_done(object: Object, key: NodePath) -> void:
 	GameManager.current_game_state = GameManager.GameState.Fight

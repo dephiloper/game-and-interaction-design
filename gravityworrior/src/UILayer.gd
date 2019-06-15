@@ -18,6 +18,6 @@ func _process(delta: float) -> void:
 	var i = 0
 	for player in GameManager.players:
 		if is_instance_valid(player):
-			labels[i].text = str(player.health) + "/" + str(player.max_health)
+			labels[i].text = str(int(player.health * 100) / 100.0) + "/" + str(player.max_health)
 			labels[i+1].text = str(int(player.boost * 100) / 100.0)
 			i += 2
