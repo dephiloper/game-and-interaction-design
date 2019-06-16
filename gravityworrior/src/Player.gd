@@ -35,6 +35,7 @@ var max_health: float = 100.0
 var controls: Controls # provides pressed actions of the player
 var health: float = 100
 var boost: float = max_boost
+var gun: Gun
 var is_inactive: bool = false
 
 # fields
@@ -72,7 +73,7 @@ func apply_buff(buff_type: String) -> void:
 			_attack_speed_multiplier *= 1.2
 
 func _init() -> void:
-	var gun = GUN_SCENE.instance();
+	gun = GUN_SCENE.instance();
 	gun.gear_up(gun_type.MACHINE)
 	add_child(gun)
 	add_to_group("Player")
@@ -192,12 +193,12 @@ func _caculate_cross_hair_direction() -> Vector2:
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
 	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE 
-	$Gun.rotation = direction.angle()
+	gun.rotation = direction.angle()
 	
 	return direction
 
 func _shoot(dir: Vector2) -> void:
-	$Gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
+	gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
 
 func _apply_planet_ability(delta: float) -> void:
 	_on_planet_speed_multiplier = INITIAL_ON_PLANET_SPEED_MULTIPLIER

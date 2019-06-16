@@ -30,4 +30,5 @@ func _process(_delta: float) -> void:
 		if is_instance_valid(player):
 			huds[i].set_health_value(player.health, player.max_health)
 			huds[i].set_boost_value(player.boost, player.max_boost)
+			huds[i].set_ammo_value(player.gun.current_ammo, player.gun.ammo_capacity)
 			i+=1
