@@ -25,6 +25,11 @@ _global_script_classes=[ {
 "path": "res://src/Controls.gd"
 }, {
 "base": "Node2D",
+"class": "Gun",
+"language": "GDScript",
+"path": "res://src/Gun.gd"
+}, {
+"base": "Node2D",
 "class": "Planet",
 "language": "GDScript",
 "path": "res://src/Planet.gd"
@@ -43,6 +48,7 @@ _global_script_class_icons={
 "Buff": "",
 "Bullet": "",
 "Controls": "",
+"Gun": "",
 "Planet": "",
 "Player": "",
 "Satellite": ""
@@ -126,7 +132,7 @@ aim_down={
 }
 shoot={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777237,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777238,"unicode":0,"echo":false,"script":null)
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":7,"pressure":0.0,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":2,"pressure":0.0,"pressed":false,"script":null)
  ]

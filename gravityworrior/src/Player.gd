@@ -3,8 +3,8 @@ extends KinematicBody2D
 class_name Player
 
 # preloaded scenes
-const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
+const GUN_SCENE = preload("res://src/Gun.tscn")
 
 const INITIAL_ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const REDUCED_ON_PLANET_SPEED_MULTIPLIER: float = 2.0
@@ -31,6 +31,7 @@ var max_health: float = 100.0
 var controls: Controls # provides pressed actions of the player
 var health: float = 100
 var boost: float = max_boost
+var gun: Gun
 var is_inactive: bool = false
 
 # fields
@@ -68,19 +69,23 @@ func apply_buff(buff_type: String) -> void:
 			_attack_speed_multiplier *= 1.2
 
 func _init() -> void:
+	gun = GUN_SCENE.instance();
+	gun.gear_up(Gun.TYPE.LAUNCHER)
+	add_child(gun)
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
 	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
 
+#warning-ignore-all:return_value_discarded
 func _ready() -> void:
 	$PlayerSprite.texture = texture
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if health <= 0.0:
 		is_inactive = true
 		$PlayerSprite.texture = INACTIVE_TEXTURE
@@ -161,7 +166,7 @@ func _calculate_player_movement() -> Vector2:
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
 		
-	if controls.just_pressed("shoot") > 0:
+	if controls.pressed("shoot") > 0:
 		if shoot_dir == Vector2.ZERO:
 			shoot_dir = movement_dir
 		if shoot_dir == Vector2.ZERO:
@@ -183,15 +188,13 @@ func _caculate_cross_hair_direction() -> Vector2:
 	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
-	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE
+	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE 
+	gun.rotation = direction.angle()
 	
 	return direction
 
 func _shoot(dir: Vector2) -> void:
-	var b: Bullet = BULLET_SCENE.instance()
-	b.init(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
-	b.position = global_position
-	$"/root/Main".add_child(b)
+	gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
 
 func _apply_planet_ability(delta: float) -> void:
 	_on_planet_speed_multiplier = INITIAL_ON_PLANET_SPEED_MULTIPLIER

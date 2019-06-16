@@ -10,4 +10,4 @@ func set_boost_value(value: float, max_value: float):
 	$Bars/BoostPercentage.rect_rotation = 180 - (value * 180) / max_value
 	
 func set_ammo_value(value: float, max_value: float):
-	pass
+	$Label.text = str(int(value))

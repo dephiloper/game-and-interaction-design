@@ -4,6 +4,7 @@ var _player_selections: Array = []
 var _players_confirmed: Array = []
 var _buffs: Array = []
 
+#warning-ignore:return_value_discarded
 func _ready() -> void:
 	randomize()
 	
@@ -32,7 +33,7 @@ func _ready() -> void:
                 Vector2(1, 1), Vector2(0, 0), 0.5,
                 Tween.TRANS_LINEAR, Tween.EASE_OUT)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if GameManager.current_game_state == GameManager.GameState.Vote:
 		if not _players_confirmed.has(false):
 			$Tween.start()
@@ -71,5 +72,5 @@ func _select_buff(index: int, player: int) -> void:
 	
 	(_buffs[index] as Buff).select(player)
 	
-func _on_selection_done(object: Object, key: NodePath) -> void:
+func _on_selection_done(_object: Object, _key: NodePath) -> void:
 	GameManager.current_game_state = GameManager.GameState.Fight

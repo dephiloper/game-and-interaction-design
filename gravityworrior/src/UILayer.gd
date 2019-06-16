@@ -19,7 +19,7 @@ func _ready() -> void:
 	$HudP3.rotate_bars()
 	$BuffSelection.position = get_viewport().size / 2
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if GameManager.current_game_state == GameManager.GameState.Vote:
 		$BuffSelection.visible = true
 	else:
@@ -30,6 +30,7 @@ func _process(delta: float) -> void:
 		if is_instance_valid(player):
 			huds[i].set_health_value(player.health, player.max_health)
 			huds[i].set_boost_value(player.boost, player.max_boost)
+			huds[i].set_ammo_value(player.gun.current_ammo, player.gun.ammo_capacity)
 			i+=1
 			
 	#$SatteliteBar.set_health_value(GameManager.satellite.health)
