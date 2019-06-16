@@ -134,7 +134,6 @@ func _process_dead(delta):
 func _update_velocity_by_direction():
 	if _velocity.length_squared() > 0.01:
 		var angle = _direction.angle_to(_velocity.normalized())
-		var old_angle = angle
 		if abs(angle) > MAX_ROTATION_ANGLE:
 			angle = sign(angle) * MAX_ROTATION_ANGLE
 		_direction = _direction.rotated(angle).normalized()
