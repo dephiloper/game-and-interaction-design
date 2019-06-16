@@ -228,10 +228,10 @@ func _process_attack_player(delta):
 
 func _process_dead(delta):
 	_channel_time -= delta
-	var alpha = _channel_time / DIE_TIME
 	if _channel_time < 0:
 		_has_to_be_removed = true
 	else:
+		var alpha = _channel_time / DIE_TIME
 		$Sprite.modulate = Color(1, 1, 1, alpha)
 
 func _physics_process(delta: float) -> void:
