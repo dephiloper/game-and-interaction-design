@@ -18,8 +18,6 @@ const CROSS_HAIR_DISTANCE: int = 128
 var _movement_speed: float = 10.0
 var _on_planet_speed_multiplier: float = INITIAL_ON_PLANET_SPEED_MULTIPLIER
 var _boost_speed_multiplier: float = 2.5
-var _max_boost: float = 0.5
-var max_health: float = 100.0
 var _damage: float = 10.0
 var _bullet_size_multiplier: float = 1.0
 var _attack_speed_multiplier: float = 1.0
@@ -31,9 +29,12 @@ enum gun_type {
 }
 
 # properties
+var max_boost: float = 0.5
+var max_health: float = 100.0
+
 var controls: Controls # provides pressed actions of the player
 var health: float = 100
-var boost: float = _max_boost
+var boost: float = max_boost
 var is_inactive: bool = false
 
 # fields
@@ -46,7 +47,7 @@ var _last_shoot_dir = Vector2.RIGHT
 
 # public methods
 func hit(damage: float) -> void:
-	health -= damage
+	health = max(health - damage, 0)
 	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
 
 func apply_buff(buff_type: String) -> void:
@@ -56,8 +57,8 @@ func apply_buff(buff_type: String) -> void:
 		Buff.Types.BoostSpeed:
 			_boost_speed_multiplier *= 1.1
 		Buff.Types.BoostTime:
-			_max_boost *= 1.2
-			boost = _max_boost
+			max_boost *= 1.2
+			boost = max_boost
 		Buff.Types.Health:
 			max_health *= 1.1
 		Buff.Types.Damage:
@@ -80,13 +81,14 @@ func _init() -> void:
 	add_child(controls)
 	controls.set_device_id(device_id)
 
+#warning-ignore-all:return_value_discarded
 func _ready() -> void:
 	$PlayerSprite.texture = texture
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if health <= 0.0:
 		is_inactive = true
 		$PlayerSprite.texture = INACTIVE_TEXTURE
@@ -136,7 +138,7 @@ func _physics_process(delta: float) -> void:
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
 			# recharge boost
-			boost = min(boost + BOOST_RECHARGE_VALUE * delta, _max_boost)
+			boost = min(boost + BOOST_RECHARGE_VALUE * delta, max_boost)
 
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
@@ -204,12 +206,12 @@ func _apply_planet_ability(delta: float) -> void:
 		Planet.Type.HEALTH_REGENERATION:
 			health = min(health + delta, 100) 
 		Planet.Type.HAZARD:
-			health -= delta
+			health = max(health - delta, 0)
 		Planet.Type.FREEZE:
 			_on_planet_speed_multiplier = REDUCED_ON_PLANET_SPEED_MULTIPLIER
 			
 func _on_CooldownTimer_timeout() -> void:
-	boost = _max_boost
+	boost = max_boost
 	_is_cooldown = false
 	$PlayerSprite.self_modulate.a = 1.0
 	

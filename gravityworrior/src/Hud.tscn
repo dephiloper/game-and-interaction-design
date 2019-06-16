@@ -1,0 +1,89 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://src/Hud.gd" type="Script" id=1]
+[ext_resource path="res://krita/health_no_color.png" type="Texture" id=2]
+[ext_resource path="res://krita/health2.png" type="Texture" id=3]
+[ext_resource path="res://krita/health-light.png" type="Texture" id=4]
+[ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=5]
+[ext_resource path="res://img/ammo.png" type="Texture" id=6]
+
+[sub_resource type="CanvasItemMaterial" id=2]
+light_mode = 2
+
+[sub_resource type="CanvasItemMaterial" id=1]
+
+[sub_resource type="DynamicFont" id=3]
+size = 32
+font_data = ExtResource( 5 )
+
+[node name="Hud" type="Control"]
+modulate = Color( 1, 1, 1, 0.752941 )
+script = ExtResource( 1 )
+
+[node name="Bars" type="Node2D" parent="."]
+scale = Vector2( 0.15, 0.15 )
+
+[node name="HealthPercentage" type="TextureRect" parent="Bars"]
+modulate = Color( 0.6, 0.14902, 0.12549, 1 )
+material = SubResource( 2 )
+margin_left = -512.0
+margin_top = -512.0
+margin_right = 512.0
+margin_bottom = 512.0
+rect_pivot_offset = Vector2( 512, 512 )
+texture = ExtResource( 2 )
+
+[node name="HealthOutline" type="TextureRect" parent="Bars"]
+material = SubResource( 1 )
+margin_left = -512.0
+margin_top = -512.0
+margin_right = 512.0
+margin_bottom = 512.0
+rect_pivot_offset = Vector2( 512, 512 )
+texture = ExtResource( 3 )
+
+[node name="HealthMask" type="Light2D" parent="Bars"]
+texture = ExtResource( 4 )
+mode = 2
+
+[node name="BoostPercentage" type="TextureRect" parent="Bars"]
+modulate = Color( 0.2, 0.501961, 0.137255, 1 )
+material = SubResource( 2 )
+margin_left = -512.0
+margin_top = -512.0
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.7, 0.7 )
+rect_pivot_offset = Vector2( 512, 512 )
+texture = ExtResource( 2 )
+
+[node name="BoostOutline" type="TextureRect" parent="Bars"]
+material = SubResource( 1 )
+margin_left = -512.0
+margin_top = -512.0
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.7, 0.7 )
+rect_pivot_offset = Vector2( 512, 512 )
+texture = ExtResource( 3 )
+
+[node name="BoostMask" type="Light2D" parent="Bars"]
+texture = ExtResource( 4 )
+texture_scale = 0.7
+mode = 2
+
+[node name="Label" type="Label" parent="."]
+margin_left = -23.0
+margin_top = -13.0
+margin_right = 13.0
+margin_bottom = 21.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "10"
+align = 1
+valign = 1
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 22, 0 )
+scale = Vector2( 0.05, 0.05 )
+texture = ExtResource( 6 )
