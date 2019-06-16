@@ -7,10 +7,6 @@ enum TYPE {
 }
 
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
-const MACHINE = TYPE.MACHINE
-const GATLING = TYPE.GATLING
-const RIFLE = TYPE.RIFLE
-const LAUNCHER = TYPE.LAUNCHER
 
 var base_damage: float
 var reload_time: float
@@ -26,7 +22,6 @@ var is_reloading: bool = false
 func _reload() -> void:
 	if (current_ammo == 0 && !is_reloading):
 		$ReloadTimer.start()
-		print("restart reload timer")
 		is_reloading = true
 		
 	if ($ReloadTimer.get_time_left() == 0):
@@ -34,18 +29,14 @@ func _reload() -> void:
 		is_reloading = false;
 
 func _reset_magazine() -> void:
-	print("reload complete")
 	current_ammo = ammo_capacity
 
 func shoot(dir: Vector2, _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier) -> void: 
-	print("Want to shoot!")
 	if (current_ammo == 0):
-		print("reload ammo: ", current_ammo)
 		_reload()
 	if (current_ammo > 0):
 		#shoot mechanism
 		if ($FirerateTimer.get_time_left() == 0):
-			print("shoot! ammo:", current_ammo)
 			var b: Bullet = BULLET_SCENE.instance()
 			b.init(dir, _damage_buff, base_damage, bullet_size, _bullet_size_multiplier, bullet_speed, _bullet_speed_multiplier, aoe, gravity_affection)
 			b.position = global_position
@@ -66,7 +57,7 @@ func _apply_gun_visuals(offset, texture_path) -> void:
 
 func gear_up(type) -> void:
 	match type:
-		MACHINE:
+		TYPE.MACHINE:
 			base_damage = 5
 			fire_rate = 8
 			ammo_capacity = 20
@@ -79,7 +70,7 @@ func gear_up(type) -> void:
 			_apply_gun_visuals(50, "res://img/gun01.png")
 			#define Bullet texture
 		
-		GATLING:
+		TYPE.GATLING:
 			base_damage = 2
 			fire_rate = 50;
 			ammo_capacity = 50
@@ -89,10 +80,10 @@ func gear_up(type) -> void:
 			aoe = false
 			gravity_affection = 5
 			reload_time = 5
-			$GunSprite.texture = load("res://img/gun01.png")
+			_apply_gun_visuals(50, "res://img/gun01.png")
 			#define Bullet texture
 		
-		RIFLE:
+		TYPE.RIFLE:
 			base_damage = 30
 			fire_rate = 2;
 			ammo_capacity = 3
@@ -102,10 +93,10 @@ func gear_up(type) -> void:
 			aoe = false
 			gravity_affection = 0
 			reload_time = 3
-			$GunSprite.texture = load("res://img/gun01.png")
+			_apply_gun_visuals(50, "res://img/gun01.png")
 			#define Bullet texture
 		
-		LAUNCHER:
+		TYPE.LAUNCHER:
 			base_damage = 10
 			fire_rate = 1;
 			ammo_capacity = 30
@@ -115,5 +106,5 @@ func gear_up(type) -> void:
 			aoe = true
 			gravity_affection = 5
 			reload_time = 4
-			$GunSprite.texture = load("res://img/gun01.png")
+			_apply_gun_visuals(50, "res://img/gun01.png")
 			#define Bullet texture

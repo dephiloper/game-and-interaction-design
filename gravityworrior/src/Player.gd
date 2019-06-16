@@ -24,10 +24,6 @@ var _attack_speed_multiplier: float = 1.0
 
 export(Texture) var texture
 
-enum gun_type {
-	MACHINE, GATLING, RIFLE, LAUNCHER
-}
-
 # properties
 var max_boost: float = 0.5
 var max_health: float = 100.0
@@ -74,7 +70,7 @@ func apply_buff(buff_type: String) -> void:
 
 func _init() -> void:
 	gun = GUN_SCENE.instance();
-	gun.gear_up(gun_type.MACHINE)
+	gun.gear_up(Gun.TYPE.LAUNCHER)
 	add_child(gun)
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
