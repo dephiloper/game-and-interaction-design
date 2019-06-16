@@ -25,6 +25,11 @@ _global_script_classes=[ {
 "path": "res://src/Controls.gd"
 }, {
 "base": "Node2D",
+"class": "Gun",
+"language": "GDScript",
+"path": "res://src/Gun.gd"
+}, {
+"base": "Node2D",
 "class": "Planet",
 "language": "GDScript",
 "path": "res://src/Planet.gd"
@@ -38,6 +43,7 @@ _global_script_class_icons={
 "Buff": "",
 "Bullet": "",
 "Controls": "",
+"Gun": "",
 "Planet": "",
 "Player": ""
 }

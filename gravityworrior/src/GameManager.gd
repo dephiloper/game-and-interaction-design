@@ -1,6 +1,5 @@
 extends Node
 
-#warning-ignore:unused_class_variable
 var current_game_state = GameState.Vote
 var planets: Array = []
 var players: Array = []
