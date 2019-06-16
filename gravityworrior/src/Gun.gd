@@ -1,5 +1,7 @@
 extends Sprite
 
+onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
+
 class_name Gun
 
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
@@ -16,6 +18,8 @@ func shoot(dir: Vector2):
 	b.init(dir, _damage)
 	b.position = global_position
 	$"/root/Main".add_child(b)
+	
+	get_node("../AudioStreamPlayer").play()
 
 func _ready():
 	pass # Replace with function body.
