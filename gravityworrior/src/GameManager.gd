@@ -10,6 +10,9 @@ enum GameState {
 	Vote
 }
 
+func _on_game_over():
+	print("Game Over")
+
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
 	
@@ -19,3 +22,4 @@ func register_player(player: Player) -> int:
 	
 func set_satellite(s: Satellite):
 	satellite = s
+	satellite.connect("game_over", self, "_on_game_over")

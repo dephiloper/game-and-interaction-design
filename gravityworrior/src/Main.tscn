@@ -47,3 +47,4 @@ z_index = 1
 
 [node name="Satellite" parent="." instance=ExtResource( 6 )]
 position = Vector2( 199.834, 293.996 )
+

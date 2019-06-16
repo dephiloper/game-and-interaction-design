@@ -9,10 +9,11 @@ const MAX_ROTATION_ANGLE = 0.02
 const MAX_HEALTH = 50
 const FOLLOW_PROBABILITY: float = 0.33
 const SQUARED_ATTACK_RANGE = 20000
+const DAMAGE = 20
 
 const FOLLOW_PLAYER_TIME = 5
 const ATTACK_CHANNEL_TIME = 0.7
-const ATTACK_DURATION = 1
+const ATTACK_DURATION = 0.8
 const DIE_TIME = 1.0
 
 enum DestroyerState {
@@ -117,6 +118,7 @@ func _process_channel_attack(delta):
 func _process_attack(delta):
 	_channel_time -= delta
 	if _channel_time < 0:
+		GameManager.satellite.hit(DAMAGE)
 		_start_follow_player()
 
 	_velocity += (_target_point - position).normalized() * ATTACK_SPEED

@@ -20,5 +20,4 @@ func set_health_value(value: float, max_value: float = 100) -> void:
 func _draw() -> void:
 	draw_rect(Rect2(0, 0, WIDTH, HEIGHT), Color.black)
 	var width: float = ((WIDTH - 2*BORDER_SIZE) * progress) / max_progress
-	print(width)
 	draw_rect(Rect2(BORDER_SIZE, BORDER_SIZE, width, HEIGHT - 2*BORDER_SIZE), Color.red)
