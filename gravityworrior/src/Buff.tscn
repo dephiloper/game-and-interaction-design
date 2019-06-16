@@ -7,6 +7,8 @@
 [ext_resource path="res://img/icon.png" type="Texture" id=5]
 [ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=6]
 
+
+
 [sub_resource type="DynamicFont" id=1]
 font_data = ExtResource( 6 )
 

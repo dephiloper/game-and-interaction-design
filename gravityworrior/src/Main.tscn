@@ -6,7 +6,7 @@
 [ext_resource path="res://img/player1.png" type="Texture" id=4]
 [ext_resource path="res://src/Planet.tscn" type="PackedScene" id=5]
 [ext_resource path="res://src/EnemySpawn.tscn" type="PackedScene" id=6]
-[ext_resource path="res://sender/godot_satellite-2.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/Satellite.tscn" type="PackedScene" id=7]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -22,25 +22,33 @@ texture = ExtResource( 4 )
 
 [node name="Planet" parent="." instance=ExtResource( 5 )]
 position = Vector2( 200, 320 )
+z_index = 1
 
 [node name="Planet2" parent="." instance=ExtResource( 5 )]
-position = Vector2( 470.253, 136.433 )
+position = Vector2( 429.431, 124.769 )
+z_index = 1
 
 [node name="Planet3" parent="." instance=ExtResource( 5 )]
-position = Vector2( 937.065, 237.725 )
+position = Vector2( 773.776, 178.241 )
+z_index = 1
 
 [node name="Planet4" parent="." instance=ExtResource( 5 )]
-position = Vector2( 380.018, 607.387 )
+position = Vector2( 245.888, 601.555 )
+z_index = 1
 
 [node name="Planet5" parent="." instance=ExtResource( 5 )]
-position = Vector2( 642.488, 416.686 )
+position = Vector2( 570.174, 490.166 )
+z_index = 1
 
 [node name="Planet6" parent="." instance=ExtResource( 5 )]
-position = Vector2( 1136.67, 638.145 )
+position = Vector2( 793.763, 624.149 )
+z_index = 1
+
+[node name="Planet7" parent="." instance=ExtResource( 5 )]
+position = Vector2( 992.043, 441.032 )
+z_index = 1
 
 [node name="EnemySpawn" parent="." instance=ExtResource( 6 )]
 
-[node name="godot_satellite-2" parent="." groups=[
-"sender",
-] instance=ExtResource( 7 )]
-position = Vector2( 706.97, 289.618 )
+[node name="Satellite" parent="." instance=ExtResource( 7 )]
+position = Vector2( 199.834, 293.996 )
