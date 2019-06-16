@@ -3,7 +3,6 @@ extends KinematicBody2D
 class_name Player
 
 # preloaded scenes
-const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
 
 const INITIAL_ON_PLANET_SPEED_MULTIPLIER: float = 3.0
@@ -80,10 +79,7 @@ func _ready() -> void:
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 
-func _process(delta: float) -> void:
-	if health <= 0.0:
-		is_inactive = true
-		$PlayerSprite.texture = INACTIVE_TEXTURE
+func _process(delta: float) -> void: 
 	if not is_inactive and _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
@@ -183,15 +179,13 @@ func _caculate_cross_hair_direction() -> Vector2:
 	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
 	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
-	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE
+	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE 
+	$Gun.rotation = direction.angle()
 	
 	return direction
 
 func _shoot(dir: Vector2) -> void:
-	var b: Bullet = BULLET_SCENE.instance()
-	b.init(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
-	b.position = global_position
-	$"/root/Main".add_child(b)
+	$Gun.shoot(dir);
 
 func _apply_planet_ability(delta: float) -> void:
 	_on_planet_speed_multiplier = INITIAL_ON_PLANET_SPEED_MULTIPLIER
