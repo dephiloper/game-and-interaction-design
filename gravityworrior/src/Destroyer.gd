@@ -28,7 +28,7 @@ var health = MAX_HEALTH
 var state
 var _velocity: Vector2 = Vector2.ZERO
 var _has_to_be_removed = false
-var _target_point = Vector2(400, 400)
+var _target_point: Vector2
 var _target_player = null
 var _channel_time = 0
 var _direction = null
@@ -48,6 +48,7 @@ func _on_hit(damage):
 #warning-ignore:return_value_discarded
 func _ready():
 	$Body.connect("got_hit", self, "_on_hit")
+	_target_point = GameManager.satellite.position
 	_start_fly_to_sender()
 
 func _get_nearest_player():
