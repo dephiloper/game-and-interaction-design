@@ -48,6 +48,7 @@ var _lurk_target_point = null
 var _lurk_direction = null
 var _move_to_planet_cooldown = 0
 var _attack_cooldown = 0
+var _has_to_be_removed = false
 
 func state_to_str(s):
 	match s:
@@ -86,6 +87,9 @@ func die():
 
 func is_dead():
 	return state == ASSASSIN_STATE.Dead
+
+func has_to_be_removed():
+	return _has_to_be_removed
 
 func attack_player_by_signal(player):
 	if state == ASSASSIN_STATE.FlyToPlayer or state == ASSASSIN_STATE.LurkOnPlanet:
@@ -224,10 +228,10 @@ func _process_attack_player(delta):
 
 func _process_dead(delta):
 	_channel_time -= delta
-	var alpha = _channel_time / DIE_TIME
 	if _channel_time < 0:
-		queue_free()
+		_has_to_be_removed = true
 	else:
+		var alpha = _channel_time / DIE_TIME
 		$Sprite.modulate = Color(1, 1, 1, alpha)
 
 func _physics_process(delta: float) -> void:
