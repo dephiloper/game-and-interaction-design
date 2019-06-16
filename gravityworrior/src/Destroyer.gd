@@ -2,7 +2,7 @@ extends Node2D
 
 const SPEED = 2.0
 const FOLLOW_SPEED = 3.0
-const ATTACK_SPEED = 170.0
+const ATTACK_SPEED = 15.0
 const DRAG = 0.95
 const MAX_ROTATION_ANGLE = 0.02
 
@@ -78,12 +78,9 @@ func _start_follow_player():
 func _start_channel_attack():
 	state = DestroyerState.ChannelAttack
 	_channel_time = ATTACK_CHANNEL_TIME
-	_velocity = Vector2.ZERO
 
 func _start_attack():
 	state = DestroyerState.Attack
-
-	_velocity = (_target_point - position).normalized() * ATTACK_SPEED
 	_channel_time = ATTACK_DURATION
 
 func _die():
@@ -114,10 +111,15 @@ func _process_channel_attack(delta):
 	if _channel_time < 0:
 		_start_attack()
 
+	_velocity *= DRAG
+
 func _process_attack(delta):
 	_channel_time -= delta
 	if _channel_time < 0:
 		_start_follow_player()
+
+	_velocity += (_target_point - position).normalized() * ATTACK_SPEED
+	_velocity *= DRAG
 
 func _process_dead(delta):
 	_velocity *= DRAG
