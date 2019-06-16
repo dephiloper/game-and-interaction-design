@@ -9,7 +9,7 @@ func _ready():
 			health_node = node.get_node("Health")
 			break
 	$LifeBar.initialize(health_node.max_health)
-	$LifeBar._on_SatHealth_health_changed(20) # Hier bitte den Health Value übergeben, wenn Alien Heath Sender
+	$LifeBar._on_SatHealth_health_changed(health_node.health) # Hier bitte den Health Value übergeben, wenn Alien Heath Sender
 	
 
 func _on_Health_health_changed(health):
