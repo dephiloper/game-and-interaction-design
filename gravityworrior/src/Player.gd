@@ -61,8 +61,7 @@ func apply_buff(buff_type: String) -> void:
 		Buff.Types.Damage:
 			_damage *= 1.2
 		Buff.Types.Ammo:
-			# todo when ammo is available / implemented
-			pass
+			gun.ammo_capacity += 1
 		Buff.Types.BiggerBullets:
 			_bullet_size_multiplier *= 1.2
 		Buff.Types.AttackSpeed:
@@ -70,7 +69,7 @@ func apply_buff(buff_type: String) -> void:
 
 func _init() -> void:
 	gun = GUN_SCENE.instance();
-	gun.gear_up(Gun.TYPE.LAUNCHER)
+	gun.gear_up(Gun.TYPE.MACHINE)
 	add_child(gun)
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
