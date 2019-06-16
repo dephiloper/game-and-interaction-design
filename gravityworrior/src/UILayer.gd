@@ -31,3 +31,5 @@ func _process(delta: float) -> void:
 			huds[i].set_health_value(player.health, player.max_health)
 			huds[i].set_boost_value(player.boost, player.max_boost)
 			i+=1
+
+

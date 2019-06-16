@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/UILayer.gd" type="Script" id=1]
 [ext_resource path="res://src/BuffSelection.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/Hud.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/SatHealth.gd" type="Script" id=4]
+[ext_resource path="res://sathealth/interface/bar/LifeBar.tscn" type="PackedScene" id=5]
 
 [node name="UILayer" type="Node2D"]
 z_index = 10
@@ -36,3 +38,18 @@ margin_left = 1240.0
 margin_top = 640.0
 margin_right = 1240.0
 margin_bottom = 640.0
+
+[node name="SatHealth" type="Control" parent="."]
+margin_left = 429.167
+margin_top = 205.499
+margin_right = 853.167
+margin_bottom = 249.499
+rect_pivot_offset = Vector2( 98.7385, 43.7632 )
+script = ExtResource( 4 )
+
+[node name="LifeBar" parent="SatHealth" instance=ExtResource( 5 )]
+margin_top = -1.0
+margin_bottom = 52.0
+[connection signal="health_changed" from="SatHealth" to="SatHealth/LifeBar" method="_on_SatHealth_health_changed"]
+
+[editable path="SatHealth/LifeBar"]
