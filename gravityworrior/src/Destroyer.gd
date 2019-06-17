@@ -92,6 +92,10 @@ func _die():
 	$Body.collision_layer = 0
 	$Body.collision_mask = 0
 	_channel_time = DIE_TIME
+	var kill_counter = $"/root/Main/EnemySpawn".kill_count
+	if kill_counter > 0:
+		$"/root/Main/EnemySpawn".kill_count = kill_counter - 1
+	print(kill_counter)
 
 func _process_fly_to_sender():
 	_velocity += (_target_point - position).normalized() * SPEED

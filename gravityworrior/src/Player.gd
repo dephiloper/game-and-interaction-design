@@ -88,6 +88,10 @@ func _process(_delta: float) -> void:
 	if health <= 0.0:
 		is_inactive = true
 		$PlayerSprite.texture = INACTIVE_TEXTURE
+		$"/root/GameManager".dead_players += 1
+		if $"/root/GameManager".dead_players == $"/root/GameManager".players.size():
+			print("all players dead")
+			get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
 	if not is_inactive and _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
@@ -216,4 +220,5 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 		if not (body as Player).is_inactive:
 			is_inactive = false
 			health = max_health
+			$"/root/GameManager".dead_players -= 1
 			$PlayerSprite.texture = texture

@@ -58,7 +58,7 @@ func _apply_gun_visuals(offset, texture_path) -> void:
 func gear_up(type) -> void:
 	match type:
 		TYPE.MACHINE:
-			base_damage = 5
+			base_damage = 100
 			fire_rate = 8
 			ammo_capacity = 20
 			current_ammo = ammo_capacity
