@@ -118,7 +118,6 @@ func _die():
 	var kill_counter = $"/root/Main/EnemySpawn".kill_count
 	if kill_counter > 0:
 		$"/root/Main/EnemySpawn".kill_count = kill_counter - 1
-	print(kill_counter)
 
 func _get_next_route_point(target_point):
 	var route_point: Vector2 = target_point
