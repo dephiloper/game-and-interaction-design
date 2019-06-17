@@ -76,6 +76,8 @@ func on_SpawnTimer_timeout() -> void:
 		for _i in range (DESTROYER_PER_WAVE):
 			_create_destroyer()
 		for _i in range(ASSASSINS_PER_WAVE):
+			if enemy_list.size() >= 10:
+					break
 			_create_assassin()
 		has_spawned = true
 
