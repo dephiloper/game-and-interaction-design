@@ -10,11 +10,11 @@ var wave_over = false
 var kill_count: int
 var current_level: int = 1
 const level1: int = 1
-const level2: int = 1
-const level3: int = 1
+const level2: int = 2
+const level3: int = 3
 
-const DESTROYER_PER_WAVE: int = 1
-const ASSASSINS_PER_WAVE: int = 0
+const DESTROYER_PER_WAVE: int = 2
+const ASSASSINS_PER_WAVE: int = 5
 
 func _on_attack_player(player):
 	for assassin in assassin_list:
