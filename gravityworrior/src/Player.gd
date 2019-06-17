@@ -69,7 +69,12 @@ func apply_buff(buff_type: String) -> void:
 
 func _init() -> void:
 	gun = GUN_SCENE.instance();
-	gun.gear_up(Gun.TYPE.MACHINE)
+	var weapon_index = randi() % 4
+	match weapon_index:
+		0: gun.gear_up(Gun.TYPE.MACHINE)
+		1: gun.gear_up(Gun.TYPE.GATLING)
+		2: gun.gear_up(Gun.TYPE.LAUNCHER)
+		3: gun.gear_up(Gun.TYPE.RIFLE)
 	add_child(gun)
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)

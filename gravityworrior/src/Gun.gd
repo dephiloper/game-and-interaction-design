@@ -58,7 +58,7 @@ func _apply_gun_visuals(offset, texture_path) -> void:
 func gear_up(type) -> void:
 	match type:
 		TYPE.MACHINE:
-			base_damage = 100
+			base_damage = 10
 			fire_rate = 8
 			ammo_capacity = 20
 			current_ammo = ammo_capacity
@@ -66,7 +66,7 @@ func gear_up(type) -> void:
 			bullet_size = 5
 			aoe = false
 			gravity_affection = 0.995
-			reload_time = 3
+			reload_time = 1.5
 			_apply_gun_visuals(50, "res://img/gun01.png")
 			#define Bullet texture
 		
