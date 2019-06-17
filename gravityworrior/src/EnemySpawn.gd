@@ -10,11 +10,11 @@ var wave_over = false
 var kill_count: int
 var current_level: int = 1
 const level1: int = 1
-const level2: int = 2
-const level3: int = 3
+const level2: int = 1
+const level3: int = 1
 
 const DESTROYER_PER_WAVE: int = 1
-const ASSASSINS_PER_WAVE: int = 5
+const ASSASSINS_PER_WAVE: int = 0
 
 func _on_attack_player(player):
 	for assassin in assassin_list:
@@ -64,6 +64,7 @@ func on_SpawnTimer_timeout() -> void:
 			wave_over = true
 			if (enemy_list.size() == 0):
 				GameManager.current_game_state = GameManager.GameState.Vote
+				get_node("/root/Main/UILayer").reinstantiate_buff_selection()
 				current_level +=1
 				set_level(current_level)
 				wave_over = false

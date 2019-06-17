@@ -2,6 +2,8 @@ extends Node2D
 
 var huds: Array = []
 
+const BUFF_SELECTION_SCENE = preload("res://src/BuffSelection.tscn")
+
 func _ready() -> void:
 	huds.append($HudP0)
 	huds.append($HudP1)
@@ -20,11 +22,6 @@ func _ready() -> void:
 	$BuffSelection.position = get_viewport().size / 2
 
 func _process(_delta: float) -> void:
-	if GameManager.current_game_state == GameManager.GameState.Vote:
-		$BuffSelection.visible = true
-	else:
-		$BuffSelection.visible = false
-	
 	var i = 0
 	for player in GameManager.players:
 		if is_instance_valid(player):
@@ -33,6 +30,14 @@ func _process(_delta: float) -> void:
 			huds[i].set_ammo_value(player.gun.current_ammo, player.gun.ammo_capacity)
 			i+=1
 			
+			
+			
+func reinstantiate_buff_selection():
+	var buff_scene = BUFF_SELECTION_SCENE.instance()
+	add_child(buff_scene)
+	buff_scene.name = "BuffSelection"
+	buff_scene.position = get_viewport().size / 2
+	
 	#$SatteliteBar.set_health_value(GameManager.satellite.health)
 
 

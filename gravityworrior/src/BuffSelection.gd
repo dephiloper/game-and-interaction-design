@@ -74,3 +74,4 @@ func _select_buff(index: int, player: int) -> void:
 	
 func _on_selection_done(_object: Object, _key: NodePath) -> void:
 	GameManager.current_game_state = GameManager.GameState.Fight
+	queue_free()
