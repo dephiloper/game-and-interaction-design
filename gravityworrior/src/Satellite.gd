@@ -18,6 +18,7 @@ func _ready() -> void:
 
 func hit(damage: float) -> void:
 	health = max(health - damage, 0)
+	$"/root/Main/UILayer/SatteliteBar".set_health_value(health, max_health)
 	if health <= 0:
 		emit_signal("game_over")
 	
