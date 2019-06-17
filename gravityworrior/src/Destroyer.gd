@@ -122,8 +122,7 @@ func _die():
 func _get_next_route_point(target_point):
 	var route_point: Vector2 = target_point
 	var index = 0
-	var route_points = []
-	while route_point.distance_to(position) > ROUTE_POINT_DISTANCE:
+	while route_point.distance_to(position) > ROUTE_POINT_DISTANCE and (index < 25):
 		var route_point_to_position = (position - route_point).normalized() * ROUTE_POINT_DISTANCE
 		route_point += route_point_to_position
 
@@ -133,11 +132,8 @@ func _get_next_route_point(target_point):
 		var planet_route_distance = (nearest_planet.radius + MIN_PLANET_ROUTE_DISTANCE)
 		if planet_to_route_point.length() < planet_route_distance:
 			route_point = nearest_planet.position + planet_to_route_point.normalized() * planet_route_distance
-		route_points.append(route_point)
 
 		index += 1
-		if index > 25:
-			break
 
 	return route_point
 
