@@ -71,10 +71,10 @@ func _init() -> void:
 	gun = GUN_SCENE.instance();
 	var weapon_index = randi() % 4
 	match weapon_index:
-		0: gun.gear_up(Gun.TYPE.MACHINE)
+		0: gun.gear_up(Gun.TYPE.RIFLE)
 		1: gun.gear_up(Gun.TYPE.GATLING)
 		2: gun.gear_up(Gun.TYPE.LAUNCHER)
-		3: gun.gear_up(Gun.TYPE.RIFLE)
+		3: gun.gear_up(Gun.TYPE.MACHINE)
 	add_child(gun)
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
@@ -124,6 +124,11 @@ func _physics_process(delta: float) -> void:
 		if collision:
 			if collision.collider.is_in_group("Planet"):
 				_is_on_planet = true
+			elif collision.collider.is_in_group("Destroyer"):
+				_velocity = _velocity.bounce(collision.normal)
+				position += _velocity * 0.02
+				_velocity *= 0.7
+
 		# applying pull only when player is not boosting!
 		elif not _is_boosting or _is_cooldown: 
 			_velocity += pull

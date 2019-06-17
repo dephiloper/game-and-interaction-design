@@ -57,6 +57,8 @@ func _ready():
 	_target_point = GameManager.satellite.position
 	_satellite_planet = _get_nearest_planet(_target_point)
 	_start_fly_to_sender()
+	$Head.add_to_group("Destroyer")
+	$Body.add_to_group("Destroyer")
 
 func _get_nearest_player():
 	var nearest_player = null

@@ -38,8 +38,8 @@ func _filter_has_to_be_removes(enemies, free):
 			index += 1
 
 func _physics_process(_delta: float) -> void:
-	_filter_has_to_be_removes(enemy_list, true)
 	_filter_has_to_be_removes(assassin_list, false)
+	_filter_has_to_be_removes(enemy_list, true)
 
 func _create_assassin():
 	var assassin = _create_enemy_by_scene(_assassin_scene)
