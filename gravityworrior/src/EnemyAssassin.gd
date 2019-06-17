@@ -42,6 +42,7 @@ var _target_player: Player = null
 var _target_planet: Planet = null
 var _velocity: Vector2 = Vector2.ZERO
 var _damage: float = 10.0
+var _damageSatellite: float = 1.0
 var _channel_time = 0
 var _attack_velocity = Vector2.ZERO
 var _lurk_target_point = null
@@ -275,6 +276,9 @@ func _process_collision(collision):
 	var collider = collision.collider
 	if collider.has_method("hit"):
 		collider.hit(_damage)
+		die()
+	if collider.has_method("hitSatellite"):
+		collider.hitSatellite(_damageSatellite)
 		die()
 
 	var do_bounce = true
