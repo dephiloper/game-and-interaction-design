@@ -23,6 +23,7 @@ func _on_attack_player(player):
 #warning-ignore:return_value_discarded
 func _ready() -> void:
 	$SpawnTimer.connect("timeout", self, "on_SpawnTimer_timeout")
+	$WaveStateTimer.connect("timeout", self, "on_WaveStateTimer_timeout")
 	set_level(current_level)
 
 func _filter_has_to_be_removes(enemies, free):
@@ -58,7 +59,7 @@ func _create_enemy_by_scene(scene):
 	
 	return enemy
 
-func on_SpawnTimer_timeout() -> void:
+func on_WaveStateTimer_timeout() -> void:
 	if has_spawned:
 		if kill_count == 0:
 			wave_over = true
@@ -68,7 +69,8 @@ func on_SpawnTimer_timeout() -> void:
 				set_level(current_level)
 				wave_over = false
 				has_spawned = false
-				
+
+func on_SpawnTimer_timeout() -> void:
 	if (GameManager.current_game_state == GameManager.GameState.Fight && !wave_over):
 		for _i in range (DESTROYER_PER_WAVE):
 			_create_destroyer()

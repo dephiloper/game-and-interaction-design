@@ -5,7 +5,6 @@
 [ext_resource path="res://src/Hud.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/SatelliteBar.tscn" type="PackedScene" id=4]
 
-
 [node name="UILayer" type="Node2D"]
 z_index = 10
 script = ExtResource( 1 )

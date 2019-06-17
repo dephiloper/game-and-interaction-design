@@ -2,8 +2,6 @@
 
 [ext_resource path="res://src/EnemySpawn.gd" type="Script" id=1]
 
-
-
 [sub_resource type="Curve2D" id=1]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 0.424561, -19.6777, 0, 0, 0, 0, -1.62598, -25.8293, 0, 0, 0, 0, 1306.62, -25.8293, 0, 0, 0, 0, 1304.57, 720.5, 0, 0, 0, 0, -1.62598, 722.62, 0, 0, 0, 0, 3.8938, -12.7159 )
@@ -25,3 +23,5 @@ rotation = -1.96729
 wait_time = 10.0
 autostart = true
 
+[node name="WaveStateTimer" type="Timer" parent="."]
+autostart = true
