@@ -1,6 +1,6 @@
 extends Node2D
 
-const SPEED = 2.0
+const SPEED = 1.0
 const FOLLOW_SPEED = 4.0
 const ATTACK_SPEED = 20.0
 const DRAG = 0.95
@@ -75,7 +75,7 @@ func _get_nearest_planet(pos):
 	var nearest_planet = null
 	var nearest_planet_distance = null
 	for planet in GameManager.planets:
-		var planet_distance = planet.position.distance_squared_to(position)
+		var planet_distance = planet.position.distance_squared_to(pos)
 		if nearest_planet == null or (planet_distance < nearest_planet_distance):
 			nearest_planet = planet
 			nearest_planet_distance = planet_distance

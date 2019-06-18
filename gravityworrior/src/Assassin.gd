@@ -5,6 +5,8 @@ const ATTACK_SPEED: float = 450.0
 const DRAG: float = 0.92
 const GO_INTO_PLANET_SPEED = 50
 const MOVE_AWAY_FROM_PLANET_SPEED = 10
+const ROUTE_POINT_DISTANCE = 50
+const MIN_PLANET_ROUTE_DISTANCE = 55
 
 const SQUARED_ATTACK_RANGE: int = 20000
 const SQUARED_SIGNAL_ATTACK_RANGE: int = 40000
@@ -112,6 +114,35 @@ func _get_planet_in_range():
 			return planet
 	return null
 
+func _get_nearest_planet(pos):
+	var nearest_planet = null
+	var nearest_planet_distance = null
+	for planet in GameManager.planets:
+		var planet_distance = planet.position.distance_squared_to(pos)
+		if nearest_planet == null or (planet_distance < nearest_planet_distance):
+			nearest_planet = planet
+			nearest_planet_distance = planet_distance
+
+	return nearest_planet
+
+func _get_next_route_point(target_point):
+	var route_point: Vector2 = target_point
+	var index = 0
+	while route_point.distance_to(position) > ROUTE_POINT_DISTANCE and (index < 25):
+		var route_point_to_position = (position - route_point).normalized() * ROUTE_POINT_DISTANCE
+		route_point += route_point_to_position
+
+		# press away from planet
+		var nearest_planet: Planet = _get_nearest_planet(route_point)
+		var planet_to_route_point: Vector2 = (route_point - nearest_planet.position)
+		var planet_route_distance = (nearest_planet.radius + MIN_PLANET_ROUTE_DISTANCE)
+		if planet_to_route_point.length() < planet_route_distance:
+			route_point = nearest_planet.position + planet_to_route_point.normalized() * planet_route_distance
+
+		index += 1
+
+	return route_point
+
 func _start_fly_to_player():
 	_target_player = GameManager.players[randi() % GameManager.players.size()]
 	state = ASSASSIN_STATE.FlyToPlayer
@@ -155,19 +186,24 @@ func _start_move_away_from_planet():
 	_move_to_planet_cooldown = MOVE_TO_PLANET_COOLDOWN_TIME
 
 func _process_fly_to_player(delta):
-	look_at(_target_player.position)
-	_velocity += (_target_player.position - position).normalized() * SPEED
+	var route_point = _get_next_route_point(_target_player.position)
+	_velocity += (route_point - position).normalized() * SPEED
 
 	var player_in_range = _get_player_in_range()
 	if player_in_range:
 		_start_channel_attack(player_in_range, true)
 
+	look_at(position + _velocity)
+
+	# uncomment this to make assassins go to planets
+	"""
 	if _move_to_planet_cooldown <= 0:
 		var planet_in_range = _get_planet_in_range()
 		if planet_in_range:
 			_start_fly_to_planet(planet_in_range)
 	else:
 		_move_to_planet_cooldown -= delta
+	"""
 
 func _process_channel_attack(delta: float):
 	look_at(_target_player.position)

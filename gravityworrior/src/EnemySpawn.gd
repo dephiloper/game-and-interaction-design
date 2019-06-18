@@ -1,6 +1,6 @@
 extends Node2D
 
-var _assassin_scene = preload("res://src/EnemyAssassin.tscn")
+var _assassin_scene = preload("res://src/Assassin.tscn")
 var _destroyer_scene = preload("res://src/Destroyer.tscn")
 var enemy_list = []
 var assassin_list = []
