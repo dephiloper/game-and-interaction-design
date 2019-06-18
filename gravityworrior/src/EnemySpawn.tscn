@@ -4,7 +4,7 @@
 
 [sub_resource type="Curve2D" id=1]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 0.424561, -19.6777, 0, 0, 0, 0, -1.62598, -25.8293, 0, 0, 0, 0, 1306.62, -25.8293, 0, 0, 0, 0, 1304.57, 720.5, 0, 0, 0, 0, -1.62598, 722.62, 0, 0, 0, 0, 3.8938, -12.7159 )
+"points": PoolVector2Array( 0, 0, 0, 0, 1184.04, -45.0886, 0, 0, 0, 0, 1332.18, -49.3291, 0, 0, 0, 0, 1336.36, 739.405, 0, 0, 0, 0, 1188.21, 737.285 )
 }
 
 [node name="EnemySpawn" type="Node2D"]
@@ -25,3 +25,4 @@ autostart = true
 
 [node name="WaveStateTimer" type="Timer" parent="."]
 autostart = true
+
