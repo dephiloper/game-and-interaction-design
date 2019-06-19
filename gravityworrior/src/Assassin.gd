@@ -109,6 +109,10 @@ func attack_player_by_signal(player):
 		if dist < SQUARED_SIGNAL_ATTACK_RANGE:
 			_start_channel_attack(player, false)
 
+func attack_player_because_guard(player):
+	if state == ASSASSIN_STATE.GuardDestroyer:
+		_start_fly_to_player(player)
+
 func _get_player_in_range():
 	for player in GameManager.players:
 		var squared_distance = player.position.distance_squared_to(position)
@@ -196,8 +200,8 @@ func _choose_random(list: Array):
 		return null
 	return list[randi() % list.size()]
 
-func _start_fly_to_player():
-	_target_player = _choose_random(GameManager.get_living_players())
+func _start_fly_to_player(target_player):
+	_target_player = target_player
 	state = ASSASSIN_STATE.FlyToPlayer
 
 func _choose_destroyer_to_guard():
@@ -365,7 +369,7 @@ func _process_move_away_from_planet(delta):
 	_velocity += _lurk_direction * MOVE_AWAY_FROM_PLANET_SPEED
 	_channel_time -= delta
 	if _channel_time < 0:
-		_start_fly_to_player()
+		_start_fly_to_player(_choose_random(GameManager.get_living_players()))
 
 	var player_in_range = _get_player_in_range()
 	if player_in_range:

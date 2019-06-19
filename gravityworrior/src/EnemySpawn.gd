@@ -20,7 +20,7 @@ func _on_attack_player(player):
 
 func _on_destroyer_got_attacked(player):
 	for assassin in GameManager.assassins:
-		assassin.attack_player_by_signal(player)
+		assassin.attack_player_because_guard(player)
 
 #warning-ignore:return_value_discarded
 func _ready() -> void:
