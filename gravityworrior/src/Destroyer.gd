@@ -1,7 +1,7 @@
 extends Node2D
 
 const SPEED = 1.0
-const FOLLOW_SPEED = 4.0
+const FOLLOW_SPEED = 2.0
 const ATTACK_SPEED = 20.0
 const DRAG = 0.95
 const MAX_ROTATION_ANGLE = 0.02
@@ -29,8 +29,11 @@ enum DestroyerState {
 	Dead
 }
 
+signal got_attacked(player)
+
 var health = MAX_HEALTH
 var state
+var num_guards = 0
 var _velocity: Vector2 = Vector2.ZERO
 var _has_to_be_removed = false
 var _target_point: Vector2
@@ -48,8 +51,13 @@ func _on_hit(damage):
 		_die()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:
+		# uncomment to make destroyer follow player
+		"""
 		if _with_probability(FOLLOW_PROBABILITY):
 			_start_follow_player()
+		"""
+
+		emit_signal("got_attacked", _get_nearest_player())
 
 #warning-ignore:return_value_discarded
 func _ready():
@@ -84,6 +92,9 @@ func _get_nearest_planet(pos):
 
 func _sender_in_range():
 	return _target_point.distance_squared_to(position) < SQUARED_ATTACK_RANGE
+
+func is_dead():
+	return state == DestroyerState.Dead
 
 func _start_fly_to_sender():
 	state = DestroyerState.FlyToSender

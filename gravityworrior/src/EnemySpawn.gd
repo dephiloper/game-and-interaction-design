@@ -2,8 +2,6 @@ extends Node2D
 
 var _assassin_scene = preload("res://src/Assassin.tscn")
 var _destroyer_scene = preload("res://src/Destroyer.tscn")
-var enemy_list = []
-var assassin_list = []
 
 var has_spawned = false
 var wave_over = false
@@ -13,11 +11,15 @@ const level1: int = 1
 const level2: int = 2
 const level3: int = 3
 
-const DESTROYER_PER_WAVE: int = 2
+const DESTROYER_PER_WAVE: int = 1
 const ASSASSINS_PER_WAVE: int = 5
 
 func _on_attack_player(player):
-	for assassin in assassin_list:
+	for assassin in GameManager.assassins:
+		assassin.attack_player_by_signal(player)
+
+func _on_destroyer_got_attacked(player):
+	for assassin in GameManager.assassins:
 		assassin.attack_player_by_signal(player)
 
 #warning-ignore:return_value_discarded
@@ -38,22 +40,25 @@ func _filter_has_to_be_removes(enemies, free):
 			index += 1
 
 func _physics_process(_delta: float) -> void:
-	_filter_has_to_be_removes(assassin_list, false)
-	_filter_has_to_be_removes(enemy_list, true)
+	_filter_has_to_be_removes(GameManager.assassins, false)
+	_filter_has_to_be_removes(GameManager.destroyers, false)
+	_filter_has_to_be_removes(GameManager.enemies, true)
 
 func _create_assassin():
 	var assassin = _create_enemy_by_scene(_assassin_scene)
-	assassin_list.append(assassin)
+	GameManager.assassins.append(assassin)
 	assassin.connect("attack_player", self, "_on_attack_player")
 
 func _create_destroyer():
-	_create_enemy_by_scene(_destroyer_scene)
+	var destroyer = _create_enemy_by_scene(_destroyer_scene)
+	GameManager.destroyers.append(destroyer)
+	destroyer.connect("got_attacked", self, "_on_destroyer_got_attacked")
 
 func _create_enemy_by_scene(scene):
 	$SpawnPath/SpawnPathLocation.set_offset(randi())
 	var enemy = scene.instance()
 	add_child(enemy)
-	enemy_list.append(enemy)
+	GameManager.enemies.append(enemy)
 
 	enemy.position = $SpawnPath/SpawnPathLocation.position
 	
@@ -63,7 +68,7 @@ func on_WaveStateTimer_timeout() -> void:
 	if has_spawned:
 		if kill_count == 0:
 			wave_over = true
-			if (enemy_list.size() == 0):
+			if (GameManager.enemies.size() == 0):
 				GameManager.current_game_state = GameManager.GameState.Vote
 				get_node("/root/Main/UILayer").reinstantiate_buff_selection()
 				current_level +=1
@@ -76,7 +81,7 @@ func on_SpawnTimer_timeout() -> void:
 		for _i in range (DESTROYER_PER_WAVE):
 			_create_destroyer()
 		for _i in range(ASSASSINS_PER_WAVE):
-			if enemy_list.size() >= 10:
+			if GameManager.enemies.size() >= 10:
 					break
 			_create_assassin()
 		has_spawned = true
