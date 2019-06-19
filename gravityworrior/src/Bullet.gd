@@ -23,8 +23,8 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta)
 	if collision:
 		if collision.collider.has_method("hit"):
-			collision.collider.hit(_damage)
-			queue_free()
+			if collision.collider.hit(_damage, collision):
+				queue_free()
 		if _bounce_count == 1:
 			queue_free()
 		_velocity = _velocity.bounce(collision.normal)

@@ -1,4 +1,4 @@
-extends Node2D
+extends KinematicBody2D
 
 const SPEED = 1.0
 const FOLLOW_SPEED = 2.0
@@ -45,7 +45,10 @@ var _direction = null
 func _with_probability(probability):
 	return randf() < probability
 
-func _on_hit(damage):
+func hit(damage, collision):
+	if collision.collider_shape == $HeadCollisionShape:
+		return false
+
 	health -= damage
 	if health <= 0:
 		_die()
@@ -59,14 +62,14 @@ func _on_hit(damage):
 
 		emit_signal("destroyer_got_attacked", _get_nearest_player())
 
+	return true
+
 #warning-ignore:return_value_discarded
 func _ready():
-	$Body.connect("got_hit", self, "_on_hit")
 	_target_point = GameManager.satellite.position
 	_satellite_planet = _get_nearest_planet(_target_point)
 	_start_fly_to_sender()
-	$Head.add_to_group("Destroyer")
-	$Body.add_to_group("Destroyer")
+	add_to_group("Destroyer")
 
 func _get_nearest_player():
 	var nearest_player = null
@@ -121,10 +124,8 @@ func _start_circle():
 
 func _die():
 	state = DestroyerState.Dead
-	$Head.collision_layer = 0
-	$Head.collision_mask = 0
-	$Body.collision_layer = 0
-	$Body.collision_mask = 0
+	collision_layer = 0
+	collision_mask = 0
 	_channel_time = DIE_TIME
 	var kill_counter = $"/root/Main/EnemySpawn".kill_count
 	if kill_counter > 0:
@@ -173,10 +174,6 @@ func _process_channel_attack(delta):
 	_velocity *= DRAG
 
 func _process_attack(delta):
-	_channel_time -= delta
-	if _channel_time < 0:
-		GameManager.satellite.hit(DAMAGE)
-		_die()
 
 	_velocity += (_target_point - position).normalized() * ATTACK_SPEED
 	_velocity *= DRAG
@@ -200,8 +197,8 @@ func _process_dead(delta):
 		_has_to_be_removed = true
 	else:
 		var alpha = _channel_time / DIE_TIME
-		get_node("Head/Sprite").modulate = Color(1, 1, 1, alpha)
-		get_node("Body/Sprite").modulate = Color(1, 1, 1, alpha*alpha)
+		$HeadSprite.modulate = Color(1, 1, 1, alpha)
+		$BodySprite.modulate = Color(1, 1, 1, alpha*alpha)
 
 func _update_velocity_by_direction():
 	if _velocity.length_squared() > 0.01:
@@ -228,9 +225,17 @@ func _physics_process(delta: float) -> void:
 
 	_update_velocity_by_direction()
 
-	position += _velocity * delta
+	var collision = move_and_collide(_velocity * delta)
+	if collision:
+		_velocity = _velocity.bounce(collision.normal)
+		_velocity *= 0.1
+		if collision.collider.is_in_group("Satellite"):
+			GameManager.satellite.hit(DAMAGE)
+			_die()
+
 	if _velocity.length_squared() > 0.01:
-		look_at(position + _direction)
+		if not is_dead():
+			look_at(position + _direction)
 
 func has_to_be_removed():
 	return _has_to_be_removed

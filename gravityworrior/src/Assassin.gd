@@ -88,11 +88,12 @@ func state_to_str(s):
 func _ready() -> void:
 	_start_guard_destroyer()
 
-func hit(damage: float) -> void:
+func hit(damage: float, _collision) -> bool:
 	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
 		_die()
+	return true
 
 func _die():
 	state = ASSASSIN_STATE.Dead
