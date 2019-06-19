@@ -176,7 +176,7 @@ func _process_attack(delta):
 	_channel_time -= delta
 	if _channel_time < 0:
 		GameManager.satellite.hit(DAMAGE)
-		_start_circle()
+		_die()
 
 	_velocity += (_target_point - position).normalized() * ATTACK_SPEED
 	_velocity *= DRAG
