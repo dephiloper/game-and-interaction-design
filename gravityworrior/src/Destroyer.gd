@@ -20,6 +20,11 @@ const ATTACK_DURATION = 0.8
 const CIRCLE_DURATION = 15
 const DIE_TIME = 1.0
 
+const BAR_WIDTH: int = 32
+const BAR_HEIGHT: int = 6
+const BAR_BORDER_SIZE: int = 1
+const BAR_OFFSET = Vector2(-30, 20)
+
 enum DestroyerState {
 	FlyToSender,
 	ChannelAttack,
@@ -51,7 +56,9 @@ func hit(damage, collision):
 
 	health -= damage
 	if health <= 0:
+		health = 0
 		_die()
+	update()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:
 		# uncomment to make destroyer follow player
@@ -64,7 +71,7 @@ func hit(damage, collision):
 
 	return true
 
-#warning-ignore:return_value_discarded
+
 func _ready():
 	_target_point = GameManager.satellite.position
 	_satellite_planet = _get_nearest_planet(_target_point)
@@ -173,8 +180,7 @@ func _process_channel_attack(delta):
 
 	_velocity *= DRAG
 
-func _process_attack(delta):
-
+func _process_attack():
 	_velocity += (_target_point - position).normalized() * ATTACK_SPEED
 	_velocity *= DRAG
 
@@ -198,7 +204,8 @@ func _process_dead(delta):
 	else:
 		var alpha = _channel_time / DIE_TIME
 		$HeadSprite.modulate = Color(1, 1, 1, alpha)
-		$BodySprite.modulate = Color(1, 1, 1, alpha*alpha)
+		$BodySprite.modulate = Color(1, 1, 1, alpha)
+		update()
 
 func _update_velocity_by_direction():
 	if _velocity.length_squared() > 0.01:
@@ -215,7 +222,7 @@ func _physics_process(delta: float) -> void:
 		DestroyerState.ChannelAttack:
 			_process_channel_attack(delta)
 		DestroyerState.Attack:
-			_process_attack(delta)
+			_process_attack()
 		DestroyerState.FollowPlayer:
 			_process_follow_player(delta)
 		DestroyerState.CircleSender:
@@ -236,6 +243,27 @@ func _physics_process(delta: float) -> void:
 	if _velocity.length_squared() > 0.01:
 		if not is_dead():
 			look_at(position + _direction)
+
+func _draw() -> void:
+	var alpha = 1
+	if is_dead():
+		alpha = _channel_time / DIE_TIME
+
+	var background_color = Color.black
+	background_color.a = alpha
+	var foreground_color = Color.red
+	foreground_color.a = alpha
+	draw_rect(Rect2(BAR_OFFSET.x, BAR_OFFSET.y, BAR_WIDTH, BAR_HEIGHT), background_color)
+	var width: float = ((BAR_WIDTH - 2*BAR_BORDER_SIZE) * health) / MAX_HEALTH
+	print('health: ', health)
+	draw_rect(
+		Rect2(
+			BAR_BORDER_SIZE + BAR_OFFSET.x,
+			BAR_BORDER_SIZE + BAR_OFFSET.y,
+			width,
+			BAR_HEIGHT - 2*BAR_BORDER_SIZE),
+		foreground_color
+	)
 
 func has_to_be_removed():
 	return _has_to_be_removed
