@@ -41,6 +41,8 @@ enum ASSASSIN_STATE {
 	Dead
 }
 
+signal assassin_got_attacked(player)
+
 var state = ASSASSIN_STATE.FlyToPlayer
 # var old_state = null
 
@@ -87,11 +89,12 @@ func _ready() -> void:
 	_start_guard_destroyer()
 
 func hit(damage: float) -> void:
+	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
-		die()
+		_die()
 
-func die():
+func _die():
 	state = ASSASSIN_STATE.Dead
 	_channel_time = DIE_TIME
 	collision_mask = 0
@@ -128,39 +131,32 @@ func _get_planet_in_range():
 	return null
 
 func _get_nearest_planet(pos):
-	var nearest_planet = null
-	var nearest_planet_distance = null
-	for planet in GameManager.planets:
-		var planet_distance = planet.position.distance_squared_to(pos)
-		if nearest_planet == null or (planet_distance < nearest_planet_distance):
-			nearest_planet = planet
-			nearest_planet_distance = planet_distance
-
-	return nearest_planet
+	return _get_nearest(pos, GameManager.planets)
 
 func _get_nearest_destroyer(pos):
-	var nearest_destroyer = null
-	var nearest_destroyer_distance = null
-	for destroyer in GameManager.destroyers:
-		var destroyer_distance = destroyer.position.distance_squared_to(pos)
-		if nearest_destroyer == null or (destroyer_distance < nearest_destroyer_distance):
-			nearest_destroyer = destroyer
-			nearest_destroyer_distance = destroyer_distance
-
-	return nearest_destroyer
+	return _get_nearest(pos, GameManager.destroyers)
 
 func _get_nearest_assassin(pos):
-	var nearest_assassin = null
-	var nearest_assassin_distance = null
+	var assassins_without_self = []
 	for assassin in GameManager.assassins:
-		if assassin == self:
-			continue
-		var assassin_distance = assassin.position.distance_squared_to(pos)
-		if nearest_assassin == null or (assassin_distance < nearest_assassin_distance):
-			nearest_assassin = assassin
-			nearest_assassin_distance = assassin_distance
+		if assassin != self:
+			assassins_without_self.append(assassin)
 
-	return nearest_assassin
+	return _get_nearest(pos, assassins_without_self)
+
+func _get_nearest_player(pos):
+	return _get_nearest(pos, GameManager.get_living_players())
+
+func _get_nearest(pos, list):
+	var nearest_entity = null
+	var nearest_entity_distance = null
+	for entity in list:
+		var entity_distance = entity.position.distance_squared_to(pos)
+		if nearest_entity == null or (entity_distance < nearest_entity_distance):
+			nearest_entity = entity
+			nearest_entity_distance = entity_distance
+
+	return nearest_entity
 
 func _move_away_from(point_to_move, target, distance):
 	var target_to_point: Vector2 = point_to_move - target
@@ -341,6 +337,8 @@ func _process_guard_destroyer():
 			_destroyer_to_guard.num_guards -= 1
 			_start_channel_attack(player_in_range, true)
 
+		look_at(position + _destroyer_to_guard._velocity)
+
 func _process_go_into_planet(delta):
 	_channel_time -= delta
 	if _channel_time > 0:
@@ -436,10 +434,10 @@ func _process_collision(collision):
 	var collider = collision.collider
 	if collider.has_method("hit") and not collider.is_in_group("Destroyer"):
 		collider.hit(_damage)
-		die()
+		_die()
 	if collider.has_method("hitSatellite"):
 		collider.hitSatellite(_damageSatellite)
-		die()
+		_die()
 
 	var do_bounce = true
 

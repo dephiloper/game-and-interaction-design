@@ -29,7 +29,7 @@ enum DestroyerState {
 	Dead
 }
 
-signal got_attacked(player)
+signal destroyer_got_attacked(player)
 
 var health = MAX_HEALTH
 var state
@@ -57,7 +57,7 @@ func _on_hit(damage):
 			_start_follow_player()
 		"""
 
-		emit_signal("got_attacked", _get_nearest_player())
+		emit_signal("destroyer_got_attacked", _get_nearest_player())
 
 #warning-ignore:return_value_discarded
 func _ready():

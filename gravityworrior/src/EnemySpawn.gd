@@ -22,6 +22,10 @@ func _on_destroyer_got_attacked(player):
 	for assassin in GameManager.assassins:
 		assassin.attack_player_because_guard(player)
 
+func _on_assassin_got_attacked(player):
+	for assassin in GameManager.assassins:
+		assassin.attack_player_because_guard(player)
+
 #warning-ignore:return_value_discarded
 func _ready() -> void:
 	$SpawnTimer.connect("timeout", self, "on_SpawnTimer_timeout")
@@ -48,11 +52,12 @@ func _create_assassin():
 	var assassin = _create_enemy_by_scene(_assassin_scene)
 	GameManager.assassins.append(assassin)
 	assassin.connect("attack_player", self, "_on_attack_player")
+	assassin.connect("assassin_got_attacked", self, "_on_assassin_got_attacked")
 
 func _create_destroyer():
 	var destroyer = _create_enemy_by_scene(_destroyer_scene)
 	GameManager.destroyers.append(destroyer)
-	destroyer.connect("got_attacked", self, "_on_destroyer_got_attacked")
+	destroyer.connect("destroyer_got_attacked", self, "_on_destroyer_got_attacked")
 
 func _create_enemy_by_scene(scene):
 	$SpawnPath/SpawnPathLocation.set_offset(randi())
