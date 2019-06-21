@@ -35,6 +35,7 @@ signal destroyer_got_attacked(player)
 
 var health = MAX_HEALTH
 var state
+var num_guards: int = 0
 var _velocity: Vector2 = Vector2.ZERO
 var _has_to_be_removed = false
 var _target_point: Vector2
