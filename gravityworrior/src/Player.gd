@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 class_name Player
 
+signal active_changed
+
 # preloaded scenes
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
 const GUN_SCENE = preload("res://src/Gun.tscn")
@@ -14,13 +16,8 @@ const OFF_PLANET_MAX_VELOCITY: int = 300
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 const CROSS_HAIR_DISTANCE: int = 128
-
-var _movement_speed: float = 10.0
-var _on_planet_speed_multiplier: float = INITIAL_ON_PLANET_SPEED_MULTIPLIER
-var _boost_speed_multiplier: float = 2.5
-var _damage: float = 10.0
-var _bullet_size_multiplier: float = 1.0
-var _attack_speed_multiplier: float = 1.0
+const BORDER_BOUNDRY: int = 48
+const BORDER_BOUNDRY_PULL: int = 48
 
 export(Texture) var texture
 
@@ -41,6 +38,13 @@ var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _is_cooldown: bool = false
 var _last_shoot_dir = Vector2.RIGHT
+
+var _movement_speed: float = 10.0
+var _on_planet_speed_multiplier: float = INITIAL_ON_PLANET_SPEED_MULTIPLIER
+var _boost_speed_multiplier: float = 2.5
+var _damage: float = 10.0
+var _bullet_size_multiplier: float = 1.0
+var _attack_speed_multiplier: float = 1.0
 
 # public methods
 func hit(damage: float) -> void:
@@ -68,6 +72,7 @@ func apply_buff(buff_type: String) -> void:
 			_attack_speed_multiplier *= 1.2
 
 func _init() -> void:
+	add_to_group("Player")
 	gun = GUN_SCENE.instance();
 	var weapon_index = randi() % 4
 	match weapon_index:
@@ -76,13 +81,11 @@ func _init() -> void:
 		2: gun.gear_up(Gun.TYPE.LAUNCHER)
 		3: gun.gear_up(Gun.TYPE.MACHINE)
 	add_child(gun)
-	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
 	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
 
-#warning-ignore-all:return_value_discarded
 func _ready() -> void:
 	$PlayerSprite.texture = texture
 	$Trail.texture = texture
@@ -92,11 +95,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if health <= 0.0:
 		is_inactive = true
+		emit_signal("active_changed", not is_inactive)
 		$PlayerSprite.texture = INACTIVE_TEXTURE
-		$"/root/GameManager".dead_players += 1
-		if $"/root/GameManager".dead_players == $"/root/GameManager".players.size():
-			print("all players dead")
-			get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
 	if not is_inactive and _is_cooldown:
 		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
 
@@ -105,13 +105,11 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	$Trail.emitting = false
-	
 	# we are on planet
 	if _is_on_planet == true:
 		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
-		_apply_planet_ability(delta)
 		_velocity = move_and_slide_with_snap(_velocity, diff, -diff)
 		_velocity = _velocity.slide(diff.normalized())
 		_velocity = _velocity.slide(-diff.normalized())
@@ -132,6 +130,8 @@ func _physics_process(delta: float) -> void:
 		# applying pull only when player is not boosting!
 		elif not _is_boosting or _is_cooldown: 
 			_velocity += pull
+			
+		_velocity += _calculate_boundary_pull()
 			
 		var max_velocity: float = OFF_PLANET_MAX_VELOCITY
 		
@@ -161,7 +161,7 @@ func _calculate_gravitational_pull() -> Vector2:
 		
 		var force: float = planet.gravity / distance
 		pull += (planet.position - position).normalized() * force
-		
+	
 	return pull
 
 func _calculate_player_movement() -> Vector2:
@@ -187,7 +187,6 @@ func _calculate_player_movement() -> Vector2:
 			
 		_shoot(shoot_dir.normalized())
 		_last_shoot_dir = shoot_dir
-		
 	
 	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
@@ -195,6 +194,19 @@ func _calculate_player_movement() -> Vector2:
 		movement_dir *= _boost_speed_multiplier
 		
 	return movement_dir
+
+func _calculate_boundary_pull() -> Vector2:
+	var pull = Vector2(0,0)
+	if position.x < BORDER_BOUNDRY:
+		pull += Vector2(BORDER_BOUNDRY_PULL, 0)
+	if position.y < BORDER_BOUNDRY:
+		pull += Vector2(0, BORDER_BOUNDRY_PULL)
+	if position.x > get_viewport().size.x - BORDER_BOUNDRY:
+		pull += Vector2(-BORDER_BOUNDRY_PULL, 0)
+	if position.y > get_viewport().size.y - BORDER_BOUNDRY:
+		pull += Vector2(0, -BORDER_BOUNDRY_PULL)
+	
+	return pull
 
 func _caculate_cross_hair_direction() -> Vector2:
 	var horizontal: float = controls.pressed("aim_right") - controls.pressed("aim_left")
@@ -209,17 +221,6 @@ func _caculate_cross_hair_direction() -> Vector2:
 func _shoot(dir: Vector2) -> void:
 	gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
 
-func _apply_planet_ability(delta: float) -> void:
-	_on_planet_speed_multiplier = INITIAL_ON_PLANET_SPEED_MULTIPLIER
-	
-	match (_closest_planet.type):
-		Planet.Type.HEALTH_REGENERATION:
-			health = min(health + delta, 100) 
-		Planet.Type.HAZARD:
-			health = max(health - delta, 0)
-		Planet.Type.FREEZE:
-			_on_planet_speed_multiplier = REDUCED_ON_PLANET_SPEED_MULTIPLIER
-			
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost
 	_is_cooldown = false
@@ -229,6 +230,6 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 	if is_inactive and body.is_in_group("Player"):
 		if not (body as Player).is_inactive:
 			is_inactive = false
+			emit_signal("active_changed", not is_inactive)
 			health = max_health
-			$"/root/GameManager".dead_players -= 1
 			$PlayerSprite.texture = texture

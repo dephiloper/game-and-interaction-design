@@ -13,15 +13,6 @@ var _num_points: int = 0.0
 var _offset: float = 0.0
 var _rotation: float = 0.0
 var _initialized: bool = false
-var type = Type.DEFAULT
-
-const Type = {
-	DEFAULT = Color.burlywood,
-	HEALTH_REGENERATION = Color.palevioletred,
-	REPULSIVE_POWER = Color.darkslategray,
-	HAZARD = Color.firebrick,
-	FREEZE = Color.cadetblue,
-}
 
 func _init() -> void:
 	randomize()
@@ -45,9 +36,6 @@ func generate(center: Vector2, r: float = rand_range(32, 64),
 	self._offset = offset
 	self._planet_points = _calculate_planet_points()
 	self._rotation = rand_range(-1,1)
-	self.type = Type.values()[randi() % len(Type.values())]
-	if self.type == Type.REPULSIVE_POWER:
-			self.gravity *= -1
 
 	self._initialized = true
 	update()
@@ -71,7 +59,7 @@ func _create_collision_shape():
 	$CollisionPolygon.polygon = self._planet_points
 	
 func _draw_planet(points: Array) -> void:
-	draw_polygon(points, PoolColorArray([type]))
+	draw_polygon(points, PoolColorArray([Color.burlywood]))
 	draw_polyline(points, Color.black, 2, true)
 	
 

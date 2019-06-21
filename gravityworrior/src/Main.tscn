@@ -13,37 +13,44 @@ script = ExtResource( 1 )
 [node name="UILayer" parent="." instance=ExtResource( 2 )]
 
 [node name="Player0" parent="." instance=ExtResource( 3 )]
-position = Vector2( 610.109, 510.109 )
+position = Vector2( 231.109, 142.109 )
 
 [node name="Planet" parent="." instance=ExtResource( 4 )]
-position = Vector2( 200, 320 )
+position = Vector2( 176, 386 )
 z_index = 1
 
 [node name="Planet2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 493.58, 145.763 )
+position = Vector2( 672.58, 339.763 )
 z_index = 1
 
 [node name="Planet3" parent="." instance=ExtResource( 4 )]
-position = Vector2( 968.557, 111.759 )
+position = Vector2( 1013.56, 146.759 )
 z_index = 1
 
 [node name="Planet4" parent="." instance=ExtResource( 4 )]
-position = Vector2( 301.873, 566.565 )
+position = Vector2( 343.873, 781.565 )
 z_index = 1
 
 [node name="Planet5" parent="." instance=ExtResource( 4 )]
-position = Vector2( 700.805, 406.189 )
+position = Vector2( 871.805, 901.189 )
 z_index = 1
 
 [node name="Planet6" parent="." instance=ExtResource( 4 )]
-position = Vector2( 880.073, 629.981 )
+position = Vector2( 1490.07, 935.981 )
 z_index = 1
 
 [node name="Planet7" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1070.19, 320.898 )
+position = Vector2( 1246.19, 457.898 )
+z_index = 1
+
+[node name="Planet8" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1544.56, 126.759 )
+z_index = 1
+
+[node name="Planet9" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1679.56, 669.759 )
 z_index = 1
 
 [node name="EnemySpawn" parent="." instance=ExtResource( 5 )]
 
 [node name="Satellite" parent="." instance=ExtResource( 6 )]
-
