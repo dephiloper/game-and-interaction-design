@@ -28,3 +28,4 @@ position = Vector2( 80, 0 )
 [node name="StartTween" type="Tween" parent="."]
 
 [node name="FinishTween" type="Tween" parent="."]
+

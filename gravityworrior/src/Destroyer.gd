@@ -2,9 +2,10 @@ extends KinematicBody2D
 
 var HealthBarScene = preload("res://src/DestroyerHealthBar.tscn")
 
-const SPEED = 1.0
-const FOLLOW_SPEED = 2.0
-const ATTACK_SPEED = 20.0
+const SPEED_SCALE = 0.66
+const SPEED = 1.0 * SPEED_SCALE
+const FOLLOW_SPEED = 2.0 * SPEED_SCALE
+const ATTACK_SPEED = 20.0 *  SPEED_SCALE
 const DRAG = 0.95
 const MAX_ROTATION_ANGLE = 0.02
 const ROUTE_POINT_DISTANCE = 50
@@ -19,7 +20,7 @@ const DAMAGE = 20
 const FOLLOW_PLAYER_TIME = 7
 const ATTACK_CHANNEL_TIME = 0.7
 const ATTACK_DURATION = 0.8
-const CIRCLE_DURATION = 15
+const CIRCLE_DURATION = 30
 const DIE_TIME = 1.0
 
 enum DestroyerState {
