@@ -6,7 +6,6 @@ signal active_changed
 
 # preloaded scenes
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
-const GUN_SCENE = preload("res://src/Gun.tscn")
 
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const ON_PLANET_DRAG: float = 0.9
@@ -27,7 +26,6 @@ var max_health: float = 100.0
 var controls: Controls # provides pressed actions of the player
 var health: float = 100
 var boost: float = max_boost
-var gun: Gun
 var is_inactive: bool = false
 
 # fields
@@ -69,8 +67,6 @@ func apply_buff(buff_type: String) -> void:
 
 func _init() -> void:
 	add_to_group("Player")
-	gun = GUN_SCENE.instance();
-	add_child(gun)
 	var device_id = GameManager.register_player(self)
 	controls = Controls.new()
 	add_child(controls)
@@ -81,9 +77,10 @@ func _ready() -> void:
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
-	$HealthBar.set_health_value(health, max_health)
 
 func _process(_delta: float) -> void:
+	$Hud.set_health_value(health, max_health)
+	$Hud.set_boost_value(boost, max_boost)
 	if health <= 0.0:
 		is_inactive = true
 		emit_signal("active_changed", not is_inactive)
@@ -178,6 +175,8 @@ func _calculate_player_movement() -> Vector2:
 			
 		_shoot(shoot_dir.normalized())
 		_last_shoot_dir = shoot_dir
+		$Gun/GunSprite.rotation = _last_shoot_dir.angle()
+		
 	
 	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
@@ -203,14 +202,14 @@ func _caculate_cross_hair_direction() -> Vector2:
 	var horizontal: float = controls.pressed("aim_right") - controls.pressed("aim_left")
 	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
-	$CrossHairSprite.visible = false if direction == Vector2.ZERO else true
-	$CrossHairSprite.position = direction * CROSS_HAIR_DISTANCE 
-	gun.rotation = direction.angle()
+	$Gun/CrosshairSprite.visible = false if direction == Vector2.ZERO else true
+	$Gun/CrosshairSprite.position = direction * CROSS_HAIR_DISTANCE 
+	$Gun/GunSprite.rotation = direction.angle()
 	
 	return direction
 
 func _shoot(dir: Vector2) -> void:
-	gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
+	$Gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
 
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost

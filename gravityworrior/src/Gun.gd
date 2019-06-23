@@ -16,7 +16,7 @@ func shoot(dir: Vector2, _damage_buff, _bullet_size_multiplier, _bullet_speed_mu
 	if ($FirerateTimer.get_time_left() == 0):
 		var b: Bullet = BULLET_SCENE.instance()
 		b.init(dir, base_damage * _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
-		b.position = global_position
+		b.position = $GunSprite/BarrelPosition.global_position
 		$"/root/Main".add_child(b)
 		$FirerateTimer.start()
 
