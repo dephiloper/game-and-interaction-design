@@ -54,4 +54,3 @@ z_index = 1
 [node name="EnemySpawn" parent="." instance=ExtResource( 5 )]
 
 [node name="Satellite" parent="." instance=ExtResource( 6 )]
-
