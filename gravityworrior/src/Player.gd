@@ -15,8 +15,8 @@ const OFF_PLANET_MAX_VELOCITY: int = 200
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 const CROSS_HAIR_DISTANCE: int = 128
-const BORDER_BOUNDRY: int = 48
-const BORDER_BOUNDRY_PULL: int = 48
+const BORDER_BOUNDRY: int = 24
+const BORDER_BOUNDRY_PULL: int = 24
 
 export(Texture) var texture
 
@@ -96,7 +96,7 @@ func _process(_delta: float) -> void:
 		emit_signal("active_changed", not is_inactive)
 		$PlayerSprite.texture = INACTIVE_TEXTURE
 	if not is_inactive and _is_cooldown:
-		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 8) + 1) / 2
+		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 16) + 1) / 2
 
 func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
@@ -199,9 +199,9 @@ func _calculate_boundary_pull() -> Vector2:
 		pull += Vector2(BORDER_BOUNDRY_PULL, 0)
 	if position.y < BORDER_BOUNDRY:
 		pull += Vector2(0, BORDER_BOUNDRY_PULL)
-	if position.x > get_viewport().size.x - BORDER_BOUNDRY:
+	if position.x > ProjectSettings.get_setting("display/window/size/width") - BORDER_BOUNDRY:
 		pull += Vector2(-BORDER_BOUNDRY_PULL, 0)
-	if position.y > get_viewport().size.y - BORDER_BOUNDRY:
+	if position.y > ProjectSettings.get_setting("display/window/size/height") - BORDER_BOUNDRY:
 		pull += Vector2(0, -BORDER_BOUNDRY_PULL)
 	
 	return pull
