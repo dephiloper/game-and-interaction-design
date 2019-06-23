@@ -10,7 +10,6 @@ const Types: Dictionary = {
 	BoostTime = "Boost Time",
 	Health = "More Health",
 	Damage = "More Damage",
-	Ammo = "More Ammo",
 	BiggerBullets = "Bigger Bullets",
 	AttackSpeed = "Faster Bullets",
 }

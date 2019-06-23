@@ -62,8 +62,6 @@ func apply_buff(buff_type: String) -> void:
 			max_health *= 1.1
 		Buff.Types.Damage:
 			_damage *= 1.2
-		Buff.Types.Ammo:
-			gun.ammo_capacity += 1
 		Buff.Types.BiggerBullets:
 			_bullet_size_multiplier *= 1.2
 		Buff.Types.AttackSpeed:
@@ -72,12 +70,6 @@ func apply_buff(buff_type: String) -> void:
 func _init() -> void:
 	add_to_group("Player")
 	gun = GUN_SCENE.instance();
-	var weapon_index = randi() % 4
-	match weapon_index:
-		0: gun.gear_up(Gun.TYPE.RIFLE)
-		1: gun.gear_up(Gun.TYPE.GATLING)
-		2: gun.gear_up(Gun.TYPE.LAUNCHER)
-		3: gun.gear_up(Gun.TYPE.MACHINE)
 	add_child(gun)
 	var device_id = GameManager.register_player(self)
 	controls = Controls.new()

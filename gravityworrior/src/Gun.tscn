@@ -9,6 +9,4 @@ script = ExtResource( 1 )
 [node name="GunSprite" type="Sprite" parent="."]
 z_index = 3
 
-[node name="ReloadTimer" type="Timer" parent="."]
-
 [node name="FirerateTimer" type="Timer" parent="."]
