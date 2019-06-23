@@ -16,39 +16,39 @@ script = ExtResource( 1 )
 position = Vector2( 231.109, 142.109 )
 
 [node name="Planet" parent="." instance=ExtResource( 4 )]
-position = Vector2( 176, 386 )
+position = Vector2( 173, 453 )
 z_index = 1
 
 [node name="Planet2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 672.58, 339.763 )
+position = Vector2( 240.58, 224.763 )
 z_index = 1
 
 [node name="Planet3" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1013.56, 146.759 )
+position = Vector2( 516.56, 148.759 )
 z_index = 1
 
 [node name="Planet4" parent="." instance=ExtResource( 4 )]
-position = Vector2( 343.873, 781.565 )
+position = Vector2( 513.873, 342.565 )
 z_index = 1
 
 [node name="Planet5" parent="." instance=ExtResource( 4 )]
-position = Vector2( 871.805, 901.189 )
+position = Vector2( 569.805, 642.189 )
 z_index = 1
 
 [node name="Planet6" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1490.07, 935.981 )
+position = Vector2( 952.07, 454.981 )
 z_index = 1
 
 [node name="Planet7" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1246.19, 457.898 )
+position = Vector2( 903.19, 641.898 )
 z_index = 1
 
 [node name="Planet8" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1544.56, 126.759 )
+position = Vector2( 910.56, 79.759 )
 z_index = 1
 
 [node name="Planet9" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1679.56, 669.759 )
+position = Vector2( 1124.56, 239.759 )
 z_index = 1
 
 [node name="EnemySpawn" parent="." instance=ExtResource( 5 )]

@@ -4,7 +4,7 @@
 
 [sub_resource type="Curve2D" id=1]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 1912.59, 4.80417, 0, 0, 0, 0, 1918.79, 1085.6 )
+"points": PoolVector2Array( 0, 0, 0, 0, 1280.5, 1.47439, 0, 0, 0, 0, 1280.71, 720.16 )
 }
 
 [node name="EnemySpawn" type="Node2D"]
@@ -14,6 +14,8 @@ script = ExtResource( 1 )
 curve = SubResource( 1 )
 
 [node name="SpawnPathLocation" type="PathFollow2D" parent="SpawnPath"]
+position = Vector2( 1280.5, 1.47439 )
+rotation = 1.57045
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 10.0

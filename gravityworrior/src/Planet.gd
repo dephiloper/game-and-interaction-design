@@ -27,7 +27,7 @@ func _draw() -> void:
 	if self._initialized:
 		_draw_planet(self._planet_points)
 
-func generate(center: Vector2, r: float = rand_range(32, 64), 
+func generate(center: Vector2, r: float = rand_range(21, 42), 
 	num_points: int = int(rand_range(12,20)), 
 	offset: float = rand_range(2,4)) -> void:
 	self.position = center

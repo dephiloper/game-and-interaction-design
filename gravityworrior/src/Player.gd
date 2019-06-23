@@ -8,11 +8,10 @@ signal active_changed
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
 const GUN_SCENE = preload("res://src/Gun.tscn")
 
-const INITIAL_ON_PLANET_SPEED_MULTIPLIER: float = 3.0
-const REDUCED_ON_PLANET_SPEED_MULTIPLIER: float = 2.0
+const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const ON_PLANET_DRAG: float = 0.9
 const OFF_PLANET_DRAG: float = 0.99
-const OFF_PLANET_MAX_VELOCITY: int = 300
+const OFF_PLANET_MAX_VELOCITY: int = 200
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 const CROSS_HAIR_DISTANCE: int = 128
@@ -39,8 +38,7 @@ var _is_boosting: bool = false
 var _is_cooldown: bool = false
 var _last_shoot_dir = Vector2.RIGHT
 
-var _movement_speed: float = 10.0
-var _on_planet_speed_multiplier: float = INITIAL_ON_PLANET_SPEED_MULTIPLIER
+var _movement_speed: float = 6.0
 var _boost_speed_multiplier: float = 2.5
 var _damage: float = 10.0
 var _bullet_size_multiplier: float = 1.0
@@ -174,7 +172,7 @@ func _calculate_player_movement() -> Vector2:
 	
 	var movement_speed: float = _movement_speed
 	if _is_on_planet:
-		movement_speed *= _on_planet_speed_multiplier
+		movement_speed *= ON_PLANET_SPEED_MULTIPLIER
 		
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
 	var shoot_dir: Vector2 = _caculate_cross_hair_direction()

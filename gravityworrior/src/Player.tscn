@@ -5,7 +5,7 @@
 [ext_resource path="res://img/reticle.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 12.5, 12.5 )
+extents = Vector2( 7.62302, 7.78409 )
 
 [sub_resource type="Gradient" id=2]
 colors = PoolColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
@@ -25,7 +25,7 @@ gravity = Vector3( 0, 0, 0 )
 angular_velocity = 1.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale = 0.05
+scale = 0.03
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 3 )
 hue_variation_random = 1.0
@@ -36,13 +36,13 @@ script = ExtResource( 1 )
 texture = ExtResource( 2 )
 
 [node name="PlayerSprite" type="Sprite" parent="."]
-scale = Vector2( 0.05, 0.05 )
-z_index = 2
+scale = Vector2( 0.03, 0.03 )
+z_index = 3
 texture = ExtResource( 2 )
 
 [node name="CrossHairSprite" type="Sprite" parent="."]
-scale = Vector2( 0.05, 0.05 )
-z_index = 3
+scale = Vector2( 0.03, 0.03 )
+z_index = 2
 texture = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

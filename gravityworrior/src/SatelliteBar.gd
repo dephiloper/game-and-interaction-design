@@ -1,10 +1,10 @@
 extends Control
 
-const WIDTH: int = 64
-const HEIGHT: int = 12
+const WIDTH: int = 42
+const HEIGHT: int = 8
 const BORDER_SIZE: int = 2
-const Y_OFFSET: int = 80
-const X_OFFSET: int = 8
+const Y_OFFSET: int = 48
+const X_OFFSET: int = 6
 
 var progress: float = 100
 var max_progress: float = 100

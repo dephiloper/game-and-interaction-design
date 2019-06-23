@@ -1,8 +1,9 @@
-extends Node2D
+extends Control
 
 var _player_selections: Array = []
 var _players_confirmed: Array = []
 var _buffs: Array = []
+var _selection_allowed = false
 
 #warning-ignore:return_value_discarded
 func _ready() -> void:
@@ -27,17 +28,27 @@ func _ready() -> void:
 	for i in range(len(_player_selections)):
 		_select_buff( _player_selections[i], i)
 		
-	$Tween.connect("tween_completed", self, "_on_selection_done")
-
-	$Tween.interpolate_property(self, "scale",
-                Vector2(1, 1), Vector2(0, 0), 0.5,
-                Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$StartTween.connect("tween_completed", self, "_on_selection_allowed")
+	$FinishTween.connect("tween_completed", self, "_on_selection_done")
+	
+	$StartTween.interpolate_property(self, "rect_scale",
+		Vector2(0, 0), Vector2(1, 1), 1,
+		Tween.TRANS_LINEAR, Tween.EASE_IN)
+	
+	$FinishTween.interpolate_property(self, "rect_scale",
+		Vector2(1, 1), Vector2(0, 0), 0.5,
+		Tween.TRANS_LINEAR, Tween.EASE_OUT)
+		
+	$StartTween.start()
 
 func _process(_delta: float) -> void:
 	if GameManager.current_game_state == GameManager.GameState.Vote:
 		if not _players_confirmed.has(false):
-			$Tween.start()
-			
+			$FinishTween.start()
+		
+		if not _selection_allowed:
+			return
+		
 		var i: int = 0
 		for player in GameManager.players:
 			if not _players_confirmed[i]:
@@ -72,6 +83,9 @@ func _select_buff(index: int, player: int) -> void:
 	
 	(_buffs[index] as Buff).select(player)
 	
+func _on_selection_allowed(_object: Object, _key: NodePath) -> void:
+	_selection_allowed = true
+
 func _on_selection_done(_object: Object, _key: NodePath) -> void:
 	GameManager.current_game_state = GameManager.GameState.Fight
 	queue_free()
