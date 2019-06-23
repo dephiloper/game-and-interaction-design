@@ -8,9 +8,9 @@ var DRAG: float = 0.995
 var _velocity = Vector2.ZERO
 var _bounce_count: int = 0
 
-var _damage: float = 10
-var _radius: float = 6
-var _speed: float = 1000
+var _damage: float
+var _speed: float = 1200
+var _radius: float = 5
 
 var aoe: bool = false
 
@@ -34,13 +34,11 @@ func _physics_process(delta: float) -> void:
 	if not $VisibilityNotifier2D.is_on_screen():
 		queue_free()
 		
-func init(dir: Vector2, damage_buff: float, base_damage: float, bullet_size: float, bullet_size_multiplier: float = 1.0, bullet_speed: float = 10, attack_speed_multiplier: float = 1.0, aoe: bool = false, gravity_affection: float = 10):
-	_speed *= attack_speed_multiplier * bullet_speed
-	_radius = bullet_size_multiplier * bullet_size
+func init(dir: Vector2, damage: float, bullet_size_multiplier: float = 1.0, attack_speed_multiplier: float = 1.0):
+	_speed *= attack_speed_multiplier
+	_radius *= bullet_size_multiplier
+	_damage = damage
 	_velocity = dir * _speed
-	_damage = damage_buff  + base_damage
-	#DRAG = gravity_affection
-	#aoe = false
 	($CollisionShape2D.shape as CircleShape2D).radius = _radius
 	
 func _calculate_gravitational_pull() -> Vector2:
