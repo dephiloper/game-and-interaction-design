@@ -22,7 +22,6 @@ func _process(_delta: float) -> void:
 	if GameManager.current_game_state == GameManager.GameState.Vote:
 		if not _players_confirmed.has(false):
 			_fade_out()
-			print("test")
 			_selection_allowed = false
 		
 		var i: int = 0

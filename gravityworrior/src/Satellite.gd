@@ -16,11 +16,10 @@ func _ready() -> void:
 	var closest_planet = get_closest_planet()
 	position = closest_planet.position
 	position.y -= closest_planet.radius - SATELLITE_IN_PLANET_Y_OFFSET
-	$"/root/Main/UILayer/SatteliteBar".adjust_position(position)
 
 func hit(damage: float) -> void:
 	health = max(health - damage, 0)
-	$"/root/Main/UILayer/SatteliteBar".set_health_value(health, max_health)
+	$HealthBar.set_health_value(health, max_health)
 	if health <= 0:
 		emit_signal("game_over")
 	

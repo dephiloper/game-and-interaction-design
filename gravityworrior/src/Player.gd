@@ -81,6 +81,7 @@ func _ready() -> void:
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
+	$HealthBar.set_health_value(health, max_health)
 
 func _process(_delta: float) -> void:
 	if health <= 0.0:
