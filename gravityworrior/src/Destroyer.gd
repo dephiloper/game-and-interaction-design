@@ -12,10 +12,11 @@ const ROUTE_POINT_DISTANCE = 50
 const MIN_PLANET_ROUTE_DISTANCE = 55
 const CIRCLE_DISTANCE = 120
 
-const MAX_HEALTH = 50
+const MAX_HEALTH = 500
 const FOLLOW_PROBABILITY: float = 0.33
 const SQUARED_ATTACK_RANGE = 20000
 const DAMAGE = 20
+const HEAD_DAMAGE_RATIO: float = 0.6
 
 const FOLLOW_PLAYER_TIME = 7
 const ATTACK_CHANNEL_TIME = 0.7
@@ -50,8 +51,14 @@ func _with_probability(probability):
 	return randf() < probability
 
 func hit(damage, collision):
+	# uncomment to make destroyer head invulnerable
+	"""
 	if collision.collider_shape == $HeadCollisionShape:
 		return false
+	"""
+
+	if collision.collider_shape == $HeadCollisionShape:
+		damage *= HEAD_DAMAGE_RATIO
 
 	health -= damage
 	if health <= 0:
