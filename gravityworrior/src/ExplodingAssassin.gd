@@ -5,7 +5,7 @@ const EXPLOSION_RADIUS = 80.0
 const EXPLODING_SQUARED_ATTACK_RANGE = 1500
 const EXPLODING_ATTACK_CHANNEL_TIME = 0.1
 const SQUARED_DAMAGE_RANGE = 6400
-const EXPLOSION_DAMAGE = 20
+const EXPLOSION_DAMAGE = 15
 
 func _get_speed_scale():
 	return EXPLODING_SPEED_SCALE
@@ -17,7 +17,11 @@ func _do_explosion():
 		assassin.hit(EXPLOSION_DAMAGE, null)
 
 func _start_attack_player():
+	_do_explosion()
 	_die()
+
+func _start_die():
+	_start_channel_attack(null, false)
 
 func _get_squared_attack_range():
 	return EXPLODING_SQUARED_ATTACK_RANGE
@@ -47,6 +51,11 @@ func _get_assassins_in_damage_range():
 		assassins.append(assassin)
 
 	return _get_entities_in_range(assassins)
+
+func _process_channel_attack(delta):
+	_channel_time -= delta
+	if _channel_time < 0:
+		_start_attack_player()
 
 func _process_dead(delta):
 	_channel_time -= delta

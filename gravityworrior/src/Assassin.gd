@@ -99,25 +99,23 @@ func _get_squared_attack_range():
 func _get_attack_channel_time():
 	return ATTACK_CHANNEL_TIME
 
-func _do_explosion():
-	pass
-
 func hit(damage: float, _collision) -> bool:
 	if is_dead():
 		return false
 	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
-		_die()
+		_start_die()
 	return true
+
+func _start_die():
+	_die()
 
 func _die():
 	state = ASSASSIN_STATE.Dead
 	_channel_time = DIE_TIME
 	collision_mask = 0
 	collision_layer = 0
-
-	_do_explosion()
 
 func is_dead():
 	return state == ASSASSIN_STATE.Dead
@@ -458,10 +456,10 @@ func _process_collision(collision):
 	var collider = collision.collider
 	if collider.has_method("hit") and collider.is_in_group("Player"):
 		collider.hit(_damage)
-		_die()
+		_start_die()
 	if collider.has_method("hitSatellite"):
 		collider.hitSatellite(_damageSatellite)
-		_die()
+		_start_die()
 
 	var do_bounce = true
 
