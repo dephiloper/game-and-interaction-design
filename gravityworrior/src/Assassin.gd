@@ -13,6 +13,7 @@ const DESTROYER_DISTANCE = 40
 const ASSASSIN_DISTANCE_FORCE: float = 1.0
 const GUARD_DISTANCE = 70
 const EPSILON = 0.0001
+const MAX_HEALTH: int = 200
 
 const SQUARED_ATTACK_RANGE: float = 20000.0 * SQUARED_SPEED_SCALE
 const SQUARED_SIGNAL_ATTACK_RANGE: float = 40000.0 * SQUARED_SPEED_SCALE
@@ -48,7 +49,7 @@ signal assassin_got_attacked(player)
 var state = ASSASSIN_STATE.FlyToPlayer
 # var old_state = null
 
-var health: float = 20.0
+var health: float = MAX_HEALTH
 var _target_player: Player = null
 var _target_planet: Planet = null
 var _destroyer_to_guard = null
