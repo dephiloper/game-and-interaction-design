@@ -3,7 +3,7 @@ extends "res://src/Destroyer.gd"
 const SHOOT_DAMAGE = 5
 const SHOOT_DEVIATION = 0.2
 const NUM_SHOOTS = 2
-const SHOOT_SPEED = 0.3
+const SHOOT_SPEED = 0.1
 
 var _destroyer_bullet_scene = preload("res://src/DestroyerBullet.tscn")
 
