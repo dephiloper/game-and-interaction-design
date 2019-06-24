@@ -34,7 +34,7 @@ var _closest_planet: Planet = null
 var _is_on_planet: bool = false
 var _is_boosting: bool = false
 var _is_cooldown: bool = false
-var _last_shoot_dir = Vector2.RIGHT
+var _shoot_dir = Vector2.RIGHT
 
 var _movement_speed: float = 6.0
 var _boost_speed_multiplier: float = 2.5
@@ -165,19 +165,12 @@ func _calculate_player_movement() -> Vector2:
 		movement_speed *= ON_PLANET_SPEED_MULTIPLIER
 		
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
-	var shoot_dir: Vector2 = _caculate_cross_hair_direction()
+	_shoot_dir = _caculate_cross_hair_direction()
 		
 	if controls.pressed("shoot") > 0:
-		if shoot_dir == Vector2.ZERO:
-			shoot_dir = movement_dir
-		if shoot_dir == Vector2.ZERO:
-			shoot_dir = _last_shoot_dir
-			
-		_shoot(shoot_dir.normalized())
-		_last_shoot_dir = shoot_dir
-		$Gun/GunSprite.rotation = _last_shoot_dir.angle()
+		_shoot(_shoot_dir.normalized())
+		$Gun/GunSprite.rotation = _shoot_dir.angle()
 		
-	
 	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
 		_is_boosting = true
@@ -202,6 +195,8 @@ func _caculate_cross_hair_direction() -> Vector2:
 	var horizontal: float = controls.pressed("aim_right") - controls.pressed("aim_left")
 	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
 	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
+	if direction == Vector2.ZERO:
+		direction = _shoot_dir
 	$Gun/CrosshairSprite.visible = false if direction == Vector2.ZERO else true
 	$Gun/CrosshairSprite.position = direction * CROSS_HAIR_DISTANCE 
 	$Gun/GunSprite.rotation = direction.angle()
