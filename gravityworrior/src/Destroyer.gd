@@ -50,8 +50,11 @@ func _with_probability(probability):
 	return randf() < probability
 
 func hit(damage, collision):
+	# uncomment to make destroyer head invulnerable
+	"""
 	if collision.collider_shape == $HeadCollisionShape:
 		return false
+	"""
 
 	health -= damage
 	if health <= 0:
