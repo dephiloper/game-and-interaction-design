@@ -12,12 +12,14 @@ var _is_dead = false
 var _die_time = 0
 var _max_health
 var _delayed_health: float
+var _offset: Vector2
 
-func init(destroyer):
+func init(destroyer, offset):
 	_destroyer = destroyer
 	_die_time = _destroyer.DIE_TIME
-	_max_health = _destroyer.MAX_HEALTH
+	_max_health = _destroyer._get_max_health()
 	_delayed_health = _destroyer.health
+	_offset = offset
 
 func _physics_process(delta):
 	if (not _is_dead) and _destroyer.is_dead():
@@ -29,7 +31,7 @@ func _physics_process(delta):
 		if _channel_time <= 0:
 			queue_free()
 	else:
-		position = _destroyer.position
+		position = _destroyer.position + _offset
 		if _delayed_health > _destroyer.health:
 			_delayed_health -= _max_health * DELAYED_HEALTH_SPEED
 			update()

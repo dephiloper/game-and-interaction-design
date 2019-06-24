@@ -35,7 +35,7 @@ enum DestroyerState {
 
 signal destroyer_got_attacked(player)
 
-var health = MAX_HEALTH
+var health
 var state
 var num_guards: int = 0
 var _velocity: Vector2 = Vector2.ZERO
@@ -46,6 +46,18 @@ var _target_player = null
 var _channel_time = 0
 var _direction = null
 var _health_bar = null
+
+func _get_damage_scale():
+	return 1.0
+
+func _get_max_health():
+	return MAX_HEALTH
+
+func _get_healthbar_scale():
+	return 1.0
+
+func _get_healthbar_offset():
+	return Vector2.ZERO
 
 func _with_probability(probability):
 	return randf() < probability
@@ -79,13 +91,15 @@ func hit(damage, collision):
 
 
 func _ready():
+	health = _get_max_health()
 	_target_point = GameManager.satellite.position
 	_satellite_planet = _get_nearest_planet(_target_point)
 	_start_fly_to_sender()
 	add_to_group("Destroyer")
 
 	_health_bar = HealthBarScene.instance()
-	_health_bar.init(self)
+	_health_bar.transform = _health_bar.transform.scaled(Vector2(_get_healthbar_scale(), _get_healthbar_scale()))
+	_health_bar.init(self, _get_healthbar_offset())
 	get_parent().add_child(_health_bar)
 
 func _get_nearest_player():
@@ -247,7 +261,7 @@ func _physics_process(delta: float) -> void:
 		_velocity = _velocity.bounce(collision.normal)
 		_velocity *= 0.1
 		if collision.collider.is_in_group("Satellite"):
-			GameManager.satellite.hit(DAMAGE)
+			GameManager.satellite.hit(DAMAGE * _get_damage_scale())
 			_die()
 
 	if _velocity.length_squared() > 0.01:
