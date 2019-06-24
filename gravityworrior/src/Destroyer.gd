@@ -59,6 +59,9 @@ func _get_healthbar_scale():
 func _get_healthbar_offset():
 	return Vector2.ZERO
 
+func _connect_timer():
+	pass
+
 func _with_probability(probability):
 	return randf() < probability
 
@@ -89,7 +92,6 @@ func hit(damage, collision):
 
 	return true
 
-
 func _ready():
 	health = _get_max_health()
 	_target_point = GameManager.satellite.position
@@ -101,6 +103,8 @@ func _ready():
 	_health_bar.transform = _health_bar.transform.scaled(Vector2(_get_healthbar_scale(), _get_healthbar_scale()))
 	_health_bar.init(self, _get_healthbar_offset())
 	get_parent().add_child(_health_bar)
+
+	_connect_timer()
 
 func _get_nearest_player():
 	var nearest_player = null

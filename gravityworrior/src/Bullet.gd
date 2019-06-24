@@ -14,22 +14,31 @@ var _radius: float = 5
 
 var aoe: bool = false
 
+func _set_collision_mask():
+	pass
+
+func _get_drag():
+	return DRAG
+
 func _draw() -> void:
 	draw_circle(Vector2(0,0), _radius, Color.black)
 	draw_circle(Vector2(0,0), _radius-2, Color.yellow)
-	
+
+func _apply_hit(collision):
+	if collision.collider.has_method("hit"):
+		if collision.collider.hit(_damage, collision):
+			queue_free()
+
 func _physics_process(delta: float) -> void:
 	_velocity += _calculate_gravitational_pull() * GRAVITATION_IMPACT_FACTOR
 	var collision = move_and_collide(_velocity * delta)
 	if collision:
-		if collision.collider.has_method("hit"):
-			if collision.collider.hit(_damage, collision):
-				queue_free()
+		_apply_hit(collision)
 		if _bounce_count == 1:
 			queue_free()
 		_velocity = _velocity.bounce(collision.normal)
 		_bounce_count += 1
-	_velocity *= DRAG
+	_velocity *= _get_drag()
 		
 	if not $VisibilityNotifier2D.is_on_screen():
 		queue_free()
@@ -40,6 +49,7 @@ func init(dir: Vector2, damage: float, bullet_size_multiplier: float = 1.0, atta
 	_damage = damage
 	_velocity = dir * _speed
 	($CollisionShape2D.shape as CircleShape2D).radius = _radius
+	_set_collision_mask()
 	
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()
