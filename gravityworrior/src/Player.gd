@@ -38,7 +38,7 @@ var _last_shoot_dir = Vector2.RIGHT
 
 var _movement_speed: float = 6.0
 var _boost_speed_multiplier: float = 2.5
-var _damage: float = 10.0
+var _damage: float = 1.0
 var _bullet_size_multiplier: float = 1.0
 var _attack_speed_multiplier: float = 1.0
 

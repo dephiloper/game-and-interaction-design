@@ -4,6 +4,7 @@ var current_game_state = GameState.Vote
 var planets: Array = []
 var players: Array = []
 var assassins: Array = []
+var exploding_assassins: Array = []
 var destroyers: Array = []
 var enemies: Array = []
 var satellite: Satellite
