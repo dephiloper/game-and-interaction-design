@@ -55,7 +55,7 @@ z_index = 1
 [node name="EnemySpawn" parent="." instance=ExtResource( 5 )]
 
 [node name="Satellite" parent="." instance=ExtResource( 6 )]
-position = Vector2( 641, 395.639 )
+position = Vector2( 651.721, 415.651 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
