@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var HealthBarScene = preload("res://src/DestroyerHealthBar.tscn")
+var HealthBarScene = preload("res://src/HealthBar.tscn")
 
 const SPEED_SCALE = 0.66
 const SPEED = 1.0 * SPEED_SCALE
@@ -82,7 +82,6 @@ func hit(damage, collision):
 	if health <= 0:
 		health = 0
 		_die()
-	_health_bar.update()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:
 		# uncomment to make destroyer follow player
@@ -233,7 +232,6 @@ func _process_dead(delta):
 		var alpha = _channel_time / DIE_TIME
 		$HeadSprite.modulate = Color(1, 1, 1, alpha)
 		$BodySprite.modulate = Color(1, 1, 1, alpha)
-		_health_bar.update()
 
 func _update_velocity_by_direction():
 	if _velocity.length_squared() > 0.01:

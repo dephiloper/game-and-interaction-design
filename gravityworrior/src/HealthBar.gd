@@ -1,23 +1,78 @@
 extends Node2D
 
-const WIDTH: int = 32
-const HEIGHT: int = 6
-const BORDER_SIZE: int = 1
+const BAR_WIDTH: int = 32
+const BAR_HEIGHT: int = 6
+const BAR_BORDER_SIZE: int = 1
+const BAR_OFFSET = Vector2(0, -30)
+const DELAYED_HEALTH_SPEED = 0.02
+const FADE_TIME = 1.0
 
-var _progress: float = 100
-var _max_progress: float = 100
+var _entity
+var _channel_time: float = -1.0
+var _is_dead = false
+var _max_health
+var _delayed_health: float
+var _offset: Vector2
 
-class_name HealthBar
+func init(entity, offset):
+	_entity = entity
+	_max_health = _entity._get_max_health()
+	_delayed_health = _entity.health
+	_offset = offset
 
-func _ready() -> void:
-	position = Vector2(position.x - WIDTH/2.0, position.y)
-	
-func set_health_value(value: float, max_value: float = 100) -> void:
-	_progress = value
-	_max_progress = max_value
-	update()
+func _physics_process(delta):
+	if (not _is_dead) and _entity.is_dead():
+		_channel_time = FADE_TIME
+		_is_dead = true
+
+	if _is_dead:
+		_channel_time -= delta
+		if _channel_time <= 0:
+			queue_free()
+	else:
+		position = _entity.position + _offset
+
+	if _delayed_health > _entity.health:
+		_delayed_health -= _max_health * DELAYED_HEALTH_SPEED
+		update()
+	else:
+		if _is_dead:
+			update()
 
 func _draw() -> void:
-	draw_rect(Rect2(0, 0, WIDTH, HEIGHT), Color(0, 0, 0, 0.5))
-	var width: float = ((WIDTH - 2*BORDER_SIZE) * _progress) / _max_progress
-	draw_rect(Rect2(BORDER_SIZE, BORDER_SIZE, width, HEIGHT - 2*BORDER_SIZE), Color(1, 0, 0, 0.5))
+	var health = 0
+	var alpha = 1
+	if _is_dead:
+		alpha = _channel_time / FADE_TIME
+	else:
+		health = _entity.health
+
+	var background_color = Color.black
+	background_color.a = alpha
+	var foreground_color = Color.red
+	foreground_color.a = alpha
+
+	draw_rect(Rect2(BAR_OFFSET.x, BAR_OFFSET.y, BAR_WIDTH, BAR_HEIGHT), background_color)
+	var width: float = ((BAR_WIDTH - 2*BAR_BORDER_SIZE) * health) / _max_health
+	draw_rect(
+		Rect2(
+			BAR_BORDER_SIZE + BAR_OFFSET.x,
+			BAR_BORDER_SIZE + BAR_OFFSET.y,
+			width,
+			BAR_HEIGHT - 2*BAR_BORDER_SIZE),
+		foreground_color
+	)
+
+	if _delayed_health > health:
+		var delayed_color = Color.white
+		delayed_color.a = alpha
+		var delayed_width: float = ((BAR_WIDTH - 2*BAR_BORDER_SIZE) * _delayed_health) / _max_health
+		delayed_width -= width
+		draw_rect(
+			Rect2(
+				width,
+				BAR_BORDER_SIZE + BAR_OFFSET.y,
+				delayed_width,
+				BAR_HEIGHT - 2*BAR_BORDER_SIZE),
+			delayed_color
+		)
