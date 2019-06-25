@@ -45,7 +45,7 @@ var _attack_speed_multiplier: float = 1.0
 # public methods
 func hit(damage: float) -> void:
 	health = max(health - damage, 0)
-	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
+	#Input.start_joy_vibration(device_id, 1, 0, 0.5)
 
 func apply_buff(buff_type: String) -> void:
 	match Buff.Types[buff_type]:

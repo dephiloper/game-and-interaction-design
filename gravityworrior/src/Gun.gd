@@ -29,3 +29,4 @@ func _apply_gun_visuals(offset, texture_path) -> void:
 	var gun_offset = Vector2(offset, 0)
 	$GunSprite.set_offset(gun_offset)
 	$GunSprite.texture = load(texture_path)
+	$GunSprite.apply_scale(Vector2(0.7, 0.7))
