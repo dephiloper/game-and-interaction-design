@@ -22,6 +22,9 @@ func _connect_timer():
 func _get_healthbar_offset():
 	return Vector2(-20, 0)
 
+func _get_squared_attack_range():
+	return SQUARED_ATTACK_RANGE * 0.8
+
 func _shoot(direction):
 	var bullet: Bullet = _destroyer_bullet_scene.instance()
 	bullet.init(direction, SHOOT_DAMAGE, 1.0, SHOOT_SPEED)

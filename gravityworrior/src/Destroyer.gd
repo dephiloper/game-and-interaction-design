@@ -14,7 +14,7 @@ const CIRCLE_DISTANCE = 120
 
 const MAX_HEALTH = 50
 const FOLLOW_PROBABILITY: float = 0.33
-const SQUARED_ATTACK_RANGE = 20000
+const SQUARED_ATTACK_RANGE = 8000
 const DAMAGE = 20
 const HEAD_DAMAGE_RATIO: float = 0.4
 
@@ -57,10 +57,13 @@ func _get_healthbar_scale():
 	return 1.0
 
 func _get_healthbar_offset():
-	return Vector2.ZERO
+	return Vector2(-15, 0)
 
 func _connect_timer():
 	pass
+
+func _get_squared_attack_range():
+	return SQUARED_ATTACK_RANGE
 
 func _with_probability(probability):
 	return randf() < probability
@@ -129,7 +132,7 @@ func _get_nearest_planet(pos):
 	return nearest_planet
 
 func _sender_in_range():
-	return _target_point.distance_squared_to(position) < SQUARED_ATTACK_RANGE
+	return _target_point.distance_squared_to(position) < _get_squared_attack_range()
 
 func is_dead():
 	return state == DestroyerState.Dead
