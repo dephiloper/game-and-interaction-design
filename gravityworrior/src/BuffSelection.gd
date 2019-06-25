@@ -4,7 +4,6 @@ var _player_selections: Array
 var _players_confirmed: Array
 var _buffs: Array
 var _selection_allowed = false
-var last_direction: Vector2 = Vector2.ZERO
 
 func reset() -> void:
 	_setup()
@@ -31,15 +30,15 @@ func _process(_delta: float) -> void:
 				var controls: Controls = (player as Player).controls
 				var horizontal = controls.pressed("ui_right") - controls.pressed("ui_left")
 				if horizontal > 0.5:
-					if last_direction != Vector2.RIGHT:
+					if controls.last_axis_direction != Vector2.RIGHT:
 						_switch_to_right_buff(i)
-					last_direction = Vector2.RIGHT
+					controls.last_axis_direction = Vector2.RIGHT
 				elif horizontal < -0.5:
-					if last_direction != Vector2.LEFT:
+					if controls.last_axis_direction != Vector2.LEFT:
 						_switch_to_left_buff(i)
-					last_direction = Vector2.LEFT
+					controls.last_axis_direction = Vector2.LEFT
 				else:
-					last_direction = Vector2.ZERO
+					controls.last_axis_direction = Vector2.ZERO
 				
 				if controls.just_pressed("jump"):
 					_players_confirmed[i] = true

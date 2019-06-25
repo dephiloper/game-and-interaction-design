@@ -1,5 +1,6 @@
 extends Node2D
 
+const PLAYER_SCENE = preload("res://src/Player.tscn")
 var current_game_state = GameState.Vote
 var planets: Array = []
 var players: Array = []
@@ -10,12 +11,28 @@ var big_destroyers: Array = []
 var enemies: Array = []
 var satellite: Satellite
 
+var _max_players: int = 4
+
 enum GameState {
 	Fight,
 	Vote
 }
 
 func _ready() -> void:
+	var spawn_points = get_node("/root/Main/SpawnPoints")
+	var connected_joypads = Input.get_connected_joypads()
+	for i in connected_joypads:
+		var player = PLAYER_SCENE.instance()
+		player.position = spawn_points.get_children()[i].position
+		get_node("/root/Main").add_child(player)
+		if i == _max_players-1:
+			break
+	
+	if connected_joypads.size() == 0:
+		var player = PLAYER_SCENE.instance()
+		player.position = spawn_points.get_children()[0].position
+		get_node("/root/Main").add_child(player)
+	
 	for player in players:
 		player.connect("active_changed", self, "_player_active_changed")
 
