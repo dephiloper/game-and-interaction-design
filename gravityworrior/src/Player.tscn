@@ -47,6 +47,7 @@ margin_top = -8.0
 margin_bottom = -8.0
 
 [node name="Gun" parent="." instance=ExtResource( 4 )]
+position = Vector2( 0, 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -67,4 +68,3 @@ one_shot = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ReviveArea"]
 shape = SubResource( 1 )
-

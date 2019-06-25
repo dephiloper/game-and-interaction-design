@@ -45,7 +45,7 @@ var _attack_speed_multiplier: float = 1.0
 # public methods
 func hit(damage: float) -> void:
 	health = max(health - damage, 0)
-	# Input.start_joy_vibration(device_id, 1, 0, 0.5)
+	Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
 
 func apply_buff(buff_type: String) -> void:
 	match Buff.Types[buff_type]:
@@ -169,7 +169,6 @@ func _calculate_player_movement() -> Vector2:
 		
 	if controls.pressed("shoot") > 0:
 		_shoot(_shoot_dir.normalized())
-		$Gun/GunSprite.rotation = _shoot_dir.angle()
 		
 	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
@@ -200,7 +199,8 @@ func _caculate_cross_hair_direction() -> Vector2:
 	$Gun/CrosshairSprite.visible = false if direction == Vector2.ZERO else true
 	$Gun/CrosshairSprite.position = direction * CROSS_HAIR_DISTANCE 
 	$Gun/GunSprite.rotation = direction.angle()
-	
+	$Gun/GunSprite.set_flip_v(direction.x < 0)
+		
 	return direction
 
 func _shoot(dir: Vector2) -> void:
