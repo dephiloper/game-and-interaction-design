@@ -1,7 +1,10 @@
 extends Node2D
 
 var _assassin_scene = preload("res://src/Assassin.tscn")
+var _exploding_assassin_scene = preload("res://src/ExplodingAssassin.tscn")
 var _destroyer_scene = preload("res://src/Destroyer.tscn")
+var _big_destroyer_scene = preload("res://src/BigDestroyer.tscn")
+
 
 var has_spawned = false
 var wave_over = false
@@ -12,18 +15,26 @@ const level2: int = 2
 const level3: int = 3
 
 const DESTROYER_PER_WAVE: int = 1
+const BIG_DESTROYER_PER_WAVE: int = 1
 const ASSASSINS_PER_WAVE: int = 5
+const EXPLODING_ASSASSINS_PER_WAVE = 2
 
 func _on_attack_player(player):
 	for assassin in GameManager.assassins:
+		assassin.attack_player_by_signal(player)
+	for assassin in GameManager.exploding_assassins:
 		assassin.attack_player_by_signal(player)
 
 func _on_destroyer_got_attacked(player):
 	for assassin in GameManager.assassins:
 		assassin.attack_player_because_guard(player)
+	for assassin in GameManager.exploding_assassins:
+		assassin.attack_player_because_guard(player)
 
 func _on_assassin_got_attacked(player):
 	for assassin in GameManager.assassins:
+		assassin.attack_player_because_guard(player)
+	for assassin in GameManager.exploding_assassins:
 		assassin.attack_player_because_guard(player)
 
 #warning-ignore:return_value_discarded
@@ -45,7 +56,9 @@ func _filter_has_to_be_removes(enemies, free):
 
 func _physics_process(_delta: float) -> void:
 	_filter_has_to_be_removes(GameManager.assassins, false)
+	_filter_has_to_be_removes(GameManager.exploding_assassins, false)
 	_filter_has_to_be_removes(GameManager.destroyers, false)
+	_filter_has_to_be_removes(GameManager.big_destroyers, false)
 	_filter_has_to_be_removes(GameManager.enemies, true)
 
 func _create_assassin():
@@ -54,9 +67,20 @@ func _create_assassin():
 	assassin.connect("attack_player", self, "_on_attack_player")
 	assassin.connect("assassin_got_attacked", self, "_on_assassin_got_attacked")
 
+func _create_exploding_assassin():
+	var assassin = _create_enemy_by_scene(_exploding_assassin_scene)
+	GameManager.exploding_assassins.append(assassin)
+	assassin.connect("attack_player", self, "_on_attack_player")
+	assassin.connect("assassin_got_attacked", self, "_on_assassin_got_attacked")
+
 func _create_destroyer():
 	var destroyer = _create_enemy_by_scene(_destroyer_scene)
 	GameManager.destroyers.append(destroyer)
+	destroyer.connect("destroyer_got_attacked", self, "_on_destroyer_got_attacked")
+
+func _create_big_destroyer():
+	var destroyer = _create_enemy_by_scene(_big_destroyer_scene)
+	GameManager.big_destroyers.append(destroyer)
 	destroyer.connect("destroyer_got_attacked", self, "_on_destroyer_got_attacked")
 
 func _create_enemy_by_scene(scene):
@@ -85,10 +109,14 @@ func on_SpawnTimer_timeout() -> void:
 	if (GameManager.current_game_state == GameManager.GameState.Fight && !wave_over):
 		for _i in range (DESTROYER_PER_WAVE):
 			_create_destroyer()
+		for _i in range (BIG_DESTROYER_PER_WAVE):
+			_create_big_destroyer()
 		for _i in range(ASSASSINS_PER_WAVE):
 			if GameManager.enemies.size() >= 10:
 					break
 			_create_assassin()
+		for _i in range(EXPLODING_ASSASSINS_PER_WAVE):
+			_create_exploding_assassin()
 		has_spawned = true
 
 func set_level(level: int):

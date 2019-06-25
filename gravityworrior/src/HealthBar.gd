@@ -10,7 +10,7 @@ var _max_progress: float = 100
 class_name HealthBar
 
 func _ready() -> void:
-	position = Vector2(position.x - WIDTH/2, position.y)
+	position = Vector2(position.x - WIDTH/2.0, position.y)
 	
 func set_health_value(value: float, max_value: float = 100) -> void:
 	_progress = value

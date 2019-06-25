@@ -1,22 +1,22 @@
 extends KinematicBody2D
 
 const SPEED_SCALE: float = 0.66
-const SQUARED_SPEED_SCALE = SPEED_SCALE * SPEED_SCALE
-const SPEED: float = 10.0 * SPEED_SCALE
-const ATTACK_SPEED: float = 450.0 * SPEED_SCALE
+const SPEED: float = 10.0
+const ATTACK_SPEED: float = 450.0
 const DRAG: float = 0.92
 const GO_INTO_PLANET_SPEED = 50
-const MOVE_AWAY_FROM_PLANET_SPEED = 10 * SPEED_SCALE
+const MOVE_AWAY_FROM_PLANET_SPEED = 10
 const ROUTE_POINT_DISTANCE = 50
 const MIN_PLANET_ROUTE_DISTANCE = 55
 const DESTROYER_DISTANCE = 40
 const ASSASSIN_DISTANCE_FORCE: float = 1.0
 const GUARD_DISTANCE = 70
 const EPSILON = 0.0001
+const MAX_HEALTH: int = 20
 
-const SQUARED_ATTACK_RANGE: float = 20000.0 * SQUARED_SPEED_SCALE
-const SQUARED_SIGNAL_ATTACK_RANGE: float = 40000.0 * SQUARED_SPEED_SCALE
-const SQUARED_PLANET_DISTANCE: float = 15000.0 * SQUARED_SPEED_SCALE
+const SQUARED_ATTACK_RANGE: float = 8500.0
+const SQUARED_SIGNAL_ATTACK_RANGE: float = 17000.0
+const SQUARED_PLANET_DISTANCE: float = 6000.0
 const LURK_ON_PLANET_TARGET_POINT_DIFF: int = 100
 
 const ATTACK_CHANNEL_TIME: float = 0.35
@@ -48,7 +48,7 @@ signal assassin_got_attacked(player)
 var state = ASSASSIN_STATE.FlyToPlayer
 # var old_state = null
 
-var health: float = 20.0
+var health: float = MAX_HEALTH
 var _target_player: Player = null
 var _target_planet: Planet = null
 var _destroyer_to_guard = null
@@ -90,12 +90,26 @@ func state_to_str(s):
 func _ready() -> void:
 	_start_guard_destroyer()
 
+func _get_speed_scale():
+	return SPEED_SCALE
+
+func _get_squared_attack_range():
+	return SQUARED_ATTACK_RANGE
+
+func _get_attack_channel_time():
+	return ATTACK_CHANNEL_TIME
+
 func hit(damage: float, _collision) -> bool:
+	if is_dead():
+		return false
 	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
-		_die()
+		_start_die()
 	return true
+
+func _start_die():
+	_die()
 
 func _die():
 	state = ASSASSIN_STATE.Dead
@@ -122,7 +136,7 @@ func attack_player_because_guard(player):
 func _get_player_in_range():
 	for player in GameManager.players:
 		var squared_distance = player.position.distance_squared_to(position)
-		if squared_distance < SQUARED_ATTACK_RANGE:
+		if squared_distance < _get_squared_attack_range():
 			return player
 	return null
 
@@ -142,6 +156,10 @@ func _get_nearest_destroyer(pos):
 func _get_nearest_assassin(pos):
 	var assassins_without_self = []
 	for assassin in GameManager.assassins:
+		if assassin != self:
+			assassins_without_self.append(assassin)
+
+	for assassin in GameManager.exploding_assassins:
 		if assassin != self:
 			assassins_without_self.append(assassin)
 
@@ -224,7 +242,7 @@ func _start_channel_attack(target_player, do_emit):
 		return
 	_target_player = target_player
 	state = ASSASSIN_STATE.ChannelAttack
-	_channel_time = ATTACK_CHANNEL_TIME
+	_channel_time = _get_attack_channel_time()
 	if do_emit:
 		emit_signal("attack_player", _target_player)
 
@@ -340,6 +358,7 @@ func _process_guard_destroyer():
 			_destroyer_to_guard.num_guards -= 1
 			_start_channel_attack(player_in_range, true)
 
+		var look_at_point = position + _destroyer_to_guard._velocity + (guard_point - position)
 		look_at(position + _destroyer_to_guard._velocity)
 
 func _process_go_into_planet(delta):
@@ -427,7 +446,7 @@ func _physics_process(delta: float) -> void:
 	#	old_state = state
 
 func _process_movement(delta: float) -> void:
-	var collision = move_and_collide(_velocity * delta)
+	var collision = move_and_collide(_velocity * delta * _get_speed_scale())
 	if collision:
 		_process_collision(collision)
 
@@ -435,12 +454,12 @@ func _process_movement(delta: float) -> void:
 
 func _process_collision(collision):
 	var collider = collision.collider
-	if collider.has_method("hit") and not collider.is_in_group("Destroyer"):
+	if collider.has_method("hit") and collider.is_in_group("Player"):
 		collider.hit(_damage)
-		_die()
+		_start_die()
 	if collider.has_method("hitSatellite"):
 		collider.hitSatellite(_damageSatellite)
-		_die()
+		_start_die()
 
 	var do_bounce = true
 

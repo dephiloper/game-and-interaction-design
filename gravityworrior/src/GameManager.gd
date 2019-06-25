@@ -4,7 +4,9 @@ var current_game_state = GameState.Vote
 var planets: Array = []
 var players: Array = []
 var assassins: Array = []
+var exploding_assassins: Array = []
 var destroyers: Array = []
+var big_destroyers: Array = []
 var enemies: Array = []
 var satellite: Satellite
 
@@ -34,8 +36,13 @@ func set_satellite(s: Satellite) -> void:
 func get_living_destroyers() -> Array:
 	var living_destroyers: Array = []
 	for destroyer in destroyers:
-		if not destroyer.has_to_be_removed():
+		if not destroyer.is_dead():
 			living_destroyers.append(destroyer)
+
+	for destroyer in big_destroyers:
+		if not destroyer.is_dead():
+			living_destroyers.append(destroyer)
+
 	return living_destroyers
 
 func get_living_players() -> Array:
