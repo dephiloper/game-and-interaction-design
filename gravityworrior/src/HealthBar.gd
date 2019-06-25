@@ -4,7 +4,7 @@ const BAR_WIDTH: int = 32
 const BAR_HEIGHT: int = 6
 const BAR_BORDER_SIZE: int = 1
 const BAR_OFFSET = Vector2(0, -30)
-const DELAYED_HEALTH_SPEED = 0.02
+const DELAYED_HEALTH_SPEED = 0.01
 const FADE_TIME = 1.0
 
 var _entity
