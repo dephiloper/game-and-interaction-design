@@ -169,7 +169,6 @@ func _calculate_player_movement() -> Vector2:
 		
 	if controls.pressed("shoot") > 0:
 		_shoot(_shoot_dir.normalized())
-		$Gun/GunSprite.rotation = _shoot_dir.angle()
 		
 	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
@@ -200,7 +199,8 @@ func _caculate_cross_hair_direction() -> Vector2:
 	$Gun/CrosshairSprite.visible = false if direction == Vector2.ZERO else true
 	$Gun/CrosshairSprite.position = direction * CROSS_HAIR_DISTANCE 
 	$Gun/GunSprite.rotation = direction.angle()
-	
+	$Gun/GunSprite.set_flip_v(direction.x < 0)
+		
 	return direction
 
 func _shoot(dir: Vector2) -> void:
