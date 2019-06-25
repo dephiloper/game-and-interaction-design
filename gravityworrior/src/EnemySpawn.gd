@@ -11,17 +11,19 @@ var current_level_index: int
 var current_wave
 
 class WaveSetting:
-	var num_destroyers
+	var spawn_amount
 	var spawn_rates
+	var global_spawn_rate_gain
 
-	func _init(nd, sr):
-		num_destroyers = nd
+	func _init(sa, sr, gsrg):
+		spawn_amount = sa
 		spawn_rates = sr
+		global_spawn_rate_gain = gsrg
 
 var wave_settings = [
-	WaveSetting.new(5, [1.0, 0.0, 1.0, 0.0]),
-	WaveSetting.new(8, [1.2, 0.7, 1.0, 0.0]),
-	WaveSetting.new(11, [1.7, 1.2, 1.2, 1.0])
+	WaveSetting.new(0.7, [1.5, 0.0, 0.0, 0.0], 0.1),
+	WaveSetting.new(8.0, [1.2, 0.7, 1.0, 0.0], 0.05),
+	WaveSetting.new(11.0, [1.7, 1.2, 1.2, 1.0], 0.05)
 ]
 
 func _on_attack_player(player):
@@ -120,4 +122,8 @@ func set_level(level: int):
 		get_tree().change_scene("res://src/WinScreen.tscn")
 	else:
 		var wave_setting = wave_settings[level]
-		current_wave = _enemy_wave_class.new(wave_setting.num_destroyers, wave_setting.spawn_rates)
+		current_wave = _enemy_wave_class.new(
+			wave_setting.spawn_amount,
+			wave_setting.spawn_rates,
+			wave_setting.global_spawn_rate_gain
+		)

@@ -12,13 +12,14 @@ enum EnemyType {
 	BIG_DESTROYER
 }
 
-# the number of destroyers that will still come in this wave
-var _num_destroyers_to_spawn: int
+# the amount of points that must accumulate to complete the wave
+var _spawn_amount: float
 # an array that maps enemy types to the taken space of this enemy type
 var _taken_space_values: Array
 
 var _spawn_rates: Array
 var _spawn_values: Array
+var _spawn_amount_of_type: Array
 var _global_spawn_rate: float
 var _global_spawn_rate_gain: float
 
@@ -30,13 +31,17 @@ func _reset_spawn_values():
 func _get_default_taken_space_values():
 	return [0.07, 0.3, 0.6, 1.0]
 
-func _init(num_destroyers_to_spawn: int, spawn_rates: Array):
-	_num_destroyers_to_spawn = num_destroyers_to_spawn
+func _get_default_spawn_amounts():
+	return [0.1, 0.25, 0.7, 1.0]
+
+func _init(spawn_amount: float, spawn_rates: Array, global_spawn_rate_gain):
+	_spawn_amount = spawn_amount
 	_spawn_rates = spawn_rates
 	_reset_spawn_values()
 	_taken_space_values = _get_default_taken_space_values()
+	_spawn_amount_of_type = _get_default_spawn_amounts()
 	_global_spawn_rate = 1.0
-	_global_spawn_rate_gain = 0.05
+	_global_spawn_rate_gain = global_spawn_rate_gain
 
 func _get_num_enemies_of_type(enemy_type):
 	match enemy_type:
@@ -71,14 +76,13 @@ func process_new_enemies(delta) -> Array:
 	"""
 	var new_enemies = []
 
-	if not _destroyer_finished():
+	if not _spawn_amount_finished():
 		for enemy_type in range(NUM_ENEMY_TYPES):
 			_spawn_values[enemy_type] += _get_spawn_value_gain(enemy_type) * delta
 			if _spawn_values[enemy_type] > 100.0:
 				new_enemies.append(enemy_type)
 				_spawn_values[enemy_type] = 0.0
-				if _is_destroyer(enemy_type):
-					_num_destroyers_to_spawn -= 1
+				_spawn_amount -= _spawn_amount_of_type[enemy_type]
 
 		_global_spawn_rate += _global_spawn_rate_gain * delta
 
@@ -87,8 +91,8 @@ func process_new_enemies(delta) -> Array:
 func _no_enemies_left():
 	return GameManager.enemies.empty()
 
-func _destroyer_finished():
-	return _num_destroyers_to_spawn <= 0
+func _spawn_amount_finished():
+	return _spawn_amount <= 0.0
 
 func finished():
-	return _destroyer_finished() and _no_enemies_left()
+	return _spawn_amount_finished() and _no_enemies_left()
