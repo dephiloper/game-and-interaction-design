@@ -24,10 +24,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/Controls.gd"
 }, {
+"base": "Node",
+"class": "EnemyWave",
+"language": "GDScript",
+"path": "res://src/EnemyWave.gd"
+}, {
 "base": "Node2D",
 "class": "Gun",
 "language": "GDScript",
 "path": "res://src/Gun.gd"
+}, {
+"base": "Control",
+"class": "Hud",
+"language": "GDScript",
+"path": "res://src/Hud.gd"
 }, {
 "base": "Node2D",
 "class": "Planet",
@@ -38,14 +48,22 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://src/Player.gd"
+}, {
+"base": "Node2D",
+"class": "Satellite",
+"language": "GDScript",
+"path": "res://src/Satellite.gd"
 } ]
 _global_script_class_icons={
 "Buff": "",
 "Bullet": "",
 "Controls": "",
+"EnemyWave": "",
 "Gun": "",
+"Hud": "",
 "Planet": "",
-"Player": ""
+"Player": "",
+"Satellite": ""
 }
 
 [application]
@@ -58,10 +76,22 @@ config/icon="res://img/icon.png"
 
 GameManager="*res://src/GameManager.gd"
 
+[debug]
+
+gdscript/warnings/unassigned_variable=false
+gdscript/warnings/unassigned_variable_op_assign=false
+gdscript/warnings/unused_variable=false
+gdscript/warnings/unused_class_variable=false
+gdscript/warnings/unused_argument=false
+gdscript/warnings/return_value_discarded=false
+
 [display]
 
 window/size/width=1280
 window/size/height=720
+window/dpi/allow_hidpi=true
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [input]
 
@@ -134,4 +164,5 @@ shoot={
 
 [rendering]
 
+environment/default_clear_color=Color( 0.188235, 0.184314, 0.184314, 1 )
 environment/default_environment="res://default_env.tres"

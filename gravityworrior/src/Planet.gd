@@ -5,22 +5,14 @@ class_name Planet
 const GRAVITY_EXPONENT: float = 2.95
 
 var gravity: float = 0.0
+var radius: float = 0.0
+
 
 var _planet_points: PoolVector2Array
-var _radius: float = 0.0
 var _num_points: int = 0.0
 var _offset: float = 0.0
 var _rotation: float = 0.0
 var _initialized: bool = false
-var type = Type.DEFAULT
-
-const Type = {
-	DEFAULT = Color.burlywood,
-	HEALTH_REGENERATION = Color.palevioletred,
-	REPULSIVE_POWER = Color.darkslategray,
-	HAZARD = Color.firebrick,
-	FREEZE = Color.cadetblue,
-}
 
 func _init() -> void:
 	randomize()
@@ -35,18 +27,15 @@ func _draw() -> void:
 	if self._initialized:
 		_draw_planet(self._planet_points)
 
-func generate(center: Vector2, radius: float = rand_range(32, 64), 
+func generate(center: Vector2, r: float = rand_range(21, 42), 
 	num_points: int = int(rand_range(12,20)), 
 	offset: float = rand_range(2,4)) -> void:
 	self.position = center
-	self._radius = radius
+	self.radius = r
 	self._num_points = num_points
 	self._offset = offset
 	self._planet_points = _calculate_planet_points()
 	self._rotation = rand_range(-1,1)
-	self.type = Type.values()[randi() % len(Type.values())]
-	if self.type == Type.REPULSIVE_POWER:
-			self.gravity *= -1
 
 	self._initialized = true
 	update()
@@ -55,7 +44,7 @@ func _calculate_planet_points() -> PoolVector2Array:
 	var angle: float = 2 * PI / self._num_points
 	var points: PoolVector2Array = []
 	for i in self._num_points:
-		var r = rand_range(self._radius-self._offset, self._radius+self._offset)
+		var r = rand_range(self.radius-self._offset, self.radius+self._offset)
 		self.gravity += r
 		var x: float = r * cos(i * angle)
 		var y: float = r * sin(i * angle)
@@ -70,7 +59,7 @@ func _create_collision_shape():
 	$CollisionPolygon.polygon = self._planet_points
 	
 func _draw_planet(points: Array) -> void:
-	draw_polygon(points, PoolColorArray([type]))
+	draw_polygon(points, PoolColorArray([Color.burlywood]))
 	draw_polyline(points, Color.black, 2, true)
 	
 

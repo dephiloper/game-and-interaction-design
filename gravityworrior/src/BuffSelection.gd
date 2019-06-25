@@ -1,43 +1,29 @@
-extends Node2D
+extends Control
 
-var _player_selections: Array = []
-var _players_confirmed: Array = []
-var _buffs: Array = []
+var _player_selections: Array
+var _players_confirmed: Array
+var _buffs: Array
+var _selection_allowed = false
+
+func reset() -> void:
+	_setup()
+	_fade_in()
 
 #warning-ignore:return_value_discarded
 func _ready() -> void:
-	randomize()
-	
-	for player in GameManager.players:
-		_player_selections.append(1)
-		_players_confirmed.append(false)
-		
-	var available_types = Buff.Types.keys()
-	
-	# collect all buffs in array
-	for child in get_children():
-		var buff: Buff = child as Buff
-		if buff:
-			var rand_index = randi() % len(available_types)
-			buff.set_type(available_types[rand_index])
-			available_types.remove(rand_index)
-			_buffs.append(buff)
-	
-	# select the second buff as default
-	for i in range(len(_player_selections)):
-		_select_buff( _player_selections[i], i)
-		
-	$Tween.connect("tween_completed", self, "_on_selection_done")
-
-	$Tween.interpolate_property(self, "scale",
-                Vector2(1, 1), Vector2(0, 0), 0.5,
-                Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	_setup()
+	_fade_in()
+	$StartTween.connect("tween_completed", self, "_on_selection_allowed")
+	$FinishTween.connect("tween_completed", self, "_on_selection_done")
 
 func _process(_delta: float) -> void:
+	if not _selection_allowed:
+		return
 	if GameManager.current_game_state == GameManager.GameState.Vote:
 		if not _players_confirmed.has(false):
-			$Tween.start()
-			
+			_fade_out()
+			_selection_allowed = false
+		
 		var i: int = 0
 		for player in GameManager.players:
 			if not _players_confirmed[i]:
@@ -52,6 +38,33 @@ func _process(_delta: float) -> void:
 					buff.highlight(i)
 					player.apply_buff(buff.type)
 			i+=1
+
+func _setup() -> void:
+	randomize()
+	_player_selections = []
+	_players_confirmed = []
+	_buffs = []
+	_selection_allowed = false
+	
+	for player in GameManager.players:
+		_player_selections.append(1)
+		_players_confirmed.append(false)
+		
+	var available_types = Buff.Types.keys()
+	
+	# collect all buffs in array
+	for child in get_children():
+		var buff: Buff = child as Buff
+		if buff:
+			var rand_index = randi() % len(available_types)
+			#buff.reset()
+			buff.set_type(available_types[rand_index])
+			available_types.remove(rand_index)
+			_buffs.append(buff)
+	
+	# select the second buff as default
+	for i in range(len(_player_selections)):
+		_select_buff(_player_selections[i], i)
 
 func _switch_to_left_buff(player: int) -> void:
 	var index: int = _player_selections[player]
@@ -72,5 +85,21 @@ func _select_buff(index: int, player: int) -> void:
 	
 	(_buffs[index] as Buff).select(player)
 	
+func _on_selection_allowed(_object: Object, _key: NodePath) -> void:
+	_selection_allowed = true
+
 func _on_selection_done(_object: Object, _key: NodePath) -> void:
 	GameManager.current_game_state = GameManager.GameState.Fight
+	
+func _fade_in():
+	$StartTween.interpolate_property(self, "rect_scale",
+		Vector2(0, 0), Vector2(1, 1), 1,
+		Tween.TRANS_LINEAR, Tween.EASE_IN)
+		
+	$StartTween.start()
+
+func _fade_out():
+	$FinishTween.interpolate_property(self, "rect_scale",
+		Vector2(1, 1), Vector2(0, 0), 0.5,
+		Tween.TRANS_CIRC, Tween.EASE_IN)
+	$FinishTween.start()

@@ -10,10 +10,13 @@ const Types: Dictionary = {
 	BoostTime = "Boost Time",
 	Health = "More Health",
 	Damage = "More Damage",
-	Ammo = "More Ammo",
 	BiggerBullets = "Bigger Bullets",
 	AttackSpeed = "Faster Bullets",
 }
+
+func reset() -> void:
+	for player_selection_sprite in $BuffSprite.get_children():
+		(player_selection_sprite as Sprite).scale = Vector2(1,1)
 
 func select(player: int) -> void:
 	$BuffSprite.get_children()[player].visible = true
