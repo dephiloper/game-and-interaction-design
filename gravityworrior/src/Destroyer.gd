@@ -165,9 +165,6 @@ func _die():
 	collision_layer = 0
 	collision_mask = 0
 	_channel_time = DIE_TIME
-	var kill_counter = $"/root/Main/EnemySpawn".kill_count
-	if kill_counter > 0:
-		$"/root/Main/EnemySpawn".kill_count = kill_counter - 1
 
 func _get_next_route_point(target_point):
 	var route_point: Vector2 = target_point

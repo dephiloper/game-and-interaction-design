@@ -5,19 +5,24 @@ var _exploding_assassin_scene = preload("res://src/ExplodingAssassin.tscn")
 var _destroyer_scene = preload("res://src/Destroyer.tscn")
 var _big_destroyer_scene = preload("res://src/BigDestroyer.tscn")
 
+var _enemy_wave_class = preload("res://src/EnemyWave.gd")
 
-var has_spawned = false
-var wave_over = false
-var kill_count: int
-var current_level: int = 1
-const level1: int = 1
-const level2: int = 2
-const level3: int = 3
+var current_level_index: int
+var current_wave
 
-const DESTROYER_PER_WAVE: int = 1
-const BIG_DESTROYER_PER_WAVE: int = 1
-const ASSASSINS_PER_WAVE: int = 5
-const EXPLODING_ASSASSINS_PER_WAVE = 2
+class WaveSetting:
+	var num_destroyers
+	var spawn_rates
+
+	func _init(nd, sr):
+		num_destroyers = nd
+		spawn_rates = sr
+
+var wave_settings = [
+	WaveSetting.new(5, [1.0, 0.0, 1.0, 0.0]),
+	WaveSetting.new(8, [1.2, 0.7, 1.0, 0.0]),
+	WaveSetting.new(11, [1.7, 1.2, 1.2, 1.0])
+]
 
 func _on_attack_player(player):
 	for assassin in GameManager.assassins:
@@ -39,9 +44,8 @@ func _on_assassin_got_attacked(player):
 
 #warning-ignore:return_value_discarded
 func _ready() -> void:
-	$SpawnTimer.connect("timeout", self, "on_SpawnTimer_timeout")
-	$WaveStateTimer.connect("timeout", self, "on_WaveStateTimer_timeout")
-	set_level(current_level)
+	current_level_index = 0
+	set_level(current_level_index)
 
 func _filter_has_to_be_removes(enemies, free):
 	var index = 0
@@ -53,13 +57,6 @@ func _filter_has_to_be_removes(enemies, free):
 				enemy.queue_free()
 		else:
 			index += 1
-
-func _physics_process(_delta: float) -> void:
-	_filter_has_to_be_removes(GameManager.assassins, false)
-	_filter_has_to_be_removes(GameManager.exploding_assassins, false)
-	_filter_has_to_be_removes(GameManager.destroyers, false)
-	_filter_has_to_be_removes(GameManager.big_destroyers, false)
-	_filter_has_to_be_removes(GameManager.enemies, true)
 
 func _create_assassin():
 	var assassin = _create_enemy_by_scene(_assassin_scene)
@@ -93,39 +90,34 @@ func _create_enemy_by_scene(scene):
 	
 	return enemy
 
-func on_WaveStateTimer_timeout() -> void:
-	if has_spawned:
-		if kill_count == 0:
-			wave_over = true
-			if (GameManager.enemies.size() == 0):
-				GameManager.current_game_state = GameManager.GameState.Vote
-				get_node("/root/Main/UILayer").reinstantiate_buff_selection()
-				current_level +=1
-				set_level(current_level)
-				wave_over = false
-				has_spawned = false
+func _physics_process(delta: float) -> void:
+	_filter_has_to_be_removes(GameManager.assassins, false)
+	_filter_has_to_be_removes(GameManager.exploding_assassins, false)
+	_filter_has_to_be_removes(GameManager.destroyers, false)
+	_filter_has_to_be_removes(GameManager.big_destroyers, false)
+	_filter_has_to_be_removes(GameManager.enemies, true)
 
-func on_SpawnTimer_timeout() -> void:
-	if (GameManager.current_game_state == GameManager.GameState.Fight && !wave_over):
-		for _i in range (DESTROYER_PER_WAVE):
-			_create_destroyer()
-		for _i in range (BIG_DESTROYER_PER_WAVE):
-			_create_big_destroyer()
-		for _i in range(ASSASSINS_PER_WAVE):
-			if GameManager.enemies.size() >= 10:
-					break
-			_create_assassin()
-		for _i in range(EXPLODING_ASSASSINS_PER_WAVE):
-			_create_exploding_assassin()
-		has_spawned = true
+	if GameManager.current_game_state == GameManager.GameState.Fight:
+		_spawn_enemies(delta)
+
+func _spawn_enemies(delta):
+	var new_enemies = current_wave.process_new_enemies(delta)
+	for new_enemy in new_enemies:
+		match new_enemy:
+			0: _create_assassin()
+			1: _create_exploding_assassin()
+			2: _create_destroyer()
+			3: _create_big_destroyer()
+
+	if current_wave.finished():
+		GameManager.current_game_state = GameManager.GameState.Vote
+		get_node("/root/Main/UILayer").reinstantiate_buff_selection()
+		current_level_index += 1
+		set_level(current_level_index)
 
 func set_level(level: int):
-	match level:
-		1:
-			kill_count = level1
-		2:
-			kill_count = level2
-		3:
-			kill_count = level3
-		4:
-			get_tree().change_scene("res://src/WinScreen.tscn")
+	if level >= len(wave_settings):
+		get_tree().change_scene("res://src/WinScreen.tscn")
+	else:
+		var wave_setting = wave_settings[level]
+		current_wave = _enemy_wave_class.new(wave_setting.num_destroyers, wave_setting.spawn_rates)
