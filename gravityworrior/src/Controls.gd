@@ -4,6 +4,7 @@ class_name Controls
 
 var input_device_id setget set_device_id
 var _input_map = Dictionary()
+var _last_axis_direction: Vector2 = Vector2.ZERO
 
 func set_device_id(device_id: int) -> void:
 	input_device_id = device_id
@@ -37,4 +38,4 @@ func just_pressed(action: String) -> float:
 	var input = pressed(action)
 	if input:
 		_input_map[action] = 0
-	return input
+	return input 

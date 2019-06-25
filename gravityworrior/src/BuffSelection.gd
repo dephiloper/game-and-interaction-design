@@ -4,6 +4,7 @@ var _player_selections: Array
 var _players_confirmed: Array
 var _buffs: Array
 var _selection_allowed = false
+var last_direction: Vector2 = Vector2.ZERO
 
 func reset() -> void:
 	_setup()
@@ -28,10 +29,18 @@ func _process(_delta: float) -> void:
 		for player in GameManager.players:
 			if not _players_confirmed[i]:
 				var controls: Controls = (player as Player).controls
-				if controls.just_pressed("ui_left"):
-					_switch_to_left_buff(i)
-				if controls.just_pressed("ui_right"):
-					_switch_to_right_buff(i)
+				var horizontal = controls.pressed("ui_right") - controls.pressed("ui_left")
+				if horizontal > 0.5:
+					if last_direction != Vector2.RIGHT:
+						_switch_to_right_buff(i)
+					last_direction = Vector2.RIGHT
+				elif horizontal < -0.5:
+					if last_direction != Vector2.LEFT:
+						_switch_to_left_buff(i)
+					last_direction = Vector2.LEFT
+				else:
+					last_direction = Vector2.ZERO
+				
 				if controls.just_pressed("jump"):
 					_players_confirmed[i] = true
 					var buff: Buff = _buffs[_player_selections[i]] as Buff
@@ -57,7 +66,6 @@ func _setup() -> void:
 		var buff: Buff = child as Buff
 		if buff:
 			var rand_index = randi() % len(available_types)
-			#buff.reset()
 			buff.set_type(available_types[rand_index])
 			available_types.remove(rand_index)
 			_buffs.append(buff)
@@ -90,6 +98,8 @@ func _on_selection_allowed(_object: Object, _key: NodePath) -> void:
 
 func _on_selection_done(_object: Object, _key: NodePath) -> void:
 	GameManager.current_game_state = GameManager.GameState.Fight
+	for buff in _buffs:
+		buff.reset()
 	
 func _fade_in():
 	$StartTween.interpolate_property(self, "rect_scale",

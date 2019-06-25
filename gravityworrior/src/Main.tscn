@@ -2,9 +2,9 @@
 
 [ext_resource path="res://src/Main.gd" type="Script" id=1]
 [ext_resource path="res://src/UILayer.tscn" type="PackedScene" id=2]
-[ext_resource path="res://src/EnemySpawn.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/Planet.tscn" type="PackedScene" id=4]
-[ext_resource path="res://src/Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/EnemySpawn.tscn" type="PackedScene" id=5]
 [ext_resource path="res://src/Satellite.tscn" type="PackedScene" id=6]
 [ext_resource path="res://img/godot_background.png" type="Texture" id=7]
 
@@ -13,7 +13,7 @@ script = ExtResource( 1 )
 
 [node name="UILayer" parent="." instance=ExtResource( 2 )]
 
-[node name="Player0" parent="." instance=ExtResource( 5 )]
+[node name="Player0" parent="." instance=ExtResource( 3 )]
 position = Vector2( 231.109, 142.109 )
 
 [node name="Planet" parent="." instance=ExtResource( 4 )]
@@ -52,7 +52,7 @@ z_index = 1
 position = Vector2( 1124.56, 239.759 )
 z_index = 1
 
-[node name="EnemySpawn" parent="." instance=ExtResource( 3 )]
+[node name="EnemySpawn" parent="." instance=ExtResource( 5 )]
 
 [node name="Satellite" parent="." instance=ExtResource( 6 )]
 position = Vector2( 651.721, 415.651 )
