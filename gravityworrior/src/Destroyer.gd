@@ -230,8 +230,8 @@ func _process_dead(delta):
 		_has_to_be_removed = true
 	else:
 		var alpha = _channel_time / DIE_TIME
-		$HeadSprite.modulate = Color(1, 1, 1, alpha)
-		$BodySprite.modulate = Color(1, 1, 1, alpha)
+		$Sprite.modulate = Color(1, 1, 1, alpha)
+		#$BodySprite.modulate = Color(1, 1, 1, alpha)
 
 func _update_velocity_by_direction():
 	if _velocity.length_squared() > 0.01:
