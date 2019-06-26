@@ -30,10 +30,27 @@ func highlight(player: int) -> void:
 func set_type(new_type: String) -> void:
 	type = new_type
 	$Label.text = Types[new_type]
-
+	$InnerBuffSprite.texture = load(_get_texture_path(new_type))
 func _ready() -> void:
 	_initial_scale = $BuffSprite/Player0Selection.scale
 	var players: Array = GameManager.players
 	for i in range(len(players)):
 		$BuffSprite.get_child(i).texture = players[i].texture
 		$BuffSprite.get_child(i).modulate = players[i].color
+		
+func _get_texture_path(type: String) -> String:
+	match type:
+		"MovementSpeed":
+			return "res://img/buff_movement_speed.png"
+		"BoostSpeed":
+			return "res://img/buff_boost_speed.png"
+		"BoostTime":
+			return "res://img/buff_boost_time.png"
+		"Health":
+			return "res://img/buff_more_health.png"
+		"Damage":
+			return "res://img/buff_more_dmg.png"
+		"BiggerBullets":
+			return "res://img/buff_bigger_bullets.png"
+		"AttackSpeed":
+			return "res://img/buff_bullet_speed.png"
