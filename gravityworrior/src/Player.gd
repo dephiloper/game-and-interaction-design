@@ -6,6 +6,7 @@ signal active_changed
 
 # preloaded scenes
 const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
+const PLAYER_TEXTURE = preload("res://img/player.png")
 
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const ON_PLANET_DRAG: float = 0.9
@@ -27,6 +28,7 @@ var controls: Controls # provides pressed actions of the player
 var health: float = 100
 var boost: float = max_boost
 var is_inactive: bool = false
+var color: Color
 
 # fields
 var _velocity = Vector2()
@@ -71,9 +73,11 @@ func _init() -> void:
 	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
+	color = Color(randf(), randf(), randf())
 
 func _ready() -> void:
 	$PlayerSprite.texture = texture
+	$PlayerSprite.modulate = color
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
