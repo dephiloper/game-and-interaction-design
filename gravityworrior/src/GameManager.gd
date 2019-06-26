@@ -1,7 +1,7 @@
 extends Node2D
 
 const PLAYER_SCENE = preload("res://src/Player.tscn")
-var current_game_state = GameState.Vote
+var current_game_state = GameState.Fight
 var planets: Array = []
 var players: Array = []
 var assassins: Array = []

@@ -11,8 +11,6 @@ func reset() -> void:
 
 #warning-ignore:return_value_discarded
 func _ready() -> void:
-	_setup()
-	_fade_in()
 	$StartTween.connect("tween_completed", self, "_on_selection_allowed")
 	$FinishTween.connect("tween_completed", self, "_on_selection_done")
 
@@ -96,11 +94,13 @@ func _on_selection_allowed(_object: Object, _key: NodePath) -> void:
 	_selection_allowed = true
 
 func _on_selection_done(_object: Object, _key: NodePath) -> void:
+	visible = false
 	GameManager.current_game_state = GameManager.GameState.Fight
 	for buff in _buffs:
 		buff.reset()
 	
 func _fade_in():
+	visible = true
 	$StartTween.interpolate_property(self, "rect_scale",
 		Vector2(0, 0), Vector2(1, 1), 1,
 		Tween.TRANS_LINEAR, Tween.EASE_IN)
