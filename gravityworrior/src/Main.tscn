@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/Main.gd" type="Script" id=1]
-[ext_resource path="res://src/Satellite.tscn" type="PackedScene" id=2]
-[ext_resource path="res://src/EnemySpawn.tscn" type="PackedScene" id=3]
-[ext_resource path="res://src/UILayer.tscn" type="PackedScene" id=4]
-[ext_resource path="res://src/Planet.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/UILayer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/Planet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/EnemySpawn.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/Satellite.tscn" type="PackedScene" id=5]
 [ext_resource path="res://img/godot_background.png" type="Texture" id=6]
 
 [node name="Main" type="Node2D"]
@@ -24,47 +24,47 @@ position = Vector2( 1040, 600 )
 [node name="Spawn3" type="Position2D" parent="SpawnPoints"]
 position = Vector2( 240, 600 )
 
-[node name="UILayer" parent="." instance=ExtResource( 4 )]
+[node name="UILayer" parent="." instance=ExtResource( 2 )]
 
-[node name="Planet" parent="." instance=ExtResource( 5 )]
+[node name="Planet" parent="." instance=ExtResource( 3 )]
 position = Vector2( 173, 453 )
 z_index = 1
 
-[node name="Planet2" parent="." instance=ExtResource( 5 )]
+[node name="Planet2" parent="." instance=ExtResource( 3 )]
 position = Vector2( 240.58, 224.763 )
 z_index = 1
 
-[node name="Planet3" parent="." instance=ExtResource( 5 )]
+[node name="Planet3" parent="." instance=ExtResource( 3 )]
 position = Vector2( 516.56, 148.759 )
 z_index = 1
 
-[node name="Planet4" parent="." instance=ExtResource( 5 )]
+[node name="Planet4" parent="." instance=ExtResource( 3 )]
 position = Vector2( 643.873, 422.565 )
 z_index = 1
 
-[node name="Planet5" parent="." instance=ExtResource( 5 )]
+[node name="Planet5" parent="." instance=ExtResource( 3 )]
 position = Vector2( 569.805, 642.189 )
 z_index = 1
 
-[node name="Planet6" parent="." instance=ExtResource( 5 )]
+[node name="Planet6" parent="." instance=ExtResource( 3 )]
 position = Vector2( 952.07, 454.981 )
 z_index = 1
 
-[node name="Planet7" parent="." instance=ExtResource( 5 )]
+[node name="Planet7" parent="." instance=ExtResource( 3 )]
 position = Vector2( 903.19, 641.898 )
 z_index = 1
 
-[node name="Planet8" parent="." instance=ExtResource( 5 )]
+[node name="Planet8" parent="." instance=ExtResource( 3 )]
 position = Vector2( 910.56, 79.759 )
 z_index = 1
 
-[node name="Planet9" parent="." instance=ExtResource( 5 )]
+[node name="Planet9" parent="." instance=ExtResource( 3 )]
 position = Vector2( 1124.56, 239.759 )
 z_index = 1
 
-[node name="EnemySpawn" parent="." instance=ExtResource( 3 )]
+[node name="EnemySpawn" parent="." instance=ExtResource( 4 )]
 
-[node name="Satellite" parent="." instance=ExtResource( 2 )]
+[node name="Satellite" parent="." instance=ExtResource( 5 )]
 position = Vector2( 651.721, 415.651 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
