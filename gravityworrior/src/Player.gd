@@ -70,10 +70,10 @@ func apply_buff(buff_type: String) -> void:
 func _init() -> void:
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
+	color = GameManager.random_player_color()
 	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
-	color = Color(randf(), randf(), randf())
 
 func _ready() -> void:
 	$PlayerSprite.texture = texture
