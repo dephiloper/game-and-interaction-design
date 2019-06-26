@@ -75,8 +75,10 @@ func hit(damage, collision):
 		return false
 	"""
 
+	"""
 	if collision.collider_shape == $HeadCollisionShape:
 		damage *= HEAD_DAMAGE_RATIO
+	"""
 
 	health -= damage
 	if health <= 0:
