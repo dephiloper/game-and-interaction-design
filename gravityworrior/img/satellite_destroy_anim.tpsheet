@@ -1,0 +1,93 @@
+{
+	"textures": [
+		{
+			"image": "satellite_destroy_anim.png",
+			"size": {
+				"w": 804,
+				"h": 710
+			},
+			"sprites": [
+				{
+					"filename": "animation_satexplosion_6.png",
+					"region": {
+						"x": 1,
+						"y": 1,
+						"w": 400,
+						"h": 401
+					},
+					"margin": {
+						"x": 0,
+						"y": 0,
+						"w": 0,
+						"h": 0
+					}
+				},
+				{
+					"filename": "animation_satexplosion_5.png",
+					"region": {
+						"x": 403,
+						"y": 1,
+						"w": 400,
+						"h": 389
+					},
+					"margin": {
+						"x": 0,
+						"y": 12,
+						"w": 0,
+						"h": 12
+					}
+				},
+				{
+					"filename": "animation_satexplosion_2.png",
+					"region": {
+						"x": 1,
+						"y": 404,
+						"w": 269,
+						"h": 270
+					},
+					"margin": {
+						"x": 66,
+						"y": 63,
+						"w": 131,
+						"h": 131
+					}
+				},
+				{
+					"filename": "animation_satexplosion_1.png",
+					"region": {
+						"x": 272,
+						"y": 404,
+						"w": 196,
+						"h": 254
+					},
+					"margin": {
+						"x": 109,
+						"y": 71,
+						"w": 204,
+						"h": 147
+					}
+				},
+				{
+					"filename": "animation_satexplosion_3.png",
+					"region": {
+						"x": 470,
+						"y": 392,
+						"w": 315,
+						"h": 317
+					},
+					"margin": {
+						"x": 51,
+						"y": 48,
+						"w": 85,
+						"h": 84
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:68ed3dbc5634f8e63e7e82f8e6a814c4:b549ae99cd16272b2ab9041a7fa5889d:66e50b57888aa411694ddf5abdad6605$"
+	}
+}

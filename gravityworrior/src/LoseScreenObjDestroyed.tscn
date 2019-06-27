@@ -1,18 +1,33 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://src/LoseScreenObjDestroyed.gd" type="Script" id=1]
+[ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=2]
+[ext_resource path="res://img/animation_satexplosion_1.png" type="Texture" id=3]
+[ext_resource path="res://img/animation_satexplosion_2.png" type="Texture" id=4]
+[ext_resource path="res://img/animation_satexplosion_3.png" type="Texture" id=5]
+[ext_resource path="res://img/animation_satexplosion_5.png" type="Texture" id=6]
+[ext_resource path="res://img/sat_planet.png" type="Texture" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 65
-font_data = ExtResource( 1 )
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 40
-font_data = ExtResource( 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ) ],
+"loop": false,
+"name": "default",
+"speed": 3.0
+} ]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -31,10 +46,21 @@ margin_top = 151.664
 margin_right = 1063.38
 margin_bottom = 353.664
 custom_fonts/font = SubResource( 2 )
-text = "Satelite destroyed
+text = "Satellite destroyed
 No Rescue Possible"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 669.316, 521.84 )
+frames = SubResource( 3 )
+frame = 7
+
+[node name="sat_planet" type="Sprite" parent="."]
+position = Vector2( 609.242, 746.911 )
+scale = Vector2( 1, 0.875 )
+z_index = -1
+texture = ExtResource( 7 )
