@@ -76,8 +76,8 @@ func _init() -> void:
 	controls.set_device_id(device_id)
 
 func _ready() -> void:
-	$PlayerSprite.texture = texture
-	$PlayerSprite.modulate = color
+	$PlayerSprites/body.modulate = color
+	$PlayerSprites/head.modulate = color
 	$Trail.texture = texture
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
@@ -89,9 +89,11 @@ func _process(_delta: float) -> void:
 	if health <= 0.0:
 		is_inactive = true
 		emit_signal("active_changed", not is_inactive)
-		$PlayerSprite.texture = INACTIVE_TEXTURE
+		$PlayerSprites/body.modulate = Color.gray
+		$PlayerSprites/head.modulate = Color.gray
+		$Gun.visible = false
 	if not is_inactive and _is_cooldown:
-		$PlayerSprite.self_modulate.a = (sin($CooldownTimer.time_left * 16) + 1) / 2
+		$PlayerSprites.modulate.a = (sin($CooldownTimer.time_left * 16) + 1) / 2
 
 func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
@@ -205,6 +207,8 @@ func _caculate_cross_hair_direction() -> Vector2:
 	$Gun/CrosshairSprite.position = direction * CROSS_HAIR_DISTANCE 
 	$Gun/GunSprite.rotation = direction.angle()
 	$Gun/GunSprite.set_flip_v(direction.x < 0)
+	for sprite in $PlayerSprites.get_children():
+		sprite.set_flip_h(direction.x < 0)
 		
 	return direction
 
@@ -214,7 +218,7 @@ func _shoot(dir: Vector2) -> void:
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost
 	_is_cooldown = false
-	$PlayerSprite.self_modulate.a = 1.0
+	$PlayerSprites.modulate.a = 1.0
 	
 func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 	if is_inactive and body.is_in_group("Player"):
@@ -222,4 +226,5 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 			is_inactive = false
 			emit_signal("active_changed", not is_inactive)
 			health = max_health
-			$PlayerSprite.texture = texture
+			$PlayerSprites/body.modulate = color
+			$PlayerSprites/head.modulate = color
