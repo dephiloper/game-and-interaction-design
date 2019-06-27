@@ -17,6 +17,9 @@ var aoe: bool = false
 #	draw_circle(Vector2(0,0), _radius, Color.black)
 #	draw_circle(Vector2(0,0), _radius-2, Color.yellow)
 
+func _get_drag():
+	return DRAG
+
 func _apply_hit(collision):
 	if collision.collider.has_method("hit"):
 		if collision.collider.hit(_damage, collision):
@@ -31,7 +34,7 @@ func _physics_process(delta: float) -> void:
 			queue_free()
 		_velocity = _velocity.bounce(collision.normal)
 		_bounce_count += 1
-	_velocity *= DRAG
+	_velocity *= _get_drag()
 	look_at(position + _velocity)
 	
 	
