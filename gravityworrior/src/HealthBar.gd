@@ -32,7 +32,11 @@ func _physics_process(delta):
 	else:
 		position = _entity.position + _offset
 
-	if _delayed_health > _entity.health:
+	var health = 0
+	if not _is_dead:
+		health = _entity.health
+
+	if _delayed_health > health:
 		_delayed_health -= _max_health * DELAYED_HEALTH_SPEED
 		update()
 	else:

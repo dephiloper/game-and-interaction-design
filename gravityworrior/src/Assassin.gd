@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+var HealthBarScene = preload("res://src/HealthBar.tscn")
+
 const SPEED_SCALE: float = 0.66
 const SPEED: float = 10.0
 const ATTACK_SPEED: float = 450.0
@@ -63,6 +65,7 @@ var _lurk_direction = null
 var _move_to_planet_cooldown = 0
 var _attack_cooldown = 0
 var _has_to_be_removed = false
+var _health_bar
 
 func state_to_str(s):
 	match s:
@@ -89,6 +92,20 @@ func state_to_str(s):
 
 func _ready() -> void:
 	_start_guard_destroyer()
+
+	_health_bar = HealthBarScene.instance()
+	_health_bar.transform = _health_bar.transform.scaled(Vector2(_get_healthbar_scale(), _get_healthbar_scale()))
+	_health_bar.init(self, _get_healthbar_offset())
+	get_parent().add_child(_health_bar)
+
+func _get_healthbar_scale():
+	return 1.0
+
+func _get_healthbar_offset():
+	return Vector2(-10, 3)
+
+func _get_max_health():
+	return MAX_HEALTH
 
 func _get_speed_scale():
 	return SPEED_SCALE
