@@ -5,13 +5,13 @@ class_name Buff
 var type
 var _initial_scale: Vector2 = Vector2.ZERO
 const Types: Dictionary = {
-	MovementSpeed = "Movement Speed",
-	BoostSpeed = "Boost Speed",
-	BoostTime = "Boost Time",
-	Health = "More Health",
-	Damage = "More Damage",
-	BiggerBullets = "Bigger Bullets",
-	AttackSpeed = "Faster Bullets",
+	MovementSpeed = ["Movement Speed", preload("res://img/buff_movement_speed.png")],
+	BoostSpeed = ["Boost Speed", preload("res://img/buff_boost_speed.png")],
+	BoostTime = ["Boost Time", preload("res://img/buff_boost_time.png")],
+	Health = ["More Health", preload("res://img/buff_more_health.png")],
+	Damage = ["More Damage", preload("res://img/buff_more_dmg.png")],
+	BiggerBullets = ["Bigger Bullets", preload("res://img/buff_bigger_bullets.png")],
+	AttackSpeed = ["Faster Bullets", preload("res://img/buff_bullet_speed.png")]
 }
 
 func reset() -> void:
@@ -29,7 +29,8 @@ func highlight(player: int) -> void:
 	
 func set_type(new_type: String) -> void:
 	type = new_type
-	$Label.text = Types[new_type]
+	$Label.text = Types[new_type][0]
+	$InnerBuffSprite.texture = Types[new_type][1]
 
 func _ready() -> void:
 	_initial_scale = $BuffSprite/Player0Selection.scale

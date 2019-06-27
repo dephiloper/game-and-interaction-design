@@ -1,7 +1,8 @@
 extends Node2D
 
 const PLAYER_SCENE = preload("res://src/Player.tscn")
-var current_game_state = GameState.Vote
+
+var current_game_state = GameState.Fight
 var planets: Array = []
 var players: Array = []
 var assassins: Array = []
@@ -12,6 +13,7 @@ var enemies: Array = []
 var satellite: Satellite
 
 var _max_players: int = 4
+var _player_colors: Array = ["#22d6b6", "#9c495f", "#889a4e", "#d4b2ef", "#3ea458", "#a242b2", "#94ccd3", "#7cd474", "#339bd3", "#e1c31b"]
 
 enum GameState {
 	Fight,
@@ -45,6 +47,11 @@ func add_planet(planet: Planet) -> void:
 func register_player(player: Player) -> int:
 	players.append(player)
 	return len(players) - 1
+	
+func random_player_color() -> Color:
+	var color = _player_colors[randi() % len(_player_colors)]
+	_player_colors.erase(color)
+	return color
 	
 func set_satellite(s: Satellite) -> void:
 	satellite = s

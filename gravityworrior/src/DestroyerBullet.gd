@@ -1,5 +1,7 @@
 extends "res://src/Bullet.gd"
 
+var _radius = 5
+
 func _set_collision_mask():
 	collision_mask = 1 + 2 + 8
 
