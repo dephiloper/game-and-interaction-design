@@ -11,7 +11,7 @@ func _get_damage_scale():
 	return 2.0
 
 func _get_max_health():
-	return MAX_HEALTH * 2.5
+	return MAX_HEALTH * 3.5
 
 func _get_healthbar_scale():
 	return 1.5
