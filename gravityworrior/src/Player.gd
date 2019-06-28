@@ -14,7 +14,6 @@ const OFF_PLANET_DRAG: float = 0.99
 const OFF_PLANET_MAX_VELOCITY: int = 200
 const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
-const CROSS_HAIR_DISTANCE: int = 128
 const BORDER_BOUNDRY: int = 24
 const BORDER_BOUNDRY_PULL: int = 24
 
@@ -82,6 +81,7 @@ func _ready() -> void:
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 	$Hud.set_health_color(color)
+	$Gun.set_controls(controls)
 
 func _process(_delta: float) -> void:
 	$Hud.set_health_value(health, max_health)
@@ -105,7 +105,7 @@ func _physics_process(delta: float) -> void:
 		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
-		_velocity = move_and_slide_with_snap(_velocity, diff, -diff)
+		_velocity = move_and_slide_with_snap(_velocity, diff, -diff * 12)
 		_velocity = _velocity.slide(diff.normalized())
 		_velocity = _velocity.slide(-diff.normalized())
 	# not on planet
@@ -139,7 +139,10 @@ func _physics_process(delta: float) -> void:
 					_is_cooldown = true
 					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
-		
+	
+	for sprite in $PlayerSprites.get_children():
+		sprite.set_flip_h($Gun.shoot_dir.x < 0)
+	
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
 			# recharge boost
@@ -172,10 +175,9 @@ func _calculate_player_movement() -> Vector2:
 		movement_speed *= ON_PLANET_SPEED_MULTIPLIER
 		
 	var movement_dir: Vector2 = Vector2(horizontal, vertical).normalized() * movement_speed
-	_shoot_dir = _caculate_cross_hair_direction()
 		
 	if controls.pressed("shoot") > 0:
-		_shoot(_shoot_dir.normalized())
+		_shoot()
 		
 	if controls.pressed("jump") > 0 and not _is_cooldown:
 		_is_on_planet = false
@@ -197,23 +199,8 @@ func _calculate_boundary_pull() -> Vector2:
 	
 	return pull
 
-func _caculate_cross_hair_direction() -> Vector2:
-	var horizontal: float = controls.pressed("aim_right") - controls.pressed("aim_left")
-	var vertical: float = controls.pressed("aim_down") - controls.pressed("aim_up")
-	var direction: Vector2 = Vector2(horizontal, vertical).normalized()
-	if direction == Vector2.ZERO:
-		direction = _shoot_dir
-	$Gun/CrosshairSprite.visible = false if direction == Vector2.ZERO else true
-	$Gun/CrosshairSprite.position = direction * CROSS_HAIR_DISTANCE 
-	$Gun/GunSprite.rotation = direction.angle()
-	$Gun/GunSprite.set_flip_v(direction.x < 0)
-	for sprite in $PlayerSprites.get_children():
-		sprite.set_flip_h(direction.x < 0)
-		
-	return direction
-
-func _shoot(dir: Vector2) -> void:
-	$Gun.shoot(dir, _damage, _bullet_size_multiplier, _attack_speed_multiplier)
+func _shoot() -> void:
+	$Gun.shoot(_damage, _bullet_size_multiplier, _attack_speed_multiplier)
 
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost

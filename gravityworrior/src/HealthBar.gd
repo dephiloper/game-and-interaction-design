@@ -45,7 +45,7 @@ func _physics_process(delta):
 
 func _draw() -> void:
 	var health = 0
-	var alpha = 1
+	var alpha = 0.7
 	if _is_dead:
 		alpha = _channel_time / FADE_TIME
 	else:

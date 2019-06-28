@@ -13,30 +13,30 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 6.39498, 10.9119 )
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=2]
 radius = 8.78707
 
-[sub_resource type="Gradient" id=2]
+[sub_resource type="Gradient" id=3]
 colors = PoolColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=3]
-gradient = SubResource( 2 )
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
 
-[sub_resource type="Curve" id=4]
+[sub_resource type="Curve" id=5]
 _data = [ Vector2( 0, 0.323294 ), 0.0, 0.0, 0, 0, Vector2( 0.986991, 1 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
-curve = SubResource( 4 )
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
 
-[sub_resource type="ParticlesMaterial" id=6]
+[sub_resource type="ParticlesMaterial" id=7]
 flag_disable_z = true
 gravity = Vector3( 0, 0, 0 )
 angular_velocity = 1.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale = 0.03
-scale_curve = SubResource( 5 )
-color_ramp = SubResource( 3 )
+scale = 0.04
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 4 )
 hue_variation_random = 1.0
 
 [node name="Player" type="KinematicBody2D"]
@@ -68,7 +68,6 @@ margin_top = -7.81156
 margin_bottom = -7.81156
 
 [node name="Gun" parent="." instance=ExtResource( 8 )]
-position = Vector2( 0, 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 1 )
@@ -76,14 +75,14 @@ shape = SubResource( 1 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -6 )
-shape = SubResource( 7 )
+shape = SubResource( 2 )
 
 [node name="Trail" type="Particles2D" parent="."]
 emitting = false
-amount = 10
+amount = 20
 speed_scale = 2.0
 local_coords = false
-process_material = SubResource( 6 )
+process_material = SubResource( 7 )
 texture = ExtResource( 9 )
 
 [node name="CooldownTimer" type="Timer" parent="."]
