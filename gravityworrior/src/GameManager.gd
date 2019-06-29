@@ -39,7 +39,7 @@ func _ready() -> void:
 		player.connect("active_changed", self, "_player_active_changed")
 
 func _on_game_over():
-	get_tree().change_scene("res://src/LoseScreenObjDestroyed.tscn")
+	get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
 
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
