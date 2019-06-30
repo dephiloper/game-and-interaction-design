@@ -20,6 +20,9 @@ func _start_attack_player():
 	_do_explosion()
 	_die()
 
+func _should_collide_damage_player():
+	return false
+
 func _start_die():
 	_start_channel_attack(null, false)
 

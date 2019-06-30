@@ -116,6 +116,9 @@ func _get_squared_attack_range():
 func _get_attack_channel_time():
 	return ATTACK_CHANNEL_TIME
 
+func _should_collide_damage_player():
+	return true
+
 func hit(damage: float, _collision) -> bool:
 	if is_dead():
 		return false
@@ -472,7 +475,8 @@ func _process_movement(delta: float) -> void:
 func _process_collision(collision):
 	var collider = collision.collider
 	if collider.has_method("hit") and collider.is_in_group("Player"):
-		collider.hit(_damage)
+		if _should_collide_damage_player():
+			collider.hit(_damage)
 		_start_die()
 	if collider.has_method("hitSatellite"):
 		collider.hitSatellite(_damageSatellite)
