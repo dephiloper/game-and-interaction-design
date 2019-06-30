@@ -215,3 +215,4 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 			health = max_health
 			$PlayerSprites/body.modulate = color
 			$PlayerSprites/head.modulate = color
+			$Gun.visible = true
