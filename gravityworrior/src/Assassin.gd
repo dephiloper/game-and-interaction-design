@@ -20,6 +20,7 @@ const SQUARED_ATTACK_RANGE: float = 8500.0
 const SQUARED_SIGNAL_ATTACK_RANGE: float = 17000.0
 const SQUARED_PLANET_DISTANCE: float = 6000.0
 const LURK_ON_PLANET_TARGET_POINT_DIFF: int = 100
+const GUARD_LOOK_DISTANCE = 400
 
 const ATTACK_CHANNEL_TIME: float = 0.35
 const ATTACK_TIME: float = 0.5
@@ -378,8 +379,12 @@ func _process_guard_destroyer():
 			_destroyer_to_guard.num_guards -= 1
 			_start_channel_attack(player_in_range, true)
 
-		var look_at_point = position + _destroyer_to_guard._velocity + (guard_point - position)
-		look_at(position + _destroyer_to_guard._velocity)
+		var look_at_point = null
+		if position.distance_squared_to(guard_point) > GUARD_LOOK_DISTANCE:
+			look_at_point = position + _velocity
+		else:
+			look_at_point = position + _destroyer_to_guard._velocity
+		look_at(look_at_point)
 
 func _process_go_into_planet(delta):
 	_channel_time -= delta
