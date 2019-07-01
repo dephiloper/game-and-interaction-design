@@ -28,6 +28,7 @@ func _ready() -> void:
 
 	_health_bar = HealthBarScene.instance()
 	_health_bar.transform = _health_bar.transform.scaled(Vector2(2.0, 2.0))
+	_health_bar.color = Color.green
 	_health_bar.init(self, Vector2(-25.0, 0.0))
 	get_parent().call_deferred("add_child", _health_bar)
 

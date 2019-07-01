@@ -13,6 +13,7 @@ var _is_dead = false
 var _max_health
 var _delayed_health: float
 var _offset: Vector2
+var color: Color = Color.red
 
 func init(entity, offset):
 	_entity = entity
@@ -45,7 +46,7 @@ func _physics_process(delta):
 
 func _draw() -> void:
 	var health = 0
-	var alpha = 0.7
+	var alpha = 0.6
 	if _is_dead:
 		alpha = _channel_time / FADE_TIME
 	else:
@@ -53,7 +54,7 @@ func _draw() -> void:
 
 	var background_color = Color.black
 	background_color.a = alpha
-	var foreground_color = Color.red
+	var foreground_color = color
 	foreground_color.a = alpha
 
 	draw_rect(Rect2(BAR_OFFSET.x, BAR_OFFSET.y, BAR_WIDTH, BAR_HEIGHT), background_color)
