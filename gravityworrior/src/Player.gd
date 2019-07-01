@@ -24,7 +24,7 @@ var max_boost: float = 0.5
 var max_health: float = 100.0
 
 var controls: Controls # provides pressed actions of the player
-var health: float = 100
+var health: float = 100.0
 var boost: float = max_boost
 var is_inactive: bool = false
 var color: Color
@@ -58,7 +58,7 @@ func apply_buff(buff_type: String) -> void:
 			max_boost *= 1.2
 			boost = max_boost
 		Buff.Types.Health:
-			max_health *= 1.1
+			health = max_health
 		Buff.Types.Damage:
 			_damage *= 1.2
 		Buff.Types.BiggerBullets:
