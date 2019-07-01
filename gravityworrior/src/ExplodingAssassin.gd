@@ -26,6 +26,10 @@ func _should_collide_damage_player():
 func _start_die():
 	_start_channel_attack(null, false)
 
+func _start_channel_attack(target_player, do_emit):
+	state = ASSASSIN_STATE.ChannelAttack
+	_channel_time = _get_attack_channel_time()
+
 func _get_squared_attack_range():
 	return EXPLODING_SQUARED_ATTACK_RANGE
 
