@@ -297,7 +297,7 @@ func _start_move_away_from_planet():
 	_move_to_planet_cooldown = MOVE_TO_PLANET_COOLDOWN_TIME
 
 func _process_fly_to_player():
-	if _target_player == null:
+	if _target_player == null or _target_player.is_inactive:
 		_target_player = _choose_random(GameManager.get_living_players())
 		if _target_player == null:
 			return
