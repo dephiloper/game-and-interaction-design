@@ -1,12 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/BuffSelection.gd" type="Script" id=1]
 [ext_resource path="res://src/Buff.tscn" type="PackedScene" id=2]
+[ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 20
+font_data = ExtResource( 3 )
 
 [node name="BuffSelection" type="Control"]
 anchor_right = 1.0
 margin_right = -1280.0
-rect_scale = Vector2( 0, 0 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -34,3 +38,13 @@ position = Vector2( 120, 0 )
 [node name="StartTween" type="Tween" parent="."]
 
 [node name="FinishTween" type="Tween" parent="."]
+
+[node name="Label" type="Label" parent="."]
+margin_left = -170.0
+margin_top = -64.0
+margin_right = 170.0
+margin_bottom = -40.0
+custom_fonts/font = SubResource( 1 )
+text = "player choose your buff"
+align = 1
+valign = 1
