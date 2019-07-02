@@ -21,7 +21,7 @@ class WaveSetting:
 		global_spawn_rate_gain = gsrg
 
 var wave_settings = [
-	WaveSetting.new(1.0, [0.0, 0.0, 1.5, 0.0], 0.0),
+	WaveSetting.new(2.0, [0.0, 0.0, 2.5, 0.0], 0.5),
 	WaveSetting.new(2.7, [1.2, 0.0, 1.0, 0.0], 0.1),
 	WaveSetting.new(8.0, [1.7, 0.0, 1.5, 0.0], 0.15),
 	WaveSetting.new(11.0, [2.0, 1.0, 1.7, 0.0], 0.17),
