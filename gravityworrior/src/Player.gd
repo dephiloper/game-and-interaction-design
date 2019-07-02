@@ -54,11 +54,11 @@ func apply_buff(buff_type: String) -> void:
 			_movement_speed *= 1.2
 		Buff.Types.BoostSpeed:
 			_boost_speed_multiplier *= 1.1
-		Buff.Types.BoostTime:
+		Buff.Types.Boost:
 			max_boost *= 1.2
 			boost = max_boost
 		Buff.Types.Health:
-			health = max_health
+			max_health *= 1.2
 		Buff.Types.Damage:
 			_damage *= 1.2
 		Buff.Types.BiggerBullets:
