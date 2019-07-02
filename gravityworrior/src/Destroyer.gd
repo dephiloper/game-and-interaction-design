@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var HealthBarScene = preload("res://src/HealthBar.tscn")
 
-const SPEED_SCALE = 0.66
+const SPEED_SCALE = 0.9
 const SPEED = 1.0 * SPEED_SCALE
 const FOLLOW_SPEED = 2.0 * SPEED_SCALE
 const ATTACK_SPEED = 20.0 *  SPEED_SCALE
