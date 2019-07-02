@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var HealthBarScene = preload("res://src/HealthBar.tscn")
 
-const SPEED_SCALE: float = 0.66
+const SPEED_SCALE: float = 0.75
 const SPEED: float = 10.0
 const ATTACK_SPEED: float = 450.0
 const DRAG: float = 0.92
@@ -20,7 +20,7 @@ const SQUARED_ATTACK_RANGE: float = 8500.0
 const SQUARED_SIGNAL_ATTACK_RANGE: float = 17000.0
 const SQUARED_PLANET_DISTANCE: float = 6000.0
 const LURK_ON_PLANET_TARGET_POINT_DIFF: int = 100
-const GUARD_LOOK_DISTANCE = 400
+const GUARD_LOOK_DISTANCE_SQUARED = 400
 
 const ATTACK_CHANNEL_TIME: float = 0.35
 const ATTACK_TIME: float = 0.5
@@ -255,8 +255,9 @@ func _start_guard_destroyer():
 	_destroyer_to_guard = _choose_destroyer_to_guard()
 	if _destroyer_to_guard:
 		_destroyer_to_guard.num_guards += 1
-	_guard_position = Vector2(randf(), randf()).normalized() * GUARD_DISTANCE
-	state = ASSASSIN_STATE.GuardDestroyer
+		# _guard_position = Vector2(randf(), randf()).normalized() * GUARD_DISTANCE
+		_guard_position = (position - _destroyer_to_guard.position).normalized() * GUARD_DISTANCE
+		state = ASSASSIN_STATE.GuardDestroyer
 
 func _start_channel_attack(target_player, do_emit):
 	if _attack_cooldown > 0:
@@ -336,23 +337,28 @@ func _process_fly_to_planet():
 		_start_channel_attack(player_in_range, true)
 
 func _modify_guard_position():
-	var abs_guard_position = _destroyer_to_guard.position + _guard_position
+	var guard_point = _destroyer_to_guard.position + _guard_position
 
-	# move away from planet
-	var nearest_planet = _get_nearest_planet(abs_guard_position)
-	var planet_distance = nearest_planet.radius + MIN_PLANET_ROUTE_DISTANCE
-	abs_guard_position = _move_away_from(abs_guard_position, nearest_planet.position, planet_distance)
+	if position.distance_squared_to(guard_point) < GUARD_LOOK_DISTANCE_SQUARED:
+		var abs_guard_position = _destroyer_to_guard.position + _guard_position
 
-	# move away from destroyer
-	var nearest_destroyer = _get_nearest_destroyer(abs_guard_position)
-	abs_guard_position = _move_away_from(abs_guard_position, nearest_destroyer.position, DESTROYER_DISTANCE)
+		# move away from planet
+		var nearest_planet = _get_nearest_planet(abs_guard_position)
+		var planet_distance = nearest_planet.radius + MIN_PLANET_ROUTE_DISTANCE
+		abs_guard_position = _move_away_from(abs_guard_position, nearest_planet.position, planet_distance)
 
-	# move away from assassin
-	var nearest_assassin = _get_nearest_assassin(abs_guard_position)
-	if nearest_assassin:
-		abs_guard_position = _move_away_from_elastic(abs_guard_position, nearest_assassin.position, ASSASSIN_DISTANCE_FORCE)
+		# move away from destroyer
+		var nearest_destroyer = _get_nearest_destroyer(abs_guard_position)
+		abs_guard_position = _move_away_from(abs_guard_position, nearest_destroyer.position, DESTROYER_DISTANCE)
 
-	_guard_position = (abs_guard_position - _destroyer_to_guard.position).normalized() * GUARD_DISTANCE
+		# move away from assassin
+		var nearest_assassin = _get_nearest_assassin(abs_guard_position)
+		if nearest_assassin:
+			abs_guard_position = _move_away_from_elastic(abs_guard_position, nearest_assassin.position, ASSASSIN_DISTANCE_FORCE)
+
+		_guard_position = (abs_guard_position - _destroyer_to_guard.position).normalized() * GUARD_DISTANCE
+	else:
+		_guard_position = (position - _destroyer_to_guard.position).normalized() * GUARD_DISTANCE
 
 func _process_guard_destroyer():
 	if (_destroyer_to_guard != null) and (_destroyer_to_guard.is_dead()):
@@ -380,7 +386,7 @@ func _process_guard_destroyer():
 			_start_channel_attack(player_in_range, true)
 
 		var look_at_point = null
-		if position.distance_squared_to(guard_point) > GUARD_LOOK_DISTANCE:
+		if position.distance_squared_to(guard_point) > GUARD_LOOK_DISTANCE_SQUARED:
 			look_at_point = position + _velocity
 		else:
 			look_at_point = position + _destroyer_to_guard._velocity
