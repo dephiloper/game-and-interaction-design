@@ -4,9 +4,9 @@ class_name Planet
 
 const GRAVITY_EXPONENT: float = 2.95
 
-var gravity: float = 0.0
 var radius: float = 0.0
 
+var gravity: float = 0.0
 
 var _planet_points: PoolVector2Array
 var _num_points: int = 0.0
@@ -27,7 +27,7 @@ func _draw() -> void:
 	if self._initialized:
 		_draw_planet(self._planet_points)
 
-func generate(center: Vector2, r: float = rand_range(21, 42), 
+func generate(center: Vector2, r: float = rand_range(24, 42), 
 	num_points: int = int(rand_range(12,20)), 
 	offset: float = rand_range(2,4)) -> void:
 	self.position = center

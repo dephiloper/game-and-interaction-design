@@ -28,45 +28,41 @@ position = Vector2( 240, 600 )
 [node name="UILayer" parent="." instance=ExtResource( 2 )]
 
 [node name="Planet" parent="." instance=ExtResource( 3 )]
-position = Vector2( 173, 453 )
+position = Vector2( 202, 556 )
 z_index = 1
 
 [node name="Planet2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 240.58, 224.763 )
+position = Vector2( 200.58, 264.763 )
 z_index = 1
 
 [node name="Planet3" parent="." instance=ExtResource( 3 )]
-position = Vector2( 516.56, 148.759 )
+position = Vector2( 486.56, 148.759 )
 z_index = 1
 
 [node name="Planet4" parent="." instance=ExtResource( 3 )]
-position = Vector2( 643.873, 422.565 )
+position = Vector2( 643.873, 372.565 )
 z_index = 1
 
 [node name="Planet5" parent="." instance=ExtResource( 3 )]
-position = Vector2( 569.805, 642.189 )
+position = Vector2( 669.805, 584.189 )
 z_index = 1
 
 [node name="Planet6" parent="." instance=ExtResource( 3 )]
-position = Vector2( 952.07, 454.981 )
+position = Vector2( 1124.19, 621.898 )
 z_index = 1
 
 [node name="Planet7" parent="." instance=ExtResource( 3 )]
-position = Vector2( 903.19, 641.898 )
+position = Vector2( 840.56, 149.759 )
 z_index = 1
 
 [node name="Planet8" parent="." instance=ExtResource( 3 )]
-position = Vector2( 910.56, 79.759 )
-z_index = 1
-
-[node name="Planet9" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1124.56, 239.759 )
+position = Vector2( 1104.56, 279.759 )
 z_index = 1
 
 [node name="EnemySpawn" parent="." instance=ExtResource( 4 )]
 
 [node name="Satellite" parent="." instance=ExtResource( 5 )]
-position = Vector2( 651.721, 415.651 )
+position = Vector2( 648.721, 374.651 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
