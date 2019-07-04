@@ -12,7 +12,7 @@ var _health_bar
 var _heal_radius: float
 var _pulsating_radius: float
 var _closest_planet: Planet
-var _life_regeneration_value: float = 0.1
+var _life_regeneration_value: float = 1
 var _heal_area_position: Vector2
 var _containing_players: Array = []
 var _elapsed_time: float

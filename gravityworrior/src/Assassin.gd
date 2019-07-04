@@ -128,11 +128,11 @@ func hit(damage: float, _collision) -> bool:
 	if health <= 0.0:
 		_start_die()
 		
-	$HitTween.interpolate_property($Sprite, "modulate",
-	Color(1, 1, 1, 1), Color(0.7, 0, 0, 1), 0.05, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$HitTween.interpolate_property($Sprite, "modulate", 
+	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
-	$HitTween.interpolate_property($Sprite, "modulate", Color(0.5, 0, 0, 1), 
-	Color(1, 1, 1, 1), 0.05, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.05)
+	$HitTween.interpolate_property($Sprite, "modulate", Color(1, 0, 0, 1), 
+	Color(1, 1, 1, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.1)
 	
 	$HitTween.start()
 		
