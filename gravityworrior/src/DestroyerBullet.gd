@@ -15,6 +15,8 @@ func _draw() -> void:
 func _apply_hit(collision):
 	if collision.collider.has_method("hit") and collision.collider.is_in_group("Player"):
 		collision.collider.hit(_damage)
+	if collision.collider.is_in_group("Satellite"):
+		collision.collider.damage(_damage)
 	queue_free()
 
 func _calculate_gravitational_pull():

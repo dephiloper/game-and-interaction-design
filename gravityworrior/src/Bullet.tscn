@@ -8,7 +8,7 @@ radius = 2.31135
 height = 5.32253
 
 [node name="Bullet" type="KinematicBody2D"]
-collision_layer = 4
+collision_layer = 1024
 collision_mask = 241
 script = ExtResource( 1 )
 
@@ -26,3 +26,4 @@ position = Vector2( 0.0581142, -0.0871695 )
 rotation = 1.5708
 scale = Vector2( 0.629524, 0.629524 )
 rect = Rect2( -4, -8, 8, 16 )
+

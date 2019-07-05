@@ -94,3 +94,4 @@ one_shot = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ReviveArea"]
 position = Vector2( 0, 1 )
 shape = SubResource( 1 )
+
