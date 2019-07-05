@@ -90,14 +90,14 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	$Hud.set_health_value(health, max_health)
 	$Hud.set_boost_value(boost, max_boost)
-	if health <= 0.0:
+	if health <= 0.0 and not is_inactive:
 		is_inactive = true
 		emit_signal("active_changed", not is_inactive)
 		$PlayerSprites/body.modulate = Color.gray
 		$PlayerSprites/head.modulate = Color.gray
-		$Gun.visible = false
+		add_child(WarnSignal.new())
 	
-	if is_healing:
+	if is_healing or is_inactive:
 		$Gun.visible = false
 		$Gun.can_shoot = false
 	else:

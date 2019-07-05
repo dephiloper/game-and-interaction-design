@@ -12,13 +12,22 @@ var big_destroyers: Array = []
 var enemies: Array = []
 var satellite: Satellite
 
+var _game_over_timer: Timer
 var _max_players: int = 4
 var _player_colors: Array = ["#22d6b6", "#9c495f", "#889a4e", "#d4b2ef", "#3ea458", "#a242b2", "#94ccd3", "#7cd474", "#339bd3", "#e1c31b"]
+var _is_game_over = false
 
 enum GameState {
 	Fight,
 	Vote
 }
+
+func _init() -> void:
+	_game_over_timer = Timer.new()
+	_game_over_timer.wait_time = 0.2
+	_game_over_timer.one_shot = true
+	add_child(_game_over_timer)
+	_game_over_timer.connect("timeout", self, "_on_game_over_timer_timeout")
 
 func _ready() -> void:
 	var spawn_points = get_node("/root/Main/SpawnPoints")
@@ -37,9 +46,6 @@ func _ready() -> void:
 	
 	for player in players:
 		player.connect("active_changed", self, "_player_active_changed")
-
-func _on_game_over():
-	get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
 
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
@@ -77,5 +83,14 @@ func get_living_players() -> Array:
 	return living_players
 	
 func _player_active_changed(is_active: bool) -> void:
-	if len(get_living_players()) == 0:
+	if len(get_living_players()) == 0 and not _is_game_over:
 		_on_game_over()
+		
+func _on_game_over():
+	Engine.time_scale = 0.1
+	_is_game_over = true
+	_game_over_timer.start()
+		
+func _on_game_over_timer_timeout() -> void:
+	get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
+	Engine.time_scale = 1

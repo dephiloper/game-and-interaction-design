@@ -53,6 +53,11 @@ _global_script_classes=[ {
 "class": "Satellite",
 "language": "GDScript",
 "path": "res://src/Satellite.gd"
+}, {
+"base": "Node2D",
+"class": "WarnSignal",
+"language": "GDScript",
+"path": "res://WarnSignal.gd"
 } ]
 _global_script_class_icons={
 "Buff": "",
@@ -63,7 +68,8 @@ _global_script_class_icons={
 "Hud": "",
 "Planet": "",
 "Player": "",
-"Satellite": ""
+"Satellite": "",
+"WarnSignal": ""
 }
 
 [application]
