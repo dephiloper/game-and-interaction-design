@@ -21,11 +21,11 @@ class WaveSetting:
 		global_spawn_rate_gain = gsrg
 
 var wave_settings = [
-	WaveSetting.new(2.0, [0.0, 0.0, 2.5, 0.0], 0.5),
-	WaveSetting.new(2.7, [1.2, 0.0, 1.0, 0.0], 0.1),
-	WaveSetting.new(8.0, [1.7, 0.0, 1.5, 0.0], 0.15),
-	WaveSetting.new(11.0, [2.0, 1.0, 1.7, 0.0], 0.17),
-	WaveSetting.new(15.0, [1.7, 1.2, 1.2, 1.0], 0.2)
+	WaveSetting.new(2.0, [0.0, 0.0, 2.7, 0.0], 0.05),
+	WaveSetting.new(2.7, [0.8, 0.0, 0.7, 0.0], 0.07),
+	WaveSetting.new(8.0, [1.2, 0.0, 1.0, 0.0], 0.12),
+	WaveSetting.new(11.0, [1.4, 0.7, 1.2, 0.0], 0.12),
+	WaveSetting.new(15.0, [1.2, 0.8, 0.8, 0.7], 0.14)
 ]
 
 func _on_attack_player(player):
@@ -124,8 +124,14 @@ func set_level(level: int):
 		get_tree().change_scene("res://src/WinScreen.tscn")
 	else:
 		var wave_setting = wave_settings[level]
+		var num_player_multiplier = sqrt(len(GameManager.players))
+
+		var spawn_rates = wave_setting.spawn_rates
+		for i in range(len(spawn_rates)):
+			spawn_rates[i] = spawn_rates[i] * num_player_multiplier
+
 		current_wave = _enemy_wave_class.new(
 			wave_setting.spawn_amount,
 			wave_setting.spawn_rates,
-			wave_setting.global_spawn_rate_gain
+			wave_setting.global_spawn_rate_gain * num_player_multiplier
 		)
