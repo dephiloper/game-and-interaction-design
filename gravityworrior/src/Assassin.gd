@@ -127,6 +127,15 @@ func hit(damage: float, _collision) -> bool:
 	health -= damage
 	if health <= 0.0:
 		_start_die()
+		
+		$HitTween.interpolate_property($Sprite, "modulate", 
+	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
+
+	$HitTween.interpolate_property($Sprite, "modulate", Color(1, 0, 0, 1), 
+	Color(1, 1, 1, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.1)
+	
+	$HitTween.start()
+		
 	return true
 
 func _start_die():
@@ -489,8 +498,8 @@ func _process_collision(collision):
 		if _should_collide_damage_player():
 			collider.hit(_damage)
 		_start_die()
-	if collider.has_method("hitSatellite"):
-		collider.hitSatellite(_damageSatellite)
+	if collider.is_in_group("Satellite"):
+		collider.damage(_damageSatellite)
 		_start_die()
 
 	var do_bounce = true

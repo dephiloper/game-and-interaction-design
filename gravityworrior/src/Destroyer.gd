@@ -94,6 +94,14 @@ func hit(damage, collision):
 
 		emit_signal("destroyer_got_attacked", _get_nearest_player())
 
+	$HitTween.interpolate_property($Sprite, "modulate", 
+	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
+
+	$HitTween.interpolate_property($Sprite, "modulate", Color(1, 0, 0, 1), 
+	Color(1, 1, 1, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.1)
+	
+	$HitTween.start()
+
 	return true
 
 func _ready():
@@ -265,7 +273,7 @@ func _physics_process(delta: float) -> void:
 		_velocity = _velocity.bounce(collision.normal)
 		_velocity *= 0.1
 		if collision.collider.is_in_group("Satellite"):
-			GameManager.satellite.hit(DAMAGE * _get_damage_scale())
+			GameManager.satellite.damage(DAMAGE * _get_damage_scale())
 			_die()
 
 	if _velocity.length_squared() > 0.01:

@@ -21,3 +21,4 @@ texture = ExtResource( 2 )
 position = Vector2( -0.262999, -3.7152e-05 )
 shape = SubResource( 1 )
 
+[node name="HitTween" type="Tween" parent="."]

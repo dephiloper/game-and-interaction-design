@@ -27,6 +27,7 @@ var controls: Controls # provides pressed actions of the player
 var health: float = 100.0
 var boost: float = max_boost
 var is_inactive: bool = false
+var is_healing: bool = false
 var color: Color
 
 # fields
@@ -48,6 +49,9 @@ func hit(damage: float) -> void:
 	health = max(health - damage, 0)
 	Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
 
+func heal(life: float) -> void:
+	health = min(health + life, max_health)
+
 func apply_buff(buff_type: String) -> void:
 	match Buff.Types[buff_type]:
 		Buff.Types.MovementSpeed:
@@ -58,7 +62,7 @@ func apply_buff(buff_type: String) -> void:
 			max_boost *= 1.2
 			boost = max_boost
 		Buff.Types.Health:
-			max_health *= 1.2
+			max_health *= 1.1
 		Buff.Types.Damage:
 			_damage *= 1.2
 		Buff.Types.BiggerBullets:
@@ -92,6 +96,14 @@ func _process(_delta: float) -> void:
 		$PlayerSprites/body.modulate = Color.gray
 		$PlayerSprites/head.modulate = Color.gray
 		$Gun.visible = false
+	
+	if is_healing:
+		$Gun.visible = false
+		$Gun.can_shoot = false
+	else:
+		$Gun.visible = true
+		$Gun.can_shoot = true
+		
 	if not is_inactive and _is_cooldown:
 		$PlayerSprites.modulate.a = (sin($CooldownTimer.time_left * 16) + 1) / 2
 
