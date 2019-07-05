@@ -5,7 +5,7 @@ const SHOOT_DEVIATION = 0.3
 const NUM_SHOOTS = 1
 const SHOOT_SPEED = 0.25
 const BIG_MAX_HEALTH = 280
-const SHOOT_RANGE = 1000
+const SHOOT_RANGE = 1800
 const SHOOT_CHANNEL_TIME: float = 250.0
 const SHOOT_DURATION: float = 10.0
 const MAX_SHOOT_COUNTER: float = SHOOT_CHANNEL_TIME + SHOOT_DURATION
@@ -74,13 +74,14 @@ func _physics_process(delta: float) -> void:
 			_shoot_counter = -1
 		update()
 
-func shoot_alpha_value():
+func shoot_color():
+	var color = Color.red
 	if _shoot_counter > SHOOT_CHANNEL_TIME:
 		if (int(_shoot_counter) / 3) % 2 == 0:
-			return 0.45
-		else:
-			return 0.05
-	return pow(_shoot_counter / SHOOT_CHANNEL_TIME, 5) * 0.2
+			color = Color.orange
+		color.a = 0.45
+	color.a = pow(_shoot_counter / SHOOT_CHANNEL_TIME, 5) * 0.2
+	return color
 
 func _draw_shoot(direction):
 	var shoot_to = direction * SHOOT_RANGE
@@ -94,14 +95,17 @@ func _draw_shoot(direction):
 	if _shoot_counter > SHOOT_CHANNEL_TIME:
 		width_add = 1
 
-	var color = Color.red
-	color.a = shoot_alpha_value()
+	var color = shoot_color()
+	color.a = color.a
 	draw_line(Vector2.ZERO, shoot_to, color, 3+width_add, true)
 
-	color.a = shoot_alpha_value() * 2.0
+	color = shoot_color()
+	color.a = min(color.a * 2.0, 1.0)
 	draw_line(Vector2.ZERO, shoot_to, color, 1+width_add, true)
 
 func _draw():
+	if is_dead():
+		return
 	if _shoot_counter > 0:
 		for direction in shoot_directions:
 			_draw_shoot(direction)
