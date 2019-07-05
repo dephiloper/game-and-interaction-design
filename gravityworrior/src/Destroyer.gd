@@ -117,6 +117,10 @@ func _ready():
 	get_parent().add_child(_health_bar)
 
 	_connect_timer()
+	do_init()
+
+func do_init():
+	pass
 
 func _get_nearest_player():
 	var nearest_player = null
