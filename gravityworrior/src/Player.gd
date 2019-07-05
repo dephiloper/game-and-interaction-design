@@ -55,20 +55,20 @@ func heal(life: float) -> void:
 func apply_buff(buff_type: String) -> void:
 	match Buff.Types[buff_type]:
 		Buff.Types.MovementSpeed:
-			_movement_speed *= 1.2
+			_movement_speed += 1.2
 		Buff.Types.BoostSpeed:
-			_boost_speed_multiplier *= 1.1
+			_boost_speed_multiplier += 0.5
 		Buff.Types.Boost:
-			max_boost *= 1.2
+			max_boost += 0.25
 			boost = max_boost
 		Buff.Types.Health:
-			max_health *= 1.1
+			max_health += 25
 		Buff.Types.Damage:
-			_damage *= 1.2
+			_damage += 0.2
 		Buff.Types.BiggerBullets:
-			_bullet_size_multiplier *= 1.2
+			_bullet_size_multiplier += 0.25
 		Buff.Types.AttackSpeed:
-			_attack_speed_multiplier *= 1.2
+			_attack_speed_multiplier += 0.25
 
 func _init() -> void:
 	add_to_group("Player")

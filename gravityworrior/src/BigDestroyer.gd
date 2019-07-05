@@ -1,9 +1,10 @@
 extends "res://src/Destroyer.gd"
 
-const SHOOT_DAMAGE = 5
+const SHOOT_DAMAGE = 15
 const SHOOT_DEVIATION = 0.2
 const NUM_SHOOTS = 2
 const SHOOT_SPEED = 0.25
+const BIG_MAX_HEALTH = 280
 
 var _destroyer_bullet_scene = preload("res://src/DestroyerBullet.tscn")
 
@@ -11,7 +12,7 @@ func _get_damage_scale():
 	return 2.0
 
 func _get_max_health():
-	return MAX_HEALTH * 3.5
+	return BIG_MAX_HEALTH
 
 func _get_healthbar_scale():
 	return 1.5

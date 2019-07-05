@@ -14,7 +14,7 @@ const DESTROYER_DISTANCE = 40
 const ASSASSIN_DISTANCE_FORCE: float = 1.0
 const GUARD_DISTANCE = 70
 const EPSILON = 0.0001
-const MAX_HEALTH: int = 20
+const MAX_HEALTH: int = 35
 
 const SQUARED_ATTACK_RANGE: float = 8500.0
 const SQUARED_SIGNAL_ATTACK_RANGE: float = 17000.0
@@ -51,13 +51,13 @@ signal assassin_got_attacked(player)
 var state = ASSASSIN_STATE.FlyToPlayer
 # var old_state = null
 
-var health: float = MAX_HEALTH
+var health: float
 var _target_player: Player = null
 var _target_planet: Planet = null
 var _destroyer_to_guard = null
 var _guard_position = null
 var _velocity: Vector2 = Vector2.ZERO
-var _damage: float = 10.0
+var _damage: float = 30.0
 var _damageSatellite: float = 1.0
 var _channel_time = 0
 var _attack_velocity = Vector2.ZERO
@@ -92,6 +92,8 @@ func state_to_str(s):
 			return 'Dead'
 
 func _ready() -> void:
+	health = _get_max_health()
+
 	_start_guard_destroyer()
 
 	_health_bar = HealthBarScene.instance()

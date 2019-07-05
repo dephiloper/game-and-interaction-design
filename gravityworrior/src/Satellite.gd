@@ -6,8 +6,8 @@ class_name Satellite
 
 const SATELLITE_IN_PLANET_Y_OFFSET = 1.7
 
-var health: float = 100
-var max_health: float = 100
+const MAX_HEALTH = 1000
+var health: float = MAX_HEALTH
 var _health_bar
 var _heal_radius: float
 var _pulsating_radius: float
@@ -28,7 +28,7 @@ func is_dead():
 	return health <= 0
 
 func _get_max_health():
-	return max_health
+	return MAX_HEALTH
 
 func _ready() -> void:
 	var closest_planet = get_closest_planet()

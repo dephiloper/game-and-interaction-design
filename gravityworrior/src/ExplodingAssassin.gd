@@ -5,7 +5,8 @@ const EXPLOSION_RADIUS = 80.0
 const EXPLODING_SQUARED_ATTACK_RANGE = 5000
 const EXPLODING_ATTACK_CHANNEL_TIME = 0.1
 const SQUARED_DAMAGE_RANGE = 6400
-const EXPLOSION_DAMAGE = 15
+const EXPLOSION_DAMAGE = 25
+const EXPLODING_MAX_HEALTH = 30
 
 func _get_speed_scale():
 	return EXPLODING_SPEED_SCALE
@@ -15,6 +16,9 @@ func _do_explosion():
 		player.hit(EXPLOSION_DAMAGE)
 	for assassin in _get_assassins_in_damage_range():
 		assassin.hit(EXPLOSION_DAMAGE, null)
+
+func _get_max_health():
+	return EXPLODING_MAX_HEALTH
 
 func _start_attack_player():
 	_do_explosion()
