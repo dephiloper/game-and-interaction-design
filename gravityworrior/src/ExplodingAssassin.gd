@@ -11,9 +11,6 @@ const EXPLODING_MAX_HEALTH = 30
 func _get_speed_scale():
 	return EXPLODING_SPEED_SCALE
 
-func play_die_sound():
-	pass
-
 func _do_explosion():
 	for player in _get_players_in_damage_range():
 		player.hit(EXPLOSION_DAMAGE)

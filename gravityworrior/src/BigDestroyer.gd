@@ -38,6 +38,9 @@ func _get_max_health():
 func _get_healthbar_scale():
 	return 1.5
 
+func _get_speed():
+	return 0.7
+
 func _connect_timer():
 	$ShootTimer.connect("timeout", self, "_shoot_attack")
 

@@ -65,6 +65,9 @@ func _connect_timer():
 func _get_squared_attack_range():
 	return SQUARED_ATTACK_RANGE
 
+func _get_speed():
+	return SPEED
+
 func _with_probability(probability):
 	return randf() < probability
 
@@ -200,7 +203,7 @@ func _get_next_route_point(target_point):
 
 func _process_fly_to_sender():
 	var route_point = _get_next_route_point(_target_point)
-	_velocity += (route_point - position).normalized() * SPEED
+	_velocity += (route_point - position).normalized() * _get_speed()
 	_velocity *= DRAG
 
 	if _sender_in_range():
@@ -231,7 +234,7 @@ func _process_circle_sender(delta):
 	var movement_vec = planet_to_position.rotated(-PI/2).normalized() * 10
 	var target_point = _satellite_planet.position + planet_to_position + movement_vec
 
-	_velocity += (target_point - position).normalized() * SPEED
+	_velocity += (target_point - position).normalized() * _get_speed()
 	_velocity *= DRAG
 
 	_channel_time -= delta
