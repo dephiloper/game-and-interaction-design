@@ -22,3 +22,4 @@ z_index = 2
 texture = ExtResource( 3 )
 
 [node name="FirerateTimer" type="Timer" parent="."]
+
