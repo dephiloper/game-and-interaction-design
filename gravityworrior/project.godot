@@ -81,6 +81,7 @@ config/icon="res://img/icon.png"
 [autoload]
 
 GameManager="*res://src/GameManager.gd"
+AudioPlayer="*res://src/AudioPlayer.gd"
 
 [debug]
 
