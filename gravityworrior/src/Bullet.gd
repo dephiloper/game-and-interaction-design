@@ -16,7 +16,7 @@ func _get_drag():
 
 func _apply_hit(collision):
 	if collision.collider.has_method("hit"):
-		AudioPlayer.play_stream(AudioPlayer.enemy_hit)
+		AudioPlayer.play_stream(AudioPlayer.enemy_hit, -8)
 		if collision.collider.hit(_damage, collision):
 			queue_free()
 

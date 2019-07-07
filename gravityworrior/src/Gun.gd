@@ -24,6 +24,7 @@ func shoot(_damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier) -> v
 	if not can_shoot: return
 	
 	if ($FirerateTimer.get_time_left() == 0):
+		AudioPlayer.play_stream(AudioPlayer.player_shot, -18)
 		var b: Bullet = BULLET_SCENE.instance()
 		b.init(shoot_dir, _base_damage * _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
 		b.position = $GunSprite/BarrelPosition.global_position

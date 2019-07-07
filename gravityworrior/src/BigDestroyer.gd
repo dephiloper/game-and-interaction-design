@@ -48,7 +48,7 @@ func _get_squared_attack_range():
 	return SQUARED_ATTACK_RANGE * 0.8
 
 func _do_shoot():
-	AudioPlayer.play_stream(AudioPlayer.destroyer_laser_attack)
+	AudioPlayer.play_stream(AudioPlayer.destroyer_laser_attack, -7)
 	for direction in shoot_directions:
 		_shoot(direction)
 
@@ -71,7 +71,7 @@ func _physics_process(delta: float) -> void:
 	if _shoot_counter >= 0:
 		_shoot_counter += 1
 		if _shoot_counter == SHOOT_SOUND_START:
-			AudioPlayer.play_stream(AudioPlayer.destroyer_laser_fade)
+			AudioPlayer.play_stream(AudioPlayer.destroyer_laser_fade, -22)
 		if _shoot_counter == SHOOT_CHANNEL_TIME:
 			_do_shoot()
 		if _shoot_counter >= MAX_SHOOT_COUNTER:

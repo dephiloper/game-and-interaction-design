@@ -44,6 +44,8 @@ var _damage: float = 1.0
 var _bullet_size_multiplier: float = 1.0
 var _attack_speed_multiplier: float = 1.0
 
+var _boost_audio_player = null
+
 # public methods
 func hit(damage: float) -> void:
 	health = max(health - damage, 0)
@@ -144,6 +146,8 @@ func _physics_process(delta: float) -> void:
 		
 		if _is_boosting:  # we press boost key
 			if boost > 0.0:  # there is boost left
+				if _boost_audio_player == null:
+					_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -5)
 				$Trail.emitting = true
 				max_velocity *= _boost_speed_multiplier
 				boost = max(boost - BOOST_REDUCTION_VALUE * delta, 0.0)
@@ -151,7 +155,10 @@ func _physics_process(delta: float) -> void:
 					_is_cooldown = true
 					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
-	
+
+	if not _is_boosting and _boost_audio_player != null:
+		AudioPlayer.stop_player(_boost_audio_player)
+		_boost_audio_player = null
 	for sprite in $PlayerSprites.get_children():
 		sprite.set_flip_h($Gun.shoot_dir.x < 0)
 	

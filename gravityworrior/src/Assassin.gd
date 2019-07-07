@@ -122,14 +122,17 @@ func _get_attack_channel_time():
 func _should_collide_damage_player():
 	return true
 
+func play_die_sound():
+	AudioPlayer.play_enemy_sound(-13)
+
 func hit(damage: float, _collision) -> bool:
 	if is_dead():
 		return false
 	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
+		play_die_sound()
 		_start_die()
-		
 		$HitTween.interpolate_property($Sprite, "modulate", 
 	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
 

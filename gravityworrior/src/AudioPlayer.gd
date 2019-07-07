@@ -3,10 +3,19 @@ extends Node
 var enemy_hit = preload("res://audio/enemy_hit.ogg")
 var destroyer_laser_fade = preload("res://audio/destroyer_laser_fade.ogg")
 var destroyer_laser_attack = preload("res://audio/destroyer_laser_attack.ogg")
+var enemy_sounds = [
+	preload("res://audio/enemy_sound1.ogg"),
+	preload("res://audio/enemy_sound2.ogg"),
+	preload("res://audio/enemy_sound3.ogg")
+]
+var explosion = preload("res://audio/explosion.ogg")
+var player_boost = preload("res://audio/player_boost.ogg")
+var player_shot = preload("res://audio/player_shot.ogg")
 
-var background = preload("res://audio/enemy_hit.ogg")
+var background = preload("res://audio/enemy_hit.ogg")  # TODO
 
 var audio_players = []
+var audio_players_to_stop = []
 
 func _ready():
 	var background_music_player = AudioStreamPlayer.new()
@@ -17,17 +26,43 @@ func _ready():
 	# background_music_player.play()
 
 func _physics_process(delta):
+	for p in audio_players_to_stop:
+		p.volume_db = p.volume_db - 2
+		if p.volume_db < -60:
+			p.stop()
+			audio_players_to_stop.erase(p)
+
 	for p in audio_players:
 		if not p.is_playing():
 			audio_players.erase(p)
 			p.queue_free()
 			break
 
-func play_stream(stream):
+func play_stream(stream, volume=0):
 	var player = AudioStreamPlayer.new()
+	player.volume_db = volume
 	stream.set_loop(false)
 	player.stream = stream
 	add_child(player)
 	player.play()
 
 	audio_players.append(player)
+
+func play_enemy_sound(volume=0):
+	var stream = enemy_sounds[randi()%len(enemy_sounds)]
+	play_stream(stream, volume)
+
+func play_loop(stream, volume=0):
+	var player = AudioStreamPlayer.new()
+	player.volume_db = volume
+	stream.set_loop(true)
+	player.stream = stream
+	add_child(player)
+	player.play()
+
+	audio_players.append(player)
+
+	return player
+
+func stop_player(player):
+	audio_players_to_stop.append(player)

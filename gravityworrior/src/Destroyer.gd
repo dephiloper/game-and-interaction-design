@@ -83,6 +83,7 @@ func hit(damage, collision):
 	health -= damage
 	if health <= 0:
 		health = 0
+		AudioPlayer.play_enemy_sound(-8)
 		_die()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:
