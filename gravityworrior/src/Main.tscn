@@ -71,3 +71,4 @@ position = Vector2( 648.721, 374.651 )
 [node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
 position = Vector2( 640, 360 )
 texture = ExtResource( 6 )
+
