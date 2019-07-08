@@ -39,7 +39,7 @@ func _get_healthbar_scale():
 	return 1.5
 
 func _get_speed():
-	return 0.7
+	return 0.5
 
 func _connect_timer():
 	$ShootTimer.connect("timeout", self, "_shoot_attack")
@@ -63,7 +63,7 @@ func _shoot(direction):
 		if collider.is_in_group("Player"):
 			collider.hit(SHOOT_DAMAGE)
 		if collider.is_in_group("Satellite"):
-			collider.damage(SHOOT_DAMAGE)
+			collider.damage(SHOOT_DAMAGE*4)
 
 func _shoot_attack():
 	_shoot_counter = 0
@@ -84,7 +84,7 @@ func _physics_process(delta: float) -> void:
 func shoot_color():
 	var color = Color.red
 	if _shoot_counter > SHOOT_CHANNEL_TIME:
-		if (int(_shoot_counter) / 3) % 2 == 0:
+		if (int(_shoot_counter / 3)) % 2 == 0:
 			color = Color.orange
 		color.a = 0.45
 	color.a = pow(_shoot_counter / SHOOT_CHANNEL_TIME, 5) * 0.2
