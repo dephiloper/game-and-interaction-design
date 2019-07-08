@@ -35,8 +35,9 @@ func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
 		return
 	
-	if _controls.just_pressed("toggle_alternative_aiming"):
-		_alternative_aiming_enabled = !_alternative_aiming_enabled
+	#if _controls.just_pressed("toggle_alternative_aiming"):
+		#print("_alternative_aiming_enabled",_alternative_aiming_enabled)
+		#_alternative_aiming_enabled = !_alternative_aiming_enabled
 
 	shoot_dir = _caculate_cross_hair_direction()
 	$CrosshairSprite.visible = false if shoot_dir == Vector2.ZERO else true

@@ -74,4 +74,3 @@ position = Vector2( 640, 360 )
 texture = ExtResource( 6 )
 
 [node name="AudioPlayer" parent="." instance=ExtResource( 7 )]
-

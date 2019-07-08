@@ -5,5 +5,6 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="startscreen_gravitywarrior_v3" type="Sprite" parent="."]
-position = Vector2( 636.688, 363.565 )
+position = Vector2( 643.996, 361.216 )
+scale = Vector2( 0.665069, 0.665069 )
 texture = ExtResource( 1 )
