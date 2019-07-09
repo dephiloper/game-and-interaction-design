@@ -14,7 +14,7 @@ var can_shoot: bool = true
 var _base_damage: float = 10
 var _fire_rate: float = 5
 var _controls: Controls
-var _offset: Vector2 = Vector2(5,5)
+var _offset: Vector2 = Vector2(10,5)
 var _alternative_aiming_enabled: bool = false
 
 func set_controls(controls: Controls) -> void:
