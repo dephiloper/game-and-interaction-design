@@ -29,6 +29,8 @@ func _should_collide_damage_player():
 	return false
 
 func _start_die():
+	collision_mask = 0
+	collision_layer = 0
 	_start_channel_attack(null, false)
 
 func _start_channel_attack(target_player, do_emit):
