@@ -15,11 +15,11 @@ extents = Vector2( 6.39498, 10.9119 )
 [sub_resource type="CircleShape2D" id=2]
 radius = 8.78707
 
-[sub_resource type="Gradient" id=8]
+[sub_resource type="Gradient" id=3]
 colors = PoolColorArray( 1, 1, 1, 0.72549, 1, 1, 1, 0.203922 )
 
-[sub_resource type="GradientTexture" id=9]
-gradient = SubResource( 8 )
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
 
 [sub_resource type="Curve" id=5]
 _data = [ Vector2( 0, 0.0951999 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.6144 ), 0.0275385, 0.0, 0, 0 ]
@@ -34,7 +34,7 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.04
 scale_curve = SubResource( 6 )
-color_ramp = SubResource( 9 )
+color_ramp = SubResource( 4 )
 hue_variation_random = 1.0
 
 [node name="Player" type="KinematicBody2D"]
@@ -89,5 +89,7 @@ one_shot = true
 [node name="ReviveArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ReviveArea"]
-position = Vector2( 0, 1 )
+scale = Vector2( 2, 2 )
 shape = SubResource( 1 )
+
+[node name="HitTween" type="Tween" parent="."]

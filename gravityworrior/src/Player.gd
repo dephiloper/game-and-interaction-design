@@ -46,10 +46,21 @@ var _boost_audio_player = null
 
 # public methods
 func hit(damage: float) -> void:
+	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
+	
 	health = max(health - damage, 0)
 	Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
+	
+	$HitTween.interpolate_property($PlayerSprites, "modulate", 
+	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN)
+
+	$HitTween.interpolate_property($PlayerSprites, "modulate", Color(1, 0, 0, 1), 
+	Color(1, 1, 1, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
+	
+	$HitTween.start()
 
 func heal(life: float) -> void:
+	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
 	health = min(health + life, max_health)
 
 func apply_buff(buff_type: String) -> void:
@@ -117,6 +128,7 @@ func _physics_process(delta: float) -> void:
 	$Trail.emitting = false
 	# we are on planet
 	if _is_on_planet == true:
+		collision_mask = 1 + 16
 		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
@@ -125,6 +137,7 @@ func _physics_process(delta: float) -> void:
 		_velocity = _velocity.slide(-diff.normalized())
 	# not on planet
 	else:
+		collision_mask = 1 + 2 + 16
 		_velocity += _calculate_player_movement()
 		_velocity *= OFF_PLANET_DRAG
 		var pull: Vector2 = _calculate_gravitational_pull()
@@ -132,7 +145,7 @@ func _physics_process(delta: float) -> void:
 		if collision:
 			if collision.collider.is_in_group("Planet"):
 				_is_on_planet = true
-			elif collision.collider.is_in_group("Destroyer"):
+			if collision.collider.is_in_group("Player") or collision.collider.is_in_group("Destroyer"):
 				_velocity = _velocity.bounce(collision.normal)
 				position += _velocity * 0.02
 				_velocity *= 0.7
@@ -232,7 +245,7 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 		if not (body as Player).is_inactive:
 			is_inactive = false
 			emit_signal("active_changed", not is_inactive)
-			health = max_health
+			health = max_health / 4
 			$PlayerSprites/body.modulate = color
 			$PlayerSprites/head.modulate = color
 			$Gun.visible = true
