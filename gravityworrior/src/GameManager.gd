@@ -16,6 +16,7 @@ var _game_over_timer: Timer
 var _max_players: int = 4
 var _player_colors: Array = ["#FDD400","#B8FB3C","#FF2079","#03DDDC"]
 var _is_game_over = false
+var _camera: Camera2D
 
 enum GameState {
 	Fight,
@@ -93,3 +94,6 @@ func _on_game_over():
 func _on_game_over_timer_timeout() -> void:
 	get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
 	Engine.time_scale = 1
+	
+func trigger_camera_shake(intensity: float = 1) -> void:
+	get_node("/root/Main/MainCamera/").trigger_shake(intensity)

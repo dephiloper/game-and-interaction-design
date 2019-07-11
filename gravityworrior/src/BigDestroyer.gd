@@ -52,6 +52,7 @@ func _get_squared_attack_range():
 
 func _do_shoot():
 	AudioPlayer.play_stream(AudioPlayer.destroyer_laser_attack, -7)
+	GameManager.trigger_camera_shake()
 	for direction in shoot_directions:
 		_shoot(direction)
 

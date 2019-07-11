@@ -45,7 +45,7 @@ shape = SubResource( 1 )
 
 [node name="Trail" type="Particles2D" parent="."]
 emitting = false
-amount = 20
+amount = 40
 local_coords = false
 process_material = SubResource( 2 )
 texture = ExtResource( 3 )

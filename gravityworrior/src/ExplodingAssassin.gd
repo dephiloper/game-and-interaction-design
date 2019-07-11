@@ -17,6 +17,7 @@ func _do_explosion():
 	for assassin in _get_assassins_in_damage_range():
 		assassin.hit(EXPLOSION_DAMAGE, null)
 	AudioPlayer.play_stream(AudioPlayer.explosion, 0)
+	GameManager.trigger_camera_shake(2)
 
 func _get_max_health():
 	return EXPLODING_MAX_HEALTH
