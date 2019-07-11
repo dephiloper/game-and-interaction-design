@@ -175,6 +175,7 @@ func _physics_process(delta: float) -> void:
 		_boost_audio_player = null
 	for sprite in $PlayerSprites.get_children():
 		sprite.set_flip_h($Gun.shoot_dir.x < 0)
+		
 	
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
