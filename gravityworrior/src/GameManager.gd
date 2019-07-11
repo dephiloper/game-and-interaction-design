@@ -14,7 +14,7 @@ var satellite: Satellite
 
 var _game_over_timer: Timer
 var _max_players: int = 4
-var _player_colors: Array = ["#22d6b6", "#9c495f", "#889a4e", "#d4b2ef", "#3ea458", "#a242b2", "#94ccd3", "#7cd474", "#339bd3", "#e1c31b"]
+var _player_colors: Array = ["#FDD400","#B8FB3C","#FF2079","#03DDDC"]
 var _is_game_over = false
 
 enum GameState {
@@ -53,10 +53,8 @@ func register_player(player: Player) -> int:
 	players.append(player)
 	return len(players) - 1
 	
-func random_player_color() -> Color:
-	var color = _player_colors[randi() % len(_player_colors)]
-	_player_colors.erase(color)
-	return color
+func get_player_color() -> Color:
+	return _player_colors.pop_front()
 	
 func set_satellite(s: Satellite) -> void:
 	satellite = s

@@ -53,6 +53,7 @@ func _get_num_enemies_of_type(enemy_type):
 			return len(GameManager.destroyers)
 		EnemyType.BIG_DESTROYER:
 			return len(GameManager.big_destroyers)
+	return 0
 
 func _get_spawn_value_gain(enemy_type):
 	"""

@@ -17,8 +17,6 @@ const BOOST_RECHARGE_VALUE: float = 0.2
 const BORDER_BOUNDRY: int = 24
 const BORDER_BOUNDRY_PULL: int = 24
 
-export(Texture) var texture
-
 # properties
 var max_boost: float = 0.5
 var max_health: float = 100.0
@@ -75,7 +73,7 @@ func apply_buff(buff_type: String) -> void:
 func _init() -> void:
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
-	color = GameManager.random_player_color()
+	color = GameManager.get_player_color()
 	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
@@ -83,7 +81,7 @@ func _init() -> void:
 func _ready() -> void:
 	$PlayerSprites/body.modulate = color
 	$PlayerSprites/head.modulate = color
-	$Trail.texture = texture
+	$Trail.modulate = color.lightened(0.5)
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 	$Hud.set_health_color(color)
