@@ -66,6 +66,7 @@ z_index = 1
 position = Vector2( 648.721, 374.651 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+editor/display_folded = true
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 
