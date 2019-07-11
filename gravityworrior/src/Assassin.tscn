@@ -1,10 +1,28 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/Assassin.gd" type="Script" id=1]
 [ext_resource path="res://img/assassin.png" type="Texture" id=2]
+[ext_resource path="res://img/player.png" type="Texture" id=3]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( -13.61, -12.13, -22.51, 0, -13.79, 12, 0.32, 7, 5.05, 11.91, 22, 0, 22, 0, 5.41, -12.11, 0.28, -7.17 )
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0.7992 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.1216 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=2]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 100.0
+angular_velocity_random = 0.1
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.02
+scale_curve = SubResource( 4 )
+color = Color( 0.294118, 0.784314, 0.384314, 0.560784 )
 
 [node name="Enemy" type="KinematicBody2D"]
 scale = Vector2( 0.66, 0.66 )
@@ -24,3 +42,10 @@ z_index = 2
 shape = SubResource( 1 )
 
 [node name="HitTween" type="Tween" parent="."]
+
+[node name="Trail" type="Particles2D" parent="."]
+emitting = false
+amount = 20
+local_coords = false
+process_material = SubResource( 2 )
+texture = ExtResource( 3 )

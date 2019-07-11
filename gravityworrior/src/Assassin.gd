@@ -457,7 +457,7 @@ func _process_dead(delta):
 
 func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta
-
+	$Trail.emitting = false
 	match state:
 		ASSASSIN_STATE.FlyToPlayer:
 			_process_fly_to_player()
@@ -465,6 +465,7 @@ func _physics_process(delta: float) -> void:
 			_process_guard_destroyer()
 		ASSASSIN_STATE.ChannelAttack:
 			_process_channel_attack(delta)
+			$Trail.emitting = true
 		ASSASSIN_STATE.FlyToPlanet:
 			_process_fly_to_planet()
 		ASSASSIN_STATE.GoIntoPlanet:
@@ -477,6 +478,7 @@ func _physics_process(delta: float) -> void:
 			_process_tumble()
 		ASSASSIN_STATE.AttackPlayer:
 			_process_attack_player(delta)
+			$Trail.emitting = true
 		ASSASSIN_STATE.Dead:
 			_process_dead(delta)
 			return
