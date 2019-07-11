@@ -29,29 +29,31 @@ func setup() -> void:
 	add_child(_game_over_timer)
 	_game_over_timer.connect("timeout", self, "_on_game_over_timer_timeout")
 	
-	var spawn_points = get_node("/root/Main/SpawnPoints")
 	var connected_joypads = Input.get_connected_joypads()
 	for i in connected_joypads:
 		var player = PLAYER_SCENE.instance()
-		player.position = spawn_points.get_children()[i].position
-		get_node("/root/Main").add_child(player)
 		if i == _max_players-1:
 			break
 	
 	if connected_joypads.size() == 0:
 		var player = PLAYER_SCENE.instance()
-		player.position = spawn_points.get_children()[0].position
-		get_node("/root/Main").add_child(player)
 	
 	for player in players:
 		player.connect("active_changed", self, "_player_active_changed")
 
+
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
-	
+
 func register_player(player: Player) -> int:
 	players.append(player)
 	return len(players) - 1
+
+func create_players() -> void:
+	var spawn_points = get_node("/root/Main/SpawnPoints") 
+	for player in players:
+		get_node("/root/Main").add_child(player)
+		player.position = spawn_points.get_child(player.controls.input_device_id).position
 	
 func get_player_color() -> Color:
 	return _player_colors.pop_front()
