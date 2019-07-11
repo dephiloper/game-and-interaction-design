@@ -39,6 +39,11 @@ var _damage: float = 1.0
 var _bullet_size_multiplier: float = 1.0
 var _attack_speed_multiplier: float = 1.0
 
+# just for fun, lol
+var _vibration_time_elapsed: float = 0.0
+var _heartbeat_wait_time: float = 0.3
+var _heartbeat_count: int = 0
+
 var _boost_audio_player = null
 
 # public methods
@@ -98,6 +103,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	$Hud.set_health_value(health, max_health)
 	$Hud.set_boost_value(boost, max_boost)
+	if health > 0 and health < max_health / 4:
+		_trigger_heartbeat_vibration(_delta)
+		
 	if health <= 0.0 and not is_inactive:
 		is_inactive = true
 		if _boost_audio_player != null:
@@ -232,6 +240,15 @@ func _calculate_boundary_pull() -> Vector2:
 
 func _shoot() -> void:
 	$Gun.shoot(_damage, _bullet_size_multiplier, _attack_speed_multiplier)
+
+func _trigger_heartbeat_vibration(delta: float) -> void:
+	if _vibration_time_elapsed > _heartbeat_wait_time:
+		Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.1)
+		_heartbeat_wait_time = 0.25 if _heartbeat_count == 0 else 0.9
+		_heartbeat_count = (_heartbeat_count + 1) % 2
+		_vibration_time_elapsed = 0
+	else:
+		_vibration_time_elapsed += delta
 
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost

@@ -13,6 +13,8 @@ var _fire_rate: float = 5
 var _controls: Controls
 var _offset: Vector2 = Vector2(4,2)
 var _alternative_aiming_enabled: bool = false
+var _alternative_aiming_pressed_time: float = 0
+
 var _show_laser_pointer: bool = true
 
 func set_controls(controls: Controls) -> void:
@@ -32,13 +34,18 @@ func shoot(_damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier) -> v
 func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
 		return
+
+	if _controls.pressed("toggle_alternative_aiming"):
+		_alternative_aiming_pressed_time += delta
+		if _alternative_aiming_pressed_time > 0.3:
+			_alternative_aiming_enabled = !_alternative_aiming_enabled
+			_alternative_aiming_pressed_time = 0
+	else:
+		_alternative_aiming_pressed_time = 0
 	
 	if _controls.just_pressed("toggle_laser_pointer"):
 		_show_laser_pointer = !_show_laser_pointer
-	
-	#if _controls.just_pressed("toggle_alternative_aiming"):
-		#print("_alternative_aiming_enabled",_alternative_aiming_enabled)
-		#_alternative_aiming_enabled = !_alternative_aiming_enabled
+		
 
 	shoot_dir = _caculate_cross_hair_direction()
 	$CrosshairSprite.visible = false if shoot_dir == Vector2.ZERO else true
