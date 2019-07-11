@@ -518,4 +518,3 @@ func _process_collision(collision):
 	do_bounce = false
 	if do_bounce:
 		_velocity = _velocity.bounce(collision.normal)
-

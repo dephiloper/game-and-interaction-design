@@ -4,10 +4,6 @@ class_name Player
 
 signal active_changed
 
-# preloaded scenes
-const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
-const PLAYER_TEXTURE = preload("res://img/player.png")
-
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const ON_PLANET_DRAG: float = 0.9
 const OFF_PLANET_DRAG: float = 0.99
@@ -16,6 +12,7 @@ const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 const BORDER_BOUNDRY: int = 24
 const BORDER_BOUNDRY_PULL: int = 24
+const GRAVITATIONAL_IMPACT_FACTOR: float = 0.4 # TODO tweak the gravity here! default: 1.0
 
 # properties
 var max_boost: float = 0.5
@@ -140,7 +137,7 @@ func _physics_process(delta: float) -> void:
 		collision_mask = 1 + 2 + 16
 		_velocity += _calculate_player_movement()
 		_velocity *= OFF_PLANET_DRAG
-		var pull: Vector2 = _calculate_gravitational_pull()
+		var pull: Vector2 = _calculate_gravitational_pull() * GRAVITATIONAL_IMPACT_FACTOR
 		var collision = move_and_collide(_velocity * delta)
 		if collision:
 			if collision.collider.is_in_group("Planet"):

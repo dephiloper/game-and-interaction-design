@@ -25,7 +25,7 @@ func deselect(player: int) -> void:
 	$BuffSprite.get_children()[player].visible = false
 	
 func highlight(player: int) -> void:
-	$BuffSprite.get_children()[player].scale *= 1.5  # todo tween?
+	$BuffSprite.get_children()[player].scale *= 1.5
 	
 func set_type(new_type: String) -> void:
 	type = new_type
