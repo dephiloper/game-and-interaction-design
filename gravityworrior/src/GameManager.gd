@@ -22,14 +22,13 @@ enum GameState {
 	Vote
 }
 
-func _init() -> void:
+func setup() -> void:
 	_game_over_timer = Timer.new()
 	_game_over_timer.wait_time = 0.2
 	_game_over_timer.one_shot = true
 	add_child(_game_over_timer)
 	_game_over_timer.connect("timeout", self, "_on_game_over_timer_timeout")
-
-func _ready() -> void:
+	
 	var spawn_points = get_node("/root/Main/SpawnPoints")
 	var connected_joypads = Input.get_connected_joypads()
 	for i in connected_joypads:

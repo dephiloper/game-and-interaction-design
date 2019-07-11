@@ -150,7 +150,7 @@ func _physics_process(delta: float) -> void:
 		if _is_boosting:  # we press boost key
 			if boost > 0.0:  # there is boost left
 				if _boost_audio_player == null:
-					_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -12)
+					_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -24)
 				$Trail.emitting = true
 				max_velocity *= _boost_speed_multiplier
 				boost = max(boost - BOOST_REDUCTION_VALUE * delta, 0.0)
