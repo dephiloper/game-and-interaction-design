@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 class_name Bullet
 
-const GRAVITATIONAL_IMPACT_FACTOR: float = 10.0 # TODO tweak the gravity here! default: 3.0
+const GRAVITATIONAL_IMPACT_FACTOR: float = 7.5 # TODO tweak the gravity here! default: 3.0
 
 var DRAG: float = 0.999 # TODO initial value 0.995 imo to low!
 var _velocity = Vector2.ZERO
