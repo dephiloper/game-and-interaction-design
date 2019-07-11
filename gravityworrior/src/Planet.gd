@@ -3,9 +3,10 @@ extends Node2D
 class_name Planet
 
 const GRAVITY_EXPONENT: float = 2.95
+const COLORS: Array = [Color("#D2B48C"), Color("#DEB887"), Color("#BC8F8F"), Color("#9F8170"), Color("#8f7f77")]
+
 
 var radius: float = 0.0
-
 var gravity: float = 0.0
 
 var _planet_points: PoolVector2Array
@@ -59,7 +60,7 @@ func _create_collision_shape():
 	$CollisionPolygon.polygon = self._planet_points
 	
 func _draw_planet(points: Array) -> void:
-	draw_polygon(points, PoolColorArray([Color.burlywood]))
+	draw_polygon(points, PoolColorArray([COLORS[randi() % len(COLORS)]]))
 	draw_polyline(points, Color.black, 2, true)
 	
 
