@@ -6,7 +6,7 @@ class_name Satellite
 
 const SATELLITE_IN_PLANET_Y_OFFSET = 1.7
 
-const MAX_HEALTH = 1000
+const MAX_HEALTH = 10#00
 var health: float = MAX_HEALTH
 var _health_bar
 var _heal_radius: float

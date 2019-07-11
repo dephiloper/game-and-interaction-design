@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://src/LoseScreenWipedOut.gd" type="Script" id=1]
 [ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://img/dead_body3.png" type="Texture" id=5]
 [ext_resource path="res://img/dead_body4.png" type="Texture" id=6]
 [ext_resource path="res://img/dead_body5.png" type="Texture" id=7]
+[ext_resource path="res://img/godot_background.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 65
@@ -51,3 +52,8 @@ valign = 1
 position = Vector2( 642.915, 582.517 )
 scale = Vector2( 0.72858, 0.72858 )
 frames = SubResource( 3 )
+
+[node name="Background" type="Sprite" parent="."]
+z_index = -1
+texture = ExtResource( 8 )
+centered = false
