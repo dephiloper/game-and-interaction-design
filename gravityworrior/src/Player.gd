@@ -100,6 +100,18 @@ func _ready() -> void:
 	$Hud.set_health_color(color)
 	$Gun.set_controls(controls)
 
+func stop_boost_sound():
+	if _boost_audio_player != null:
+		AudioPlayer.stop_player(_boost_audio_player)
+		_boost_audio_player = null
+
+func start_boost_sound():
+	if _boost_audio_player == null:
+		_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -24)
+
+func on_end_wave():
+	stop_boost_sound()
+
 func _process(_delta: float) -> void:
 	$Hud.set_health_value(health, max_health)
 	$Hud.set_boost_value(boost, max_boost)
@@ -108,9 +120,7 @@ func _process(_delta: float) -> void:
 		
 	if health <= 0.0 and not is_inactive:
 		is_inactive = true
-		if _boost_audio_player != null:
-			AudioPlayer.stop_player(_boost_audio_player)
-			_boost_audio_player = null
+		stop_boost_sound()
 		emit_signal("active_changed", not is_inactive)
 		$PlayerSprites/body.modulate = Color.gray
 		$PlayerSprites/head.modulate = Color.gray
@@ -165,8 +175,7 @@ func _physics_process(delta: float) -> void:
 		
 		if _is_boosting:  # we press boost key
 			if boost > 0.0:  # there is boost left
-				if _boost_audio_player == null:
-					_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -24)
+				start_boost_sound()
 				$Trail.emitting = true
 				max_velocity *= _boost_speed_multiplier
 				boost = max(boost - BOOST_REDUCTION_VALUE * delta, 0.0)
@@ -175,9 +184,8 @@ func _physics_process(delta: float) -> void:
 					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
 
-	if not _is_boosting and _boost_audio_player != null:
-		AudioPlayer.stop_player(_boost_audio_player)
-		_boost_audio_player = null
+	if not _is_boosting:
+		stop_boost_sound()
 	for sprite in $PlayerSprites.get_children():
 		sprite.set_flip_h($Gun.shoot_dir.x < 0)
 		

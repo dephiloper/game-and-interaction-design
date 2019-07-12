@@ -116,6 +116,8 @@ func _spawn_enemies(delta):
 			3: _create_big_destroyer()
 
 	if current_wave.finished():
+		for player in GameManager.players:
+			player.on_end_wave()
 		GameManager.current_game_state = GameManager.GameState.Vote
 		get_node("/root/Main/UILayer").reinstantiate_buff_selection()
 		current_level_index += 1
