@@ -37,7 +37,7 @@ func _physics_process(delta: float) -> void:
 
 	if _controls.pressed("toggle_alternative_aiming"):
 		_alternative_aiming_pressed_time += delta
-		if _alternative_aiming_pressed_time > 0.3:
+		if _alternative_aiming_pressed_time > 1:
 			_alternative_aiming_enabled = !_alternative_aiming_enabled
 			_alternative_aiming_pressed_time = 0
 	else:
