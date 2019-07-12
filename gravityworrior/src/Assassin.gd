@@ -269,6 +269,8 @@ func _start_guard_destroyer():
 		# _guard_position = Vector2(randf(), randf()).normalized() * GUARD_DISTANCE
 		_guard_position = (position - _destroyer_to_guard.position).normalized() * GUARD_DISTANCE
 		state = ASSASSIN_STATE.GuardDestroyer
+	else:
+		_start_fly_to_player(_choose_random(GameManager.get_living_players()))
 
 func _start_channel_attack(target_player, do_emit):
 	if _attack_cooldown > 0:
