@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 var HealthBarScene = preload("res://src/HealthBar.tscn")
+var ArrowScene = preload("res://src/EnemyArrow.tscn")
 
 const SPEED_SCALE = 0.9
 const SPEED = 1.4 * SPEED_SCALE
@@ -45,7 +46,9 @@ var _satellite_planet = null
 var _target_player = null
 var _channel_time = 0
 var _direction = null
+
 var _health_bar = null
+var _arrow
 
 func _get_damage_scale():
 	return 1.0
@@ -120,6 +123,10 @@ func _ready():
 	_health_bar.init(self, _get_healthbar_offset())
 	get_parent().add_child(_health_bar)
 
+	_arrow = ArrowScene.instance()
+	_arrow.position = position
+	_arrow.play("destroyer")
+	get_parent().add_child(_arrow)
 	_connect_timer()
 	do_init()
 
@@ -182,6 +189,10 @@ func _die():
 	collision_layer = 0
 	collision_mask = 0
 	_channel_time = DIE_TIME
+
+	if _arrow:
+		_arrow.queue_free()
+		_arrow = null
 
 func _get_next_route_point(target_point):
 	var route_point: Vector2 = target_point
@@ -287,6 +298,11 @@ func _physics_process(delta: float) -> void:
 	if _velocity.length_squared() > 0.01:
 		if not is_dead():
 			look_at(position + _direction)
+
+	if _arrow != null:
+		if _arrow.update_position(position, rotation):
+			_arrow.queue_free()
+			_arrow = null
 
 func has_to_be_removed():
 	return _has_to_be_removed

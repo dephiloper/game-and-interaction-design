@@ -19,6 +19,11 @@ func _do_explosion():
 	AudioPlayer.play_stream(AudioPlayer.explosion, 0)
 	GameManager.trigger_camera_shake(2)
 
+func _create_arrow():
+	_arrow = ArrowScene.instance()
+	_arrow.play("exploder")
+	get_parent().add_child(_arrow)
+
 func _get_max_health():
 	return EXPLODING_MAX_HEALTH
 

@@ -16,8 +16,8 @@ scale = Vector2( 0.922935, 0.811289 )
 curve = SubResource( 1 )
 
 [node name="SpawnPathLocation" type="PathFollow2D" parent="SpawnPath"]
-position = Vector2( 1391, -175.548 )
-rotation = 1.5708
+position = Vector2( 1333.05, -94.308 )
+rotation = 1.57045
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 10.0

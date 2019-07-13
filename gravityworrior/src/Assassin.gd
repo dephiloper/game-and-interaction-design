@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 var HealthBarScene = preload("res://src/HealthBar.tscn")
+var ArrowScene = preload("res://src/EnemyArrow.tscn")
 
 const SPEED_SCALE: float = 0.75
 const SPEED: float = 10.0
@@ -67,6 +68,7 @@ var _move_to_planet_cooldown = 0
 var _attack_cooldown = 0
 var _has_to_be_removed = false
 var _health_bar
+var _arrow
 
 func state_to_str(s):
 	match s:
@@ -96,10 +98,19 @@ func _ready() -> void:
 
 	_start_guard_destroyer()
 
+	# create health bar
 	_health_bar = HealthBarScene.instance()
 	_health_bar.transform = _health_bar.transform.scaled(Vector2(_get_healthbar_scale(), _get_healthbar_scale()))
 	_health_bar.init(self, _get_healthbar_offset())
 	get_parent().add_child(_health_bar)
+
+	# create arrow
+	_create_arrow()
+
+func _create_arrow():
+	_arrow = ArrowScene.instance()
+	_arrow.play("assassin")
+	get_parent().add_child(_arrow)
 
 func _get_healthbar_scale():
 	return 1.0
@@ -148,6 +159,10 @@ func _die():
 	_channel_time = DIE_TIME
 	collision_mask = 0
 	collision_layer = 0
+
+	if _arrow:
+		_arrow.queue_free()
+		_arrow = null
 
 func is_dead():
 	return state == ASSASSIN_STATE.Dead
@@ -487,9 +502,10 @@ func _physics_process(delta: float) -> void:
 
 	_process_movement(delta)
 
-	#if state != old_state:
-	#	print('state: ', state_to_str(state))
-	#	old_state = state
+	if _arrow != null:
+		if _arrow.update_position(position, rotation):
+			_arrow.queue_free()
+			_arrow = null
 
 func _process_movement(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta * _get_speed_scale())
