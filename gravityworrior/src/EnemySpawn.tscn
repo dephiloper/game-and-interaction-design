@@ -4,7 +4,7 @@
 
 [sub_resource type="Curve2D" id=1]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 1391, -175.548, 0, 0, 0, 0, 1391, 912.655, 0, 0, 0, 0, -158.313, 911.264, 0, 0, 0, 0, -160.705, -176.94, 0, 0, 0, 0, 1375.51, -177.28 )
+"points": PoolVector2Array( 0, 0, 0, 0, 1333.05, -94.308, 0, 0, 0, 0, 1333.32, 825.392, 0, 0, 0, 0, -84.7808, 824.723, 0, 0, 0, 0, -84.7808, -96.3159, 0, 0, 0, 0, 1327.16, -94.9773 )
 }
 
 [node name="EnemySpawn" type="Node2D"]
@@ -17,7 +17,7 @@ curve = SubResource( 1 )
 
 [node name="SpawnPathLocation" type="PathFollow2D" parent="SpawnPath"]
 position = Vector2( 1391, -175.548 )
-rotation = 1.57083
+rotation = 1.5708
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 10.0
@@ -25,3 +25,4 @@ autostart = true
 
 [node name="WaveStateTimer" type="Timer" parent="."]
 autostart = true
+

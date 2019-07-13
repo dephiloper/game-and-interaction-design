@@ -22,12 +22,12 @@ class WaveSetting:
 
 var wave_settings = [
 	# WaveSetting.new(20.0, [1.0, 1.0, 1.0, 1.0], 0.0), # Test Wave
-	WaveSetting.new(2.0, [0.0, 0.0, 4.7, 0.0], 0.02),
-	WaveSetting.new(3.7, [0.8, 0.0, 0.7, 0.0], 0.04),
-	WaveSetting.new(8.0, [1.0, 0.3, 0.8, 0.0], 0.7),
-	WaveSetting.new(11.0, [1.0, 0.4, 0.9, 0.0], 0.7),
-	WaveSetting.new(15.0, [1.20, 0.5, 0.8, 0.4], 0.9),
-	WaveSetting.new(25.0, [1.2, 0.7, 0.9, 0.6], 0.10)
+	WaveSetting.new(2.0, [0.0, 0.0, 12.0, 0.0], 0.02),
+	WaveSetting.new(3.7, [0.8, 0.0, 0.5, 0.0], 0.03),
+	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0], 0.4),
+	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0], 0.45),
+	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1], 0.5),
+	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25], 0.55)
 ]
 
 func _on_attack_player(player):
@@ -109,6 +109,7 @@ func _physics_process(delta: float) -> void:
 func _spawn_enemies(delta):
 	var new_enemies = current_wave.process_new_enemies(delta)
 	for new_enemy in new_enemies:
+		# AudioPlayer.play_stream(AudioPlayer.destroyer_laser_attack)
 		match new_enemy:
 			0: _create_assassin()
 			1: _create_exploding_assassin()

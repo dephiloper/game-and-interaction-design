@@ -78,3 +78,4 @@ scale = Vector2( 1.1, 1.1 )
 texture = ExtResource( 7 )
 
 [node name="AudioPlayer" parent="." instance=ExtResource( 8 )]
+
