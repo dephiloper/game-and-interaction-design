@@ -68,9 +68,9 @@ func heal(life: float) -> void:
 func apply_buff(buff_type: String) -> void:
 	match Buff.Types[buff_type]:
 		Buff.Types.MovementSpeed:
-			_movement_speed += 1.2
+			_movement_speed += 1.4
 		Buff.Types.BoostSpeed:
-			_boost_speed_multiplier += 0.5
+			_boost_speed_multiplier += 0.7
 		Buff.Types.Boost:
 			max_boost += 0.25
 			boost = max_boost

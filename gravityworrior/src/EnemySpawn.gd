@@ -22,12 +22,12 @@ class WaveSetting:
 
 var wave_settings = [
 	# WaveSetting.new(20.0, [1.0, 1.0, 1.0, 1.0], 0.0), # Test Wave
-	WaveSetting.new(2.5, [0.0, 0.0, 2.7, 0.0], 0.05),
-	WaveSetting.new(2.5, [0.0, 0.0, 2.7, 0.0], 0.05),
-	WaveSetting.new(2.7, [0.8, 0.0, 0.7, 0.0], 0.07),
-	WaveSetting.new(8.0, [1.2, 0.0, 1.0, 0.0], 0.12),
-	WaveSetting.new(11.0, [1.4, 0.7, 1.2, 0.0], 0.12),
-	WaveSetting.new(15.0, [1.2, 0.8, 0.8, 0.7], 0.14)
+	WaveSetting.new(2.0, [0.0, 0.0, 4.7, 0.0], 0.02),
+	WaveSetting.new(3.7, [0.8, 0.0, 0.7, 0.0], 0.04),
+	WaveSetting.new(8.0, [1.0, 0.3, 0.8, 0.0], 0.7),
+	WaveSetting.new(11.0, [1.0, 0.4, 0.9, 0.0], 0.7),
+	WaveSetting.new(15.0, [1.20, 0.5, 0.8, 0.4], 0.9),
+	WaveSetting.new(25.0, [1.2, 0.7, 0.9, 0.6], 0.10)
 ]
 
 func _on_attack_player(player):
@@ -128,7 +128,7 @@ func set_level(level: int):
 		get_tree().change_scene("res://src/WinScreen.tscn")
 	else:
 		var wave_setting = wave_settings[level]
-		var num_player_multiplier = sqrt(len(GameManager.players))
+		var num_player_multiplier = len(GameManager.players)
 
 		var spawn_rates = wave_setting.spawn_rates
 		for i in range(len(spawn_rates)):

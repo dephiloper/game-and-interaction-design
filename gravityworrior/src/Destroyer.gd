@@ -3,7 +3,7 @@ extends KinematicBody2D
 var HealthBarScene = preload("res://src/HealthBar.tscn")
 
 const SPEED_SCALE = 0.9
-const SPEED = 1.0 * SPEED_SCALE
+const SPEED = 2.0 * SPEED_SCALE
 const FOLLOW_SPEED = 2.0 * SPEED_SCALE
 const ATTACK_SPEED = 20.0 *  SPEED_SCALE
 const DRAG = 0.95
@@ -12,7 +12,7 @@ const ROUTE_POINT_DISTANCE = 50
 const MIN_PLANET_ROUTE_DISTANCE = 55
 const CIRCLE_DISTANCE = 120
 
-const MAX_HEALTH = 140
+const MAX_HEALTH = 180
 const FOLLOW_PROBABILITY: float = 0.33
 const SQUARED_ATTACK_RANGE = 8000
 const DAMAGE = 200
