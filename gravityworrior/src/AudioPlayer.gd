@@ -8,6 +8,12 @@ var enemy_sounds = [
 	preload("res://audio/enemy_sound2.ogg"),
 	preload("res://audio/enemy_sound3.ogg")
 ]
+var player_hit_sounds = [
+	preload("res://audio/playerhit1.ogg"),
+	preload("res://audio/playerhit2.ogg"),
+	preload("res://audio/playerhit3.ogg"),
+	preload("res://audio/playerhit4.ogg")
+]
 var explosion = preload("res://audio/explosion.ogg")
 var player_boost = preload("res://audio/player_boost.ogg")
 var player_shot = preload("res://audio/player_shot.ogg")
@@ -50,6 +56,10 @@ func play_stream(stream, volume=0):
 
 func play_enemy_sound(volume=0):
 	var stream = enemy_sounds[randi()%len(enemy_sounds)]
+	play_stream(stream, volume)
+
+func play_player_hit_sound(volume=0):
+	var stream = player_hit_sounds[randi()%len(player_hit_sounds)]
 	play_stream(stream, volume)
 
 func play_loop(stream, volume=0):

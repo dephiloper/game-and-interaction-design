@@ -49,16 +49,18 @@ var _boost_audio_player = null
 # public methods
 func hit(damage: float) -> void:
 	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
-	
+
+	AudioPlayer.play_player_hit_sound(-10)
+
 	health = max(health - damage, 0)
 	Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
-	
+
 	$HitTween.interpolate_property($PlayerSprites, "modulate", 
 	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
 	$HitTween.interpolate_property($PlayerSprites, "modulate", Color(1, 0, 0, 1), 
 	Color(1, 1, 1, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
-	
+
 	$HitTween.start()
 
 func heal(life: float) -> void:
