@@ -14,7 +14,7 @@ var satellite: Satellite
 
 # 6 difficulty level
 var max_difficulty = 5
-var difficulty = 0
+var difficulty = 1
 
 var _game_over_timer: Timer
 var _max_players: int = 4

@@ -29,3 +29,4 @@ shape = SubResource( 1 )
 wait_time = 0.5
 autostart = true
 
+[node name="HitTween" type="Tween" parent="."]

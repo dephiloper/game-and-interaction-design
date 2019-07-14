@@ -4,6 +4,7 @@ var _max_press_time: float = 1.0
 
 func _ready() -> void:
 	$DifficultySlider.min_value = 0
+	$DifficultySlider.value = GameManager.difficulty
 	$DifficultySlider.max_value = GameManager.max_difficulty
 
 func _process(delta: float) -> void:

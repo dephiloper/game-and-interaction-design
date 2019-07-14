@@ -7,7 +7,7 @@ class_name Satellite
 const SATELLITE_IN_PLANET_Y_OFFSET = 1.7
 
 const MAX_HEALTH = 1000
-var health: float = MAX_HEALTH
+var health: float = 1000
 var _health_bar
 var _heal_radius: float
 var _pulsating_radius: float
@@ -52,12 +52,27 @@ func _ready() -> void:
 	$HealArea.connect("body_exited", self, "_on_HealArea_body_exited")
 	
 func _process(delta: float) -> void:
+	if GameManager.current_game_state != GameManager.GameState.Fight: return
 	_elapsed_time += delta
 	_pulsating_radius = sin(_elapsed_time) * _heal_radius
 	update()
 
 func damage(damage: float) -> void:
 	health = max(health - damage, 0)
+	
+	$HitTween.interpolate_property($Sprite, "modulate", 
+	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
+
+	$HitTween.interpolate_property($Sprite, "modulate", Color(1, 0, 0, 1), 
+	Color(1, 1, 1, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.1)
+	
+	$HitTween.start()
+	
+	GameManager.trigger_camera_shake()
+	
+	if health < MAX_HEALTH * 0.25:
+		add_child(WarnSignal.new())
+	
 	if health <= 0:
 		emit_signal("game_over")
 	

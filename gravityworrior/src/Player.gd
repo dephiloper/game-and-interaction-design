@@ -122,6 +122,7 @@ func _process(_delta: float) -> void:
 		
 	if health <= 0.0 and not is_inactive:
 		is_inactive = true
+		_is_boosting = false
 		stop_boost_sound()
 		emit_signal("active_changed", not is_inactive)
 		$PlayerSprites/body.modulate = Color.gray
