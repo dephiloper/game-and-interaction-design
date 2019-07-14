@@ -66,7 +66,7 @@ func update_position(enemy_pos, enemy_rotation):
 	position = border_position - center_to_enemy.normalized() * 10
 
 	var a = pow(1.01, -border_position.distance_to(enemy_pos))
-	print(a)
+	#print(a)
 	modulate.a = a
 
 	return enemy_pos.distance_squared_to(center) < border_position.distance_squared_to(center)

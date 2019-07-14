@@ -12,6 +12,10 @@ var big_destroyers: Array = []
 var enemies: Array = []
 var satellite: Satellite
 
+# 6 difficulty level
+var max_difficulty = 5
+var difficulty = 0
+
 var _game_over_timer: Timer
 var _max_players: int = 4
 var _player_colors: Array = ["#FDD400","#B8FB3C","#FF2079","#03DDDC"]
