@@ -14,50 +14,50 @@ var satellite: Satellite
 
 var _game_over_timer: Timer
 var _max_players: int = 4
-var _player_colors: Array = ["#22d6b6", "#9c495f", "#889a4e", "#d4b2ef", "#3ea458", "#a242b2", "#94ccd3", "#7cd474", "#339bd3", "#e1c31b"]
+var _player_colors: Array = ["#FDD400","#B8FB3C","#FF2079","#03DDDC"]
 var _is_game_over = false
+var _camera: Camera2D
 
 enum GameState {
 	Fight,
 	Vote
 }
 
-func _init() -> void:
+func setup() -> void:
 	_game_over_timer = Timer.new()
-	_game_over_timer.wait_time = 0.2
+	_game_over_timer.wait_time = 0.3
 	_game_over_timer.one_shot = true
 	add_child(_game_over_timer)
 	_game_over_timer.connect("timeout", self, "_on_game_over_timer_timeout")
-
-func _ready() -> void:
-	var spawn_points = get_node("/root/Main/SpawnPoints")
+	
 	var connected_joypads = Input.get_connected_joypads()
 	for i in connected_joypads:
 		var player = PLAYER_SCENE.instance()
-		player.position = spawn_points.get_children()[i].position
-		get_node("/root/Main").add_child(player)
 		if i == _max_players-1:
 			break
 	
 	if connected_joypads.size() == 0:
 		var player = PLAYER_SCENE.instance()
-		player.position = spawn_points.get_children()[0].position
-		get_node("/root/Main").add_child(player)
 	
 	for player in players:
 		player.connect("active_changed", self, "_player_active_changed")
 
+
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
-	
+
 func register_player(player: Player) -> int:
 	players.append(player)
 	return len(players) - 1
+
+func create_players() -> void:
+	var spawn_points = get_node("/root/Main/SpawnPoints") 
+	for player in players:
+		get_node("/root/Main").add_child(player)
+		player.position = spawn_points.get_child(player.controls.input_device_id).position
 	
-func random_player_color() -> Color:
-	var color = _player_colors[randi() % len(_player_colors)]
-	_player_colors.erase(color)
-	return color
+func get_player_color() -> Color:
+	return _player_colors.pop_front()
 	
 func set_satellite(s: Satellite) -> void:
 	satellite = s
@@ -92,5 +92,11 @@ func _on_game_over():
 	_game_over_timer.start()
 		
 func _on_game_over_timer_timeout() -> void:
-	get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
+	if len(get_living_players()) == 0:
+		get_tree().change_scene("res://src/LoseScreenWipedOut.tscn")
+	else:
+		get_tree().change_scene("res://src/LoseScreenObjDestroyed.tscn")
 	Engine.time_scale = 1
+	
+func trigger_camera_shake(intensity: float = 1) -> void:
+	get_node("/root/Main/MainCamera/").trigger_shake(intensity)

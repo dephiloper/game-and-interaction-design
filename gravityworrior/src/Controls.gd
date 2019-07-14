@@ -22,6 +22,7 @@ func _init() -> void:
 	_input_map["jump"] = 0.0
 	_input_map["shoot"] = 0.0
 	_input_map["toggle_alternative_aiming"] = 0.0
+	_input_map["toggle_laser_pointer"] = 0.0
 
 # implementation of "own" input event system
 func _input(event: InputEvent) -> void:

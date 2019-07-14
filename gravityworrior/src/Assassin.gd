@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 var HealthBarScene = preload("res://src/HealthBar.tscn")
+var ArrowScene = preload("res://src/EnemyArrow.tscn")
 
 const SPEED_SCALE: float = 0.75
 const SPEED: float = 10.0
@@ -14,7 +15,7 @@ const DESTROYER_DISTANCE = 40
 const ASSASSIN_DISTANCE_FORCE: float = 1.0
 const GUARD_DISTANCE = 70
 const EPSILON = 0.0001
-const MAX_HEALTH: int = 35
+const MAX_HEALTH: int = 55
 
 const SQUARED_ATTACK_RANGE: float = 8500.0
 const SQUARED_SIGNAL_ATTACK_RANGE: float = 17000.0
@@ -67,6 +68,7 @@ var _move_to_planet_cooldown = 0
 var _attack_cooldown = 0
 var _has_to_be_removed = false
 var _health_bar
+var _arrow
 
 func state_to_str(s):
 	match s:
@@ -96,10 +98,19 @@ func _ready() -> void:
 
 	_start_guard_destroyer()
 
+	# create health bar
 	_health_bar = HealthBarScene.instance()
 	_health_bar.transform = _health_bar.transform.scaled(Vector2(_get_healthbar_scale(), _get_healthbar_scale()))
 	_health_bar.init(self, _get_healthbar_offset())
 	get_parent().add_child(_health_bar)
+
+	# create arrow
+	_create_arrow()
+
+func _create_arrow():
+	_arrow = ArrowScene.instance()
+	_arrow.play("assassin")
+	get_parent().add_child(_arrow)
 
 func _get_healthbar_scale():
 	return 1.0
@@ -129,7 +140,8 @@ func hit(damage: float, _collision) -> bool:
 	health -= damage
 	if health <= 0.0:
 		_start_die()
-		$HitTween.interpolate_property($Sprite, "modulate", 
+	
+	$HitTween.interpolate_property($Sprite, "modulate", 
 	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
 	$HitTween.interpolate_property($Sprite, "modulate", Color(1, 0, 0, 1), 
@@ -147,6 +159,10 @@ func _die():
 	_channel_time = DIE_TIME
 	collision_mask = 0
 	collision_layer = 0
+
+	if _arrow:
+		_arrow.queue_free()
+		_arrow = null
 
 func is_dead():
 	return state == ASSASSIN_STATE.Dead
@@ -268,6 +284,8 @@ func _start_guard_destroyer():
 		# _guard_position = Vector2(randf(), randf()).normalized() * GUARD_DISTANCE
 		_guard_position = (position - _destroyer_to_guard.position).normalized() * GUARD_DISTANCE
 		state = ASSASSIN_STATE.GuardDestroyer
+	else:
+		_start_fly_to_player(_choose_random(GameManager.get_living_players()))
 
 func _start_channel_attack(target_player, do_emit):
 	if _attack_cooldown > 0:
@@ -456,7 +474,7 @@ func _process_dead(delta):
 
 func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta
-
+	$Trail.emitting = false
 	match state:
 		ASSASSIN_STATE.FlyToPlayer:
 			_process_fly_to_player()
@@ -464,6 +482,7 @@ func _physics_process(delta: float) -> void:
 			_process_guard_destroyer()
 		ASSASSIN_STATE.ChannelAttack:
 			_process_channel_attack(delta)
+			$Trail.emitting = true
 		ASSASSIN_STATE.FlyToPlanet:
 			_process_fly_to_planet()
 		ASSASSIN_STATE.GoIntoPlanet:
@@ -476,15 +495,17 @@ func _physics_process(delta: float) -> void:
 			_process_tumble()
 		ASSASSIN_STATE.AttackPlayer:
 			_process_attack_player(delta)
+			$Trail.emitting = true
 		ASSASSIN_STATE.Dead:
 			_process_dead(delta)
 			return
 
 	_process_movement(delta)
 
-	#if state != old_state:
-	#	print('state: ', state_to_str(state))
-	#	old_state = state
+	if _arrow != null:
+		if _arrow.update_position(position, rotation):
+			_arrow.queue_free()
+			_arrow = null
 
 func _process_movement(delta: float) -> void:
 	var collision = move_and_collide(_velocity * delta * _get_speed_scale())
@@ -515,4 +536,3 @@ func _process_collision(collision):
 	do_bounce = false
 	if do_bounce:
 		_velocity = _velocity.bounce(collision.normal)
-

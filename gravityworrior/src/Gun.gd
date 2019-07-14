@@ -2,20 +2,20 @@ extends Node2D
 
 class_name Gun
 
-enum TYPE {
-	MACHINE, GATLING, RIFLE, LAUNCHER
-}
-
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const CROSS_HAIR_DISTANCE: int = 128
+const GUN_POINTER_COLOR: Color = Color(1, 0, 0, 0.25)
 
 var shoot_dir = Vector2.RIGHT
 var can_shoot: bool = true
 var _base_damage: float = 10
 var _fire_rate: float = 5
 var _controls: Controls
-var _offset: Vector2 = Vector2(5,5)
+var _offset: Vector2 = Vector2(4,2)
 var _alternative_aiming_enabled: bool = false
+var _alternative_aiming_pressed_time: float = 0
+
+var _show_laser_pointer: bool = true
 
 func set_controls(controls: Controls) -> void:
 	_controls = controls
@@ -34,10 +34,18 @@ func shoot(_damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier) -> v
 func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
 		return
+
+	if _controls.pressed("toggle_alternative_aiming"):
+		_alternative_aiming_pressed_time += delta
+		if _alternative_aiming_pressed_time > 1:
+			_alternative_aiming_enabled = !_alternative_aiming_enabled
+			_alternative_aiming_pressed_time = 0
+	else:
+		_alternative_aiming_pressed_time = 0
 	
-	#if _controls.just_pressed("toggle_alternative_aiming"):
-		#print("_alternative_aiming_enabled",_alternative_aiming_enabled)
-		#_alternative_aiming_enabled = !_alternative_aiming_enabled
+	if _controls.just_pressed("toggle_laser_pointer"):
+		_show_laser_pointer = !_show_laser_pointer
+		
 
 	shoot_dir = _caculate_cross_hair_direction()
 	$CrosshairSprite.visible = false if shoot_dir == Vector2.ZERO else true
@@ -46,8 +54,12 @@ func _physics_process(delta: float) -> void:
 	$GunSprite.set_flip_v(shoot_dir.x < 0)
 	$GunSprite/BarrelPosition.position.y = 10 if (shoot_dir.x < 0) else -10 
 	position = _offset if shoot_dir.x >= 0 else Vector2(-_offset.x, _offset.y)
-	
-		
+	update()
+
+func _draw() -> void:
+	if _show_laser_pointer:
+		draw_line($GunSprite.position, $CrosshairSprite.position, GUN_POINTER_COLOR, 2)
+
 func _caculate_cross_hair_direction() -> Vector2:
 	var horizontal: float = 0
 	var vertical: float = 0

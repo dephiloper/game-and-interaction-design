@@ -4,10 +4,6 @@ class_name Player
 
 signal active_changed
 
-# preloaded scenes
-const INACTIVE_TEXTURE = preload("res://img/player_inactive.png")
-const PLAYER_TEXTURE = preload("res://img/player.png")
-
 const ON_PLANET_SPEED_MULTIPLIER: float = 3.0
 const ON_PLANET_DRAG: float = 0.9
 const OFF_PLANET_DRAG: float = 0.99
@@ -16,8 +12,7 @@ const BOOST_REDUCTION_VALUE: float = 1.0
 const BOOST_RECHARGE_VALUE: float = 0.2
 const BORDER_BOUNDRY: int = 24
 const BORDER_BOUNDRY_PULL: int = 24
-
-export(Texture) var texture
+const GRAVITATIONAL_IMPACT_FACTOR: float = 0.4 # TODO tweak the gravity here! default: 1.0
 
 # properties
 var max_boost: float = 0.5
@@ -44,22 +39,38 @@ var _damage: float = 1.0
 var _bullet_size_multiplier: float = 1.0
 var _attack_speed_multiplier: float = 1.0
 
+# just for fun, lol
+var _vibration_time_elapsed: float = 0.0
+var _heartbeat_wait_time: float = 0.3
+var _heartbeat_count: int = 0
+
 var _boost_audio_player = null
 
 # public methods
 func hit(damage: float) -> void:
+	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
+	
 	health = max(health - damage, 0)
 	Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
+	
+	$HitTween.interpolate_property($PlayerSprites, "modulate", 
+	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN)
+
+	$HitTween.interpolate_property($PlayerSprites, "modulate", Color(1, 0, 0, 1), 
+	Color(1, 1, 1, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
+	
+	$HitTween.start()
 
 func heal(life: float) -> void:
+	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
 	health = min(health + life, max_health)
 
 func apply_buff(buff_type: String) -> void:
 	match Buff.Types[buff_type]:
 		Buff.Types.MovementSpeed:
-			_movement_speed += 1.2
+			_movement_speed += 1.4
 		Buff.Types.BoostSpeed:
-			_boost_speed_multiplier += 0.5
+			_boost_speed_multiplier += 0.7
 		Buff.Types.Boost:
 			max_boost += 0.25
 			boost = max_boost
@@ -75,7 +86,7 @@ func apply_buff(buff_type: String) -> void:
 func _init() -> void:
 	add_to_group("Player")
 	var device_id = GameManager.register_player(self)
-	color = GameManager.random_player_color()
+	color = GameManager.get_player_color()
 	controls = Controls.new()
 	add_child(controls)
 	controls.set_device_id(device_id)
@@ -83,20 +94,33 @@ func _init() -> void:
 func _ready() -> void:
 	$PlayerSprites/body.modulate = color
 	$PlayerSprites/head.modulate = color
-	$Trail.texture = texture
+	$Trail.modulate = color.lightened(0.5)
 	$CooldownTimer.connect("timeout", self, "_on_CooldownTimer_timeout")
 	$ReviveArea.connect("body_entered", self, "_on_ReviveArea_body_entered")
 	$Hud.set_health_color(color)
 	$Gun.set_controls(controls)
 
+func stop_boost_sound():
+	if _boost_audio_player != null:
+		AudioPlayer.stop_player(_boost_audio_player)
+		_boost_audio_player = null
+
+func start_boost_sound():
+	if _boost_audio_player == null:
+		_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -24)
+
+func on_end_wave():
+	stop_boost_sound()
+
 func _process(_delta: float) -> void:
 	$Hud.set_health_value(health, max_health)
 	$Hud.set_boost_value(boost, max_boost)
+	if health > 0 and health < max_health / 4:
+		_trigger_heartbeat_vibration(_delta)
+		
 	if health <= 0.0 and not is_inactive:
 		is_inactive = true
-		if _boost_audio_player != null:
-			AudioPlayer.stop_player(_boost_audio_player)
-			_boost_audio_player = null
+		stop_boost_sound()
 		emit_signal("active_changed", not is_inactive)
 		$PlayerSprites/body.modulate = Color.gray
 		$PlayerSprites/head.modulate = Color.gray
@@ -119,6 +143,7 @@ func _physics_process(delta: float) -> void:
 	$Trail.emitting = false
 	# we are on planet
 	if _is_on_planet == true:
+		collision_mask = 1 + 16
 		_velocity += _calculate_player_movement()
 		_velocity *= ON_PLANET_DRAG
 		var diff: Vector2 = _closest_planet.position - position
@@ -127,14 +152,15 @@ func _physics_process(delta: float) -> void:
 		_velocity = _velocity.slide(-diff.normalized())
 	# not on planet
 	else:
+		collision_mask = 1 + 2 + 16
 		_velocity += _calculate_player_movement()
 		_velocity *= OFF_PLANET_DRAG
-		var pull: Vector2 = _calculate_gravitational_pull()
+		var pull: Vector2 = _calculate_gravitational_pull() * GRAVITATIONAL_IMPACT_FACTOR
 		var collision = move_and_collide(_velocity * delta)
 		if collision:
 			if collision.collider.is_in_group("Planet"):
 				_is_on_planet = true
-			elif collision.collider.is_in_group("Destroyer"):
+			if collision.collider.is_in_group("Player") or collision.collider.is_in_group("Destroyer"):
 				_velocity = _velocity.bounce(collision.normal)
 				position += _velocity * 0.02
 				_velocity *= 0.7
@@ -149,8 +175,7 @@ func _physics_process(delta: float) -> void:
 		
 		if _is_boosting:  # we press boost key
 			if boost > 0.0:  # there is boost left
-				if _boost_audio_player == null:
-					_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -12)
+				start_boost_sound()
 				$Trail.emitting = true
 				max_velocity *= _boost_speed_multiplier
 				boost = max(boost - BOOST_REDUCTION_VALUE * delta, 0.0)
@@ -159,11 +184,11 @@ func _physics_process(delta: float) -> void:
 					$CooldownTimer.start()
 		_velocity = _velocity.clamped(max_velocity)
 
-	if not _is_boosting and _boost_audio_player != null:
-		AudioPlayer.stop_player(_boost_audio_player)
-		_boost_audio_player = null
+	if not _is_boosting:
+		stop_boost_sound()
 	for sprite in $PlayerSprites.get_children():
 		sprite.set_flip_h($Gun.shoot_dir.x < 0)
+		
 	
 	# we are not boosting and the cooldown timer is not started
 	if not _is_boosting and $CooldownTimer.is_stopped():
@@ -224,6 +249,15 @@ func _calculate_boundary_pull() -> Vector2:
 func _shoot() -> void:
 	$Gun.shoot(_damage, _bullet_size_multiplier, _attack_speed_multiplier)
 
+func _trigger_heartbeat_vibration(delta: float) -> void:
+	if _vibration_time_elapsed > _heartbeat_wait_time:
+		Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.1)
+		_heartbeat_wait_time = 0.25 if _heartbeat_count == 0 else 0.9
+		_heartbeat_count = (_heartbeat_count + 1) % 2
+		_vibration_time_elapsed = 0
+	else:
+		_vibration_time_elapsed += delta
+
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost
 	_is_cooldown = false
@@ -234,7 +268,7 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 		if not (body as Player).is_inactive:
 			is_inactive = false
 			emit_signal("active_changed", not is_inactive)
-			health = max_health
+			health = max_health / 4
 			$PlayerSprites/body.modulate = color
 			$PlayerSprites/head.modulate = color
 			$Gun.visible = true

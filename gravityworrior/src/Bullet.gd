@@ -2,9 +2,9 @@ extends KinematicBody2D
 
 class_name Bullet
 
-const GRAVITATION_IMPACT_FACTOR: float = 3.0
+const GRAVITATIONAL_IMPACT_FACTOR: float = 7.5 # TODO tweak the gravity here! default: 3.0
 
-var DRAG: float = 0.995
+var DRAG: float = 0.999 # TODO initial value 0.995 imo to low!
 var _velocity = Vector2.ZERO
 var _bounce_count: int = 0
 
@@ -21,7 +21,7 @@ func _apply_hit(collision):
 			queue_free()
 
 func _physics_process(delta: float) -> void:
-	_velocity += _calculate_gravitational_pull() * GRAVITATION_IMPACT_FACTOR
+	_velocity += _calculate_gravitational_pull() * GRAVITATIONAL_IMPACT_FACTOR
 	var collision = move_and_collide(_velocity * delta)
 	if collision:
 		_apply_hit(collision)

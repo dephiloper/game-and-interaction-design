@@ -1,5 +1,4 @@
 extends Control
 
-
-func _process(delta) -> void:
+func _ready() -> void:
 	$AnimatedSprite.play('default')

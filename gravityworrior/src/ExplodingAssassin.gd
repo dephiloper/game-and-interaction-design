@@ -2,11 +2,11 @@ extends "res://src/Assassin.gd"
 
 const EXPLODING_SPEED_SCALE = 0.9
 const EXPLOSION_RADIUS = 80.0
-const EXPLODING_SQUARED_ATTACK_RANGE = 5000
+const EXPLODING_SQUARED_ATTACK_RANGE = 3000
 const EXPLODING_ATTACK_CHANNEL_TIME = 0.1
 const SQUARED_DAMAGE_RANGE = 6400
-const EXPLOSION_DAMAGE = 25
-const EXPLODING_MAX_HEALTH = 30
+const EXPLOSION_DAMAGE = 35
+const EXPLODING_MAX_HEALTH = 45
 
 func _get_speed_scale():
 	return EXPLODING_SPEED_SCALE
@@ -17,6 +17,12 @@ func _do_explosion():
 	for assassin in _get_assassins_in_damage_range():
 		assassin.hit(EXPLOSION_DAMAGE, null)
 	AudioPlayer.play_stream(AudioPlayer.explosion, 0)
+	GameManager.trigger_camera_shake(2)
+
+func _create_arrow():
+	_arrow = ArrowScene.instance()
+	_arrow.play("exploder")
+	get_parent().add_child(_arrow)
 
 func _get_max_health():
 	return EXPLODING_MAX_HEALTH
@@ -29,6 +35,8 @@ func _should_collide_damage_player():
 	return false
 
 func _start_die():
+	collision_mask = 0
+	collision_layer = 0
 	_start_channel_attack(null, false)
 
 func _start_channel_attack(target_player, do_emit):

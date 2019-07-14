@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://src/LoseScreenObjDestroyed.gd" type="Script" id=1]
 [ext_resource path="res://fonts/Azonix.otf" type="DynamicFontData" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://img/animation_satexplosion_3.png" type="Texture" id=5]
 [ext_resource path="res://img/animation_satexplosion_5.png" type="Texture" id=6]
 [ext_resource path="res://img/sat_planet.png" type="Texture" id=7]
+[ext_resource path="res://img/godot_background.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 65
@@ -21,7 +22,7 @@ animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ) ],
 "loop": false,
 "name": "default",
-"speed": 3.0
+"speed": 5.0
 } ]
 
 [node name="Control" type="Control"]
@@ -34,7 +35,7 @@ __meta__ = {
 
 [node name="Label" type="Label" parent="."]
 margin_right = 1277.0
-margin_bottom = 721.0
+margin_bottom = 600.0
 custom_fonts/font = SubResource( 1 )
 text = "You Lose!"
 align = 1
@@ -42,9 +43,9 @@ valign = 1
 
 [node name="Label2" type="Label" parent="."]
 margin_left = 270.375
-margin_top = 151.664
+margin_top = 78.664
 margin_right = 1063.38
-margin_bottom = 353.664
+margin_bottom = 280.664
 custom_fonts/font = SubResource( 2 )
 text = "Satellite destroyed
 No Rescue Possible"
@@ -56,11 +57,16 @@ __meta__ = {
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 669.316, 521.84 )
+z_index = 1
 frames = SubResource( 3 )
-frame = 7
 
-[node name="sat_planet" type="Sprite" parent="."]
-position = Vector2( 609.242, 746.911 )
+[node name="Planet" type="Sprite" parent="."]
+position = Vector2( 600.242, 736.911 )
+rotation = 0.296706
 scale = Vector2( 1, 0.875 )
-z_index = -1
 texture = ExtResource( 7 )
+
+[node name="Background" type="Sprite" parent="."]
+z_index = -1
+texture = ExtResource( 8 )
+centered = false
