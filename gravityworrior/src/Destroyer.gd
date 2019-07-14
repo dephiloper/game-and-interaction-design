@@ -293,6 +293,7 @@ func _physics_process(delta: float) -> void:
 		_velocity *= 0.1
 		if collision.collider.is_in_group("Satellite"):
 			GameManager.satellite.damage(DAMAGE * _get_damage_scale())
+			AudioPlayer.play_stream(AudioPlayer.satellite_hit, -2)
 			_die()
 
 	if _velocity.length_squared() > 0.01:

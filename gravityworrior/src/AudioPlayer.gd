@@ -17,6 +17,7 @@ var player_hit_sounds = [
 var explosion = preload("res://audio/explosion.ogg")
 var player_boost = preload("res://audio/player_boost.ogg")
 var player_shot = preload("res://audio/player_shot.ogg")
+var satellite_hit = preload("res://audio/satellite_hit.ogg")
 
 var background = preload("res://audio/enemy_hit.ogg")  # TODO
 
