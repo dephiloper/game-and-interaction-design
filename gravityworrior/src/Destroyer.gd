@@ -23,7 +23,7 @@ const FOLLOW_PLAYER_TIME = 7
 const ATTACK_CHANNEL_TIME = 0.7
 const ATTACK_DURATION = 0.8
 const CIRCLE_DURATION = 30
-const DIE_TIME = 1.0
+const DIE_TIME = 2.0
 
 enum DestroyerState {
 	FlyToSender,
@@ -260,7 +260,14 @@ func _process_dead(delta):
 	else:
 		var alpha = _channel_time / DIE_TIME
 		$Sprite.modulate = Color(1, 1, 1, alpha)
-		#$BodySprite.modulate = Color(1, 1, 1, alpha)
+		$Sprite/Head.position += Vector2(0, -1) * delta * 64 * alpha
+		$Sprite/Head.rotation += delta * 0.25 * alpha
+		$Sprite/LeftPaddle.position += Vector2(-1, 0) * delta * 32 * alpha
+		$Sprite/LeftPaddle.rotation += delta * 0.25 * alpha		
+		$Sprite/CenterPaddle.position += Vector2(0, 1) * delta * 64 * alpha
+		$Sprite/RightPaddle.position += Vector2(1, 0) * delta * 32 * alpha
+		$Sprite/RightPaddle.rotation -= delta * 0.25 * alpha
+		
 
 func _update_velocity_by_direction():
 	if _velocity.length_squared() > 0.01:

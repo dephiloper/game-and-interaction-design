@@ -6,7 +6,7 @@ var destroyer_laser_attack = preload("res://audio/destroyer_laser_attack.ogg")
 var enemy_sounds = [
 	preload("res://audio/enemy_sound1.ogg"),
 	preload("res://audio/enemy_sound2.ogg"),
-	preload("res://audio/enemy_sound3.ogg")
+	#preload("res://audio/enemy_sound3.ogg") sound to farty for my opinion ^^
 ]
 var player_hit_sounds = [
 	preload("res://audio/playerhit1.ogg"),

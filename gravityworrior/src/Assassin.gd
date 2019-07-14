@@ -28,7 +28,7 @@ const ATTACK_TIME: float = 0.5
 const GO_INTO_PLANET_TIME = 0.7
 const LURK_ON_PLANET_TIME = 4.0
 const MOVE_AWAY_FROM_PLANET_TIME = 0.8
-const DIE_TIME = 0.2
+const DIE_TIME = 0.8
 const MOVE_TO_PLANET_COOLDOWN_TIME = 2
 const ATTACK_COOLDOWN_TIME = 1.5
 
@@ -471,6 +471,10 @@ func _process_dead(delta):
 	else:
 		var alpha = _channel_time / DIE_TIME
 		$Sprite.modulate = Color(1, 1, 1, alpha)
+		$Sprite/Head.position += Vector2(0.5, 0.5) * delta * 64 * alpha
+		$Sprite/Head.rotation += delta * alpha
+		$Sprite/Tail.position += Vector2(-0.5, 0.5) * delta * 64 * alpha
+		$Sprite/Tail.rotation += delta * alpha
 
 func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta

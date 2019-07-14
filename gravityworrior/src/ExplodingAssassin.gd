@@ -84,6 +84,11 @@ func _process_dead(delta):
 	else:
 		var alpha = _channel_time / DIE_TIME
 		$Sprite.modulate = Color(1, 1, 1, alpha)
+		$Sprite/Head.position += Vector2(3, -3) * delta * 64 * alpha
+		$Sprite/Head.rotation += delta * alpha
+		$Sprite/Tail.position += Vector2(3, 3) * delta * 64 * alpha
+		$Sprite/Tail.rotation += delta * alpha
+
 		update()
 
 func _draw():
