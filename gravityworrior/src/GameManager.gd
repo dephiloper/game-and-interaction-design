@@ -67,6 +67,12 @@ func set_satellite(s: Satellite) -> void:
 	satellite = s
 	satellite.connect("game_over", self, "_on_game_over")
 
+func get_difficulty_damage_multiplier():
+	return 3.0 / (difficulty*2/5+1)
+
+func get_difficulty_wave_multiplier():
+	return (2.0/9.0) * difficulty + 1.0/3.0
+
 func get_living_destroyers() -> Array:
 	var living_destroyers: Array = []
 	for destroyer in destroyers:

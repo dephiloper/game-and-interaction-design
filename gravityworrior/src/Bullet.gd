@@ -17,7 +17,7 @@ func _get_drag():
 func _apply_hit(collision):
 	if collision.collider.has_method("hit"):
 		AudioPlayer.play_stream(AudioPlayer.enemy_hit, -8)
-		if collision.collider.hit(_damage, collision):
+		if collision.collider.hit(_damage * GameManager.get_difficulty_damage_multiplier(), collision):
 			queue_free()
 
 func _physics_process(delta: float) -> void:

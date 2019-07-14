@@ -22,12 +22,12 @@ class WaveSetting:
 
 var wave_settings = [
 	# WaveSetting.new(20.0, [0.0, 0.0, 0.0, 30.0], 0.0), # Test Wave
-	WaveSetting.new(2.0, [0.0, 0.0, 12.0, 0.0], 0.02),
+	WaveSetting.new(2.0, [0.0, 0.0, 20.0, 0.0], 0.0),
 	WaveSetting.new(3.7, [0.8, 0.0, 0.5, 0.0], 0.03),
-	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0], 0.4),
-	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0], 0.45),
-	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1], 0.5),
-	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25], 0.55)
+	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0], 0.3),
+	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0], 0.35),
+	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1], 0.4),
+	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25], 0.45)
 ]
 
 func _on_attack_player(player):
@@ -130,13 +130,14 @@ func set_level(level: int):
 	else:
 		var wave_setting = wave_settings[level]
 		var num_player_multiplier = len(GameManager.players)
+		var difficulty_multiplier = GameManager.get_difficulty_wave_multiplier()
 
 		var spawn_rates = wave_setting.spawn_rates
 		for i in range(len(spawn_rates)):
-			spawn_rates[i] = spawn_rates[i] * num_player_multiplier
+			spawn_rates[i] = spawn_rates[i] * num_player_multiplier * difficulty_multiplier
 
 		current_wave = _enemy_wave_class.new(
 			wave_setting.spawn_amount,
 			wave_setting.spawn_rates,
-			wave_setting.global_spawn_rate_gain * num_player_multiplier
+			wave_setting.global_spawn_rate_gain * num_player_multiplier * difficulty_multiplier
 		)
