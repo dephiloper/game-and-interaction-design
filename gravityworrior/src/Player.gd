@@ -107,7 +107,7 @@ func stop_boost_sound():
 
 func start_boost_sound():
 	if _boost_audio_player == null:
-		_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -24)
+		_boost_audio_player = AudioPlayer.play_loop(AudioPlayer.player_boost, -30)
 
 func on_end_wave():
 	stop_boost_sound()

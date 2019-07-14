@@ -69,7 +69,7 @@ func update_position(enemy_pos, enemy_rotation):
 	#print(a)
 	modulate.a = a
 
-	return enemy_pos.distance_squared_to(center) < border_position.distance_squared_to(center)
+	return enemy_pos.distance_squared_to(center) - 38000 < border_position.distance_squared_to(center)
 
 func get_intersection_point(p, r, q, s):
 	"""

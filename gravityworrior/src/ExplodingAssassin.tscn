@@ -7,19 +7,19 @@
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( -27, -36, -27, 36, 10, 28, 28, 0, 10, -28 )
 
-[sub_resource type="Curve" id=3]
+[sub_resource type="Curve" id=2]
 _data = [ Vector2( 0.024457, 0.7024 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.192 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=4]
-curve = SubResource( 3 )
+[sub_resource type="CurveTexture" id=3]
+curve = SubResource( 2 )
 
-[sub_resource type="ParticlesMaterial" id=2]
+[sub_resource type="ParticlesMaterial" id=4]
 flag_disable_z = true
 gravity = Vector3( 0, 0, 0 )
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.02
-scale_curve = SubResource( 4 )
+scale_curve = SubResource( 3 )
 
 [node name="ExplodingAssassin" type="KinematicBody2D"]
 scale = Vector2( 0.66, 0.66 )
@@ -40,5 +40,5 @@ texture = ExtResource( 2 )
 [node name="Trail" type="Particles2D" parent="."]
 emitting = false
 local_coords = false
-process_material = SubResource( 2 )
+process_material = SubResource( 4 )
 texture = ExtResource( 3 )

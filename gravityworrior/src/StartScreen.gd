@@ -1,6 +1,6 @@
 extends Node2D
 var _press_to_start_time: float = 0.0
-var _max_press_time: float = 1.5
+var _max_press_time: float = 1.0
 
 func _ready() -> void:
 	$DifficultySlider.min_value = 0
