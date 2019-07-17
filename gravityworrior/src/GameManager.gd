@@ -71,7 +71,7 @@ func get_difficulty_damage_multiplier():
 	return 3.0 / (difficulty*2/5+1)
 
 func get_difficulty_wave_multiplier():
-	return (2.0/9.0) * difficulty + 1.0/3.0
+	return (1.0/6.0) * difficulty + 1.0/3.0
 
 func get_living_destroyers() -> Array:
 	var living_destroyers: Array = []
