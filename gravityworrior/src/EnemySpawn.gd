@@ -23,11 +23,11 @@ class WaveSetting:
 var wave_settings = [
 	#WaveSetting.new(20.0, [0.0, 0.0, 20.0, 0.0], 0.0), # Test Wave
 	WaveSetting.new(2.0, [0.0, 0.0, 20.0, 0.0], 0.0),
-	WaveSetting.new(3.7, [0.8, 0.0, 0.5, 0.0], 0.03),
-	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0], 0.3),
-	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0], 0.35),
-	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1], 0.4),
-	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25], 0.45)
+	WaveSetting.new(3.7, [0.8, 0.0, 0.5, 0.0], 0.02),
+	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0], 0.2),
+	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0], 0.25),
+	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1], 0.3),
+	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25], 0.35)
 ]
 
 func _on_attack_player(player):
