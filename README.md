@@ -10,5 +10,5 @@ A university project in the game and interaction design course!
 ## Game executables
 If you just want to run the game, those can be found here: https://github.com/dephiloper/game-and-interaction-design/releases/tag/v0.1-alpha
 
-## problem solving
+## Problem solving
 if "loading failed to missing dependencies" occurs, make sure you installed git-lfs and cloned the project with it (https://git-lfs.github.com/)
