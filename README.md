@@ -7,7 +7,7 @@ A university project in the game and interaction design course!
 3. Open up godot, select Import and choose the folder your cloned this project to
 4. After the project is loaded properly press "Play" on the upper right of the window
 
-# Game executables
+## Game executables
 If you just want to run the game, those can be found here: https://github.com/dephiloper/game-and-interaction-design/releases/tag/v0.1-alpha
 
 ## problem solving
