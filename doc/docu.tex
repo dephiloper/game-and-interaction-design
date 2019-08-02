@@ -176,6 +176,7 @@ Die verwendete Game Engine Godot, welche bei der Entwicklung zum Einsatz kam, wu
 Im Folgenden wird der zeitliche Verlauf der Ausarbeitung der Spielidee, sowie dessen Umsetzung, beschrieben. Dabei werden vor allem Herausforderungen, die während des Prozesses auftraten thematisiert, sowie die dafür entwickelten Lösungen.
 \subsection{Ideenfindung}
 Zu Beginn des Projektes wurden die verschiedenen Projektideen gesichtet und auf ihre Umsetzbarkeit überprüft. In einer ersten Ideenfindung entstanden drei grundsätzliche Vorschläge, die zunächst vage beschrieben wurden.
+Diese wurden mit dem Professor besprochen und evaluiert.
 
 \lbparagraph{Omega}
 Ein Kartenspiel, bei dem die Technologie Mobile und PC kombiniert werden sollte. Karten sollten über das Handy ausgespielt und aktiviert werden können, während der allgemeine Spielstatus auf dem PC angezeigt wird. Eine genaue Vorstellung (Ziel, Regeln, Thema) des Spiels existierte noch nicht.
@@ -190,13 +191,20 @@ Es wurden verschiedene Vorschläge bezüglich des Spielzieles abgewägt, wie ein
 Ziel der ersten Iteration des Entwicklungsprozesses war ein Prototyp, in dem es möglich war, seinen Gravity Warrior durch eine Menge von Planeten zu steuern. Auf welche Art und Weise die Gravitation der Planeten auf den Gravity Warrior wirkte sowie das Movement des Spielers auf einem Planeten wurde dabei primär betrachtet. Diskutiert wurde vor allem, ob für die Situation auf dem Planeten ein anderes Movement implementiert werden sollte, als für die Situation im freien Raum. Ein Vorschlag war es den Spieler entweder im Uhrzeigersinn oder gegen den Uhrzeigersinn, um den Planeten zu bewegen, abhängig davon, ob der Spieler die A oder die D Taste betätigt. Schlussendlich wurde sich dafür entschieden das Movement auf dem Planeten ähnlich dem Movement im freien Raum zu gestalten, da sonst die Umstellung zwischen den beiden Bewegungsarten zu überraschend und kompliziert wäre.
 
 \subsection{Das Konzept des Spiels}
-Eine der ersten Entscheidungen, die das Konzept des Spiels betrafen, war, dass Gravity Warrior als ein Couch-Coop Spiel entworfen werden sollte.
-Zu diesem Zeitpunkt stand das Ziel des Spiels, das die Spieler erreichen sollten, noch nicht fest. Es wurde sich dazu entschieden,ein Wave Defence Spiel gegen angreifende Aliens umzusetzen, nachdem auch andere Spieltypen, wie kompetitives Player vs. Player oder das Angreifen einer gegnerischen Basis diskutiert wurden.
-Passend zu diesem Spielprinzip wurde die in \autoref{subsec:fan} beschriebene \nameref{subsec:fan} konzipiert, die den Spielern die Situation der Gravity Warrior vermittelt und gleichzeitig den Kernaspekt Gravitation ins Zentrum rückt.
+Eine der ersten Entscheidungen des Spielkonzepts war, dass Gravity Warrior als ein Couch-Coop Spiel entworfen werden sollte. Zu diesem Zeitpunkt stand das Ziel des Spiels, das die Spieler erreichen sollten, noch nicht fest. Es wurde sich dazu entschieden, ein Wave Defence Spiel gegen angreifende Aliens umzusetzen, nachdem auch andere Spieltypen, wie kompetitives Player vs. Player oder das Angreifen einer gegnerischen Basis diskutiert wurden.
+Passend zu diesem Spielprinzip wurde die in \autoref{subsec:fan} beschriebene \nameref{subsec:fan} konzipiert, die den Spielern die Situation der Gravity Warrior vermittelt und gleichzeitig den Kernaspekt Gravitation ins Zentrum rückt, die von verschiedenen Planeten (später Asteroiden) ausging. Deshalb waren Projektile geplant, die von der Gravitation beeinflusst werden (siehe \autoref{fig:concept}: \nameref{fig:concept}). 
+Die Spieler sollten zunächst schemenhaft als Quadrat und die Gegner als Dreiecke dargestellt werden, was skizzenhaft in \autoref{fig:concept}: \nameref{fig:concept} dargestellt wird. Zudem war ein schwarzes Loch im Universum geplant, in das der Spieler nicht fallen darf. Dieses schwarze Loch wird an einem zufälligen Ort platziert. Darüber hinaus sollten weitere gefährliche Umgebungen integriert werden. Des Weiteren sollten mehrere Spielmodi angeboten werden: Battle Royale, Competitive, Boss Fights, Coop und Hardcore. Im Rahmen des ersten Konzeptes wurde ein Moodboard erstellt, das die Farben und die einzelnen Objekte im groben skizziert (siehe \nameref{sec:appendix}).
 Um das neue Spielkonzept zu testen, wurde eine erste Variante von angreifenden Aliens implementiert, die an zufälligen Positionen am Rand des Bildschirms erscheinen, um anschließend auf den Spieler zu zufliegen. Asteroiden werden auf dem Weg zum Spieler ignoriert. Berühren die Aliens den Spieler, so werden dem Spieler Leben abgezogen. Um dies zu visualisieren, wurde eine Lebensanzeige für den Spieler entwickelt, die ebenfalls den Booststatus veranschaulicht.
 Der Spieler bekam die Möglichkeit zu schießen und wurde ein Alien getroffen, so verschwand es augenblicklich.
 
-
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.3\textwidth]{sketch_01.png}\hfill
+	\includegraphics[width=.3\textwidth]{sketch_02.png}\hfill
+	\includegraphics[width=.3\textwidth]{sketch_03.png}
+	\caption{Konzeptskizze}
+	\label{fig:concept}
+\end{figure}
 \subsection{Erweiterung der Features}
 \lbparagraph{Weitere Alienarten}
 Beim Testen des Prototypen wurde das Problem festgestellt, dass ein Alien den Spieler durch den Asteroiden hindurch angreifen konnte, während Schüsse vom Asteroiden abprallten und das Alien somit verfehlten. Um dieses Problem zu lösen, wurde mit neuem unterschiedlichen Verhalten von Aliens experimentiert und dieses iterativ verbessert.
