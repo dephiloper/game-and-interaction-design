@@ -44,7 +44,7 @@ Im Rahmen der Veranstaltung GT2 Game \& Interaction Design wurde die Aufgabe ges
 Diese Dokumentation beschreibt den Entwicklungsprozess, die angewandten Verfahren im Bereich Game \& Interaction Design sowie Hürden und Lösungsansätze, welche während der Umsetzung des Spiels aufgekommen sind. Das Projektteam bestand aus vier Mitgliedern, wobei die Bereiche Programmierung, Illustration (Assets) und Gamekonzept von allen Mitgliedern ausgeübt wurden. Später erfolgte jedoch eine Spezialisierung, wobei sich die Hälfte auf die Entwicklung im Bereich Programmierung und die andere Hälfte auf das Erstellen von Illustrationen und Sounds fokussierte. Dies kam zum einem aufgrund der Game Engine Godot (siehe Technology) zustande, welche für zwei Mitglieder erst eine gewisse Eingewöhnung abverlangte und zum anderen lag es an der Tatsache, dass die Entwicklung des Spiels zielgerichteter und schneller vorangehen sollte.
 
 \newpage
-\section{Hauptaspekte des Spiels}
+\section{Game Design}
 
 \subsection{Allgemeine Spielbeschreibung}
 Gravity Warrior ist ein 2D Couch-Coop Twin-Stick Shooter, bei dem der Spieler einen von vier Charakteren steuert (Gravity Warrior genannt), der mit einem Jet Pack und einer Plasmapistole ausgestattet ist. Neben der Steuerung der Warrior und dem Abfeuern der Plasmapistole ist die Gravitation die Kernmechanik des Spiels. Diese wird ausgehend von den Asteroiden im Spiel erzeugt und beeinflusst dabei sowohl den Spieler als auch dessen Pistolenprojektile. Nach einem kurzen Vertrautmachen mit der Steuerung werden der Spieler und seine Mitstreiter von Wellen gegnerischer Aliens angegriffen. Anhand der Story wird dem Spieler vermittelt, dass dieser Teil eines Forschungsteams ist und, dass das Team aufgrund einer zu hohen Gravitation auf der aktuell befindlichen Asteroidenkonstellation gestrandet ist. Hilfe kann ausschließlich durch einen Satelliten gerufen werden, welcher im Laufe des Spiels ebenfalls von den anbahnenden Gegnerscharen attackiert wird. Nun müssen sich die Gravity Warrior gegen unzählige Aliens behaupten, deren Angriffen ausweichen und die Energieanzeige des Satelliten überwachen um zum Heimatplaneten zurückzukehren.
@@ -176,7 +176,6 @@ Die verwendete Game Engine Godot, welche bei der Entwicklung zum Einsatz kam, wu
 Im Folgenden wird der zeitliche Verlauf der Ausarbeitung der Spielidee, sowie dessen Umsetzung, beschrieben. Dabei werden vor allem Herausforderungen, die während des Prozesses auftraten thematisiert, sowie die dafür entwickelten Lösungen.
 \subsection{Ideenfindung}
 Zu Beginn des Projektes wurden die verschiedenen Projektideen gesichtet und auf ihre Umsetzbarkeit überprüft. In einer ersten Ideenfindung entstanden drei grundsätzliche Vorschläge, die zunächst vage beschrieben wurden.
-Diese wurden mit dem Professor besprochen und evaluiert.
 
 \lbparagraph{Omega}
 Ein Kartenspiel, bei dem die Technologie Mobile und PC kombiniert werden sollte. Karten sollten über das Handy ausgespielt und aktiviert werden können, während der allgemeine Spielstatus auf dem PC angezeigt wird. Eine genaue Vorstellung (Ziel, Regeln, Thema) des Spiels existierte noch nicht.
@@ -187,10 +186,10 @@ Ein Strategiespiel dessen Ziel es ist eine Körperzelle einzunehmen, indem versc
 Ein 2D Multiplayer Spiel, bei dem jeder Spieler einen bewaffneten Avatar durch ein Asteroidensystem steuert, während er Gegner bekämpft. Kernidee ist, dass der Avatar, sowie dessen Schüsse, von der Gravitation der umliegenden Asteroiden beeinflusst wird.
 Es wurden verschiedene Vorschläge bezüglich des Spielzieles abgewägt, wie ein PvP Spiel, bei dem Mitspieler abgeschossen werden mussten oder eine Verteidigung gegen angreifende Außerirdische. Da Gravity Warrior am ausgereiftesten erschien und von der Idee am meisten überzeugte, wurde sich abschließend dafür entschieden, dieses Spiel umzusetzen.
 
-\subsection{Erster Prototyp des Player Movement}
+\subsection{Prototyp Player Movement}
 Ziel der ersten Iteration des Entwicklungsprozesses war ein Prototyp, in dem es möglich war, seinen Gravity Warrior durch eine Menge von Planeten zu steuern. Auf welche Art und Weise die Gravitation der Planeten auf den Gravity Warrior wirkte sowie das Movement des Spielers auf einem Planeten wurde dabei primär betrachtet. Diskutiert wurde vor allem, ob für die Situation auf dem Planeten ein anderes Movement implementiert werden sollte, als für die Situation im freien Raum. Ein Vorschlag war es den Spieler entweder im Uhrzeigersinn oder gegen den Uhrzeigersinn, um den Planeten zu bewegen, abhängig davon, ob der Spieler die A oder die D Taste betätigt. Schlussendlich wurde sich dafür entschieden das Movement auf dem Planeten ähnlich dem Movement im freien Raum zu gestalten, da sonst die Umstellung zwischen den beiden Bewegungsarten zu überraschend und kompliziert wäre.
 
-\subsection{Das Konzept des Spiels}
+\subsection{Spielkonzept}
 Eine der ersten Entscheidungen des Spielkonzepts war, dass Gravity Warrior als ein Couch-Coop Spiel entworfen werden sollte. Zu diesem Zeitpunkt stand das Ziel des Spiels, das die Spieler erreichen sollten, noch nicht fest. Es wurde sich dazu entschieden, ein Wave Defence Spiel gegen angreifende Aliens umzusetzen, nachdem auch andere Spieltypen, wie kompetitives Player vs. Player oder das Angreifen einer gegnerischen Basis diskutiert wurden.
 Passend zu diesem Spielprinzip wurde die in \autoref{subsec:fan} beschriebene \nameref{subsec:fan} konzipiert, die den Spielern die Situation der Gravity Warrior vermittelt und gleichzeitig den Kernaspekt Gravitation ins Zentrum rückt, die von verschiedenen Planeten (später Asteroiden) ausging. Deshalb waren Projektile geplant, die von der Gravitation beeinflusst werden (siehe \autoref{fig:concept}: \nameref{fig:concept}). 
 Die Spieler sollten zunächst schemenhaft als Quadrat und die Gegner als Dreiecke dargestellt werden, was skizzenhaft in \autoref{fig:concept}: \nameref{fig:concept} dargestellt wird. Zudem war ein schwarzes Loch im Universum geplant, in das der Spieler nicht fallen darf. Dieses schwarze Loch wird an einem zufälligen Ort platziert. Darüber hinaus sollten weitere gefährliche Umgebungen integriert werden. Des Weiteren sollten mehrere Spielmodi angeboten werden: Battle Royale, Competitive, Boss Fights, Coop und Hardcore. Im Rahmen des ersten Konzeptes wurde ein Moodboard erstellt, das die Farben und die einzelnen Objekte im groben skizziert (siehe \nameref{sec:appendix}).
@@ -198,13 +197,15 @@ Um das neue Spielkonzept zu testen, wurde eine erste Variante von angreifenden A
 Der Spieler bekam die Möglichkeit zu schießen und wurde ein Alien getroffen, so verschwand es augenblicklich.
 
 \begin{figure}[htp]
-	\centering
-	\includegraphics[width=.3\textwidth]{sketch_01.png}\hfill
-	\includegraphics[width=.3\textwidth]{sketch_02.png}\hfill
-	\includegraphics[width=.3\textwidth]{sketch_03.png}
-	\caption{Konzeptskizze}
-	\label{fig:concept}
+ \centering
+ \includegraphics[width=.32\textwidth]{sketch_01.png}\hfill
+ \includegraphics[width=.32\textwidth]{sketch_02.png}\hfill
+ \includegraphics[width=.32\textwidth]{sketch_03.png}
+ \caption{Konzeptskizze}
+ \label{fig:concept}
 \end{figure}
+
+
 \subsection{Erweiterung der Features}
 \lbparagraph{Weitere Alienarten}
 Beim Testen des Prototypen wurde das Problem festgestellt, dass ein Alien den Spieler durch den Asteroiden hindurch angreifen konnte, während Schüsse vom Asteroiden abprallten und das Alien somit verfehlten. Um dieses Problem zu lösen, wurde mit neuem unterschiedlichen Verhalten von Aliens experimentiert und dieses iterativ verbessert.
@@ -228,17 +229,27 @@ Zu Beginn des Spiels wurden Waffen mit unterschiedlichen Eigenschaften zufällig
 \lbparagraph{Eigenschaften Asteroiden}
 Die weiteren Features, die in diesem Iterationsschritt hinzukamen, waren die Eigenschaften der Asteroiden, die über die Farbe des Asteroiden angezeigt wurden. Die Eigenschaften Heilung der Spieler, verletzen der Spieler, Abstoßung statt Gravitation und Verlangsamen der Spieler wurden implementiert und wurden zu Beginn zufällig verteilt.
 
-\lbparagraph{Reduktion der Features}
-Wie sich beim Testen zeigte, wurde die Übersichtlichkeit durch die Fülle der neuen Features eingeschränkt, was den Reiz am Spiel minderte. Aus diesem Grund wurde sich dazu entschieden, die Eigenschaften der Asteroiden sowie die verschiedenen Waffentypen wieder aus dem Spiel zu nehmen.
+\lbparagraph{Reduzierung der Features}
+Wie sich beim Testen zeigte, wurde die Übersichtlichkeit durch die Fülle der neuen Features eingeschränkt, was den Reiz am Spiel minderte. Aus diesem Grund wurde sich dazu entschieden, die Eigenschaften der Asteroiden sowie die verschiedenen Waffentypen wieder aus dem Spiel zu nehmen. Obwohl diese Entscheidung dazu führte, dass dadurch die Tiefe des Spiels verringert wurde, konnte bei den \nameref{subsec:user-tests} festgestellt werden, dass sich die Spieler besser auf die Hauptaufgabe des Spiels konzentrieren konnten.
 
-\subsection{Abstimmung der Spielelemente}
+\subsection{Balancing der Spielelemente}
 Als einer der nächsten Schritte wurde ein System umgesetzt, das es erlaubte die Angriffswellen der Gegner mit zunehmender Intensität angreifen zu lassen. Damit einhergehend wurde auch ein Ziel manifestiert, das darin bestand die letzte gegnerische Welle zu überstehen. Um den Sieg beziehungsweise die Niederlage anzuzeigen, wurde ein Win-Screen sowie ein Lose-Screen erstellt und ins Spiel integriert.
 Anschließendes Testen mit mehreren Spielern zeigte dann, dass bei vier Spielern die Übersichtlichkeit durch die Menge der gegnerischen Einheiten beeinträchtigt wurde. Um diesem Problem entgegenzuwirken, wurden die einzelnen Einheiten verstärkt und die Anzahl reduziert, um somit trotzdem ein forderndes Spielerlebnis zu schaffen.
 Das größte Problem, dass während dieser Phase auftrat, war, dass die Gravitation, die namensgebend und zentraler Bestandteil der Spielidee ist, den Spieler eher behinderte, anstatt das Spielerlebnis zu bereichern. Vor allem die Bewegungen des Spielers wurden durch die Gravitation gestört. Abschließend erfolgte die Einigung die Gravitation auf den Spielern relativ gering zu halten, während die Projektile nach wie vor stark von der Gravitation manipuliert wurden.
+\newpage
 
 \subsection{Verbesserung der Experience}
 Um die Experience zu verbessern und den Spieler besser über die aktuelle Spielsituation zu informieren wurden Animationen, Sounds und Controller-Feedback in das Spiel integriert. Geachtet wurde besonders darauf, dass wichtige Geschehnisse transportiert werden, wie das Treffen oder Töten eines Gegners, das von einem Gegner Getroffen-Werden, sowie ein geringer Lebensstand oder das Sterben eines Spielkameraden. Des Weiteren wurde mittels einer abstoßenden Kraft verhindert, dass ein Spieler in den Bereich außerhalb des Bildschirms fliegen kann. Um auf anbahnende, noch nicht vollständig sichtbare Aliens aufmerksam zu werden, wurden zusätzlich kleine Icons als Indikatoren am Spielfeldrand hinzugefügt.
-Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden gespielt, wobei dieser dabei iterativ verändert wurde. Herausfordernd an dieser Stelle war, dass die ersten Waves einen guten Einstieg für neue Spieler bereitstellen sollten, während sie für erfahrene Spieler nicht zu langweilig erscheinen durften. Die Ideen, die dieses Problem lösten, waren ein Regler, mit dem die Spieler vor Spielstart den Schwierigkeitsgrad der Angriffswellen bestimmen konnten sowie Spieletests mit deren Hilfe die allgemeine Schwierigkeit angepasst wurde.
+Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden gespielt, wobei dieser dabei iterativ verändert wurde. Herausfordernd an dieser Stelle war, dass die ersten Waves einen guten Einstieg für neue Spieler bereitstellen sollten, während sie für erfahrene Spieler nicht zu langweilig erscheinen durften. Die Ideen, die dieses Problem lösten, waren ein Regler (siehe \autoref{fig:start-screen}), mit dem die Spieler vor Spielstart den Schwierigkeitsgrad der Angriffswellen bestimmen konnten sowie Spieletests mit deren Hilfe die allgemeine Schwierigkeit angepasst wurde.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.95\textwidth]{start-screen.png}
+	\caption{Start-Screen mit Regler für Schwierigkeitsgrad}
+	\label{fig:start-screen}
+\end{figure}
+
+
 
 \newpage
 \section{Fazit}
@@ -248,6 +259,7 @@ Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden
 \section{Anhang}
 \label{sec:appendix}
 \subsection{User Tests}
+\label{subsec:user-tests}
 \subsection{Repository}
 \bibliographystyle{plain}
 \bibliography{references}
