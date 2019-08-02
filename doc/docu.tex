@@ -6,6 +6,7 @@
 \usepackage{listings}
 \usepackage{subcaption}
 \newcommand{\lbparagraph}[1]{\paragraph*{#1}\mbox{}\\}
+\renewcommand{\baselinestretch}{1.2}
 \geometry{
   left=3cm,
   right=3cm,
@@ -14,21 +15,35 @@
   bindingoffset=5mm
 }
 \usepackage{graphicx}
-\title{Projektdokumentation GT2}
-\subtitle{\vspace{2mm} Game \& Interaction Design}
-\author{Jannik Schmitz,\\Maximilian Gertz,\\Bruno Schilling,\\Philipp Bönsch}
-\date{\today}
 
 \begin{document}
-\maketitle
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Hochschule für Technik und Wirtschaft Berlin \par}
+	\vspace{1cm}
+	{\Huge \scshape{Dokumentation\\ Gravity Warrior}\par}
+	\vspace{1cm}
+	{\scshape\Large GT2 - Game and Interaction Design\par}
+	\vspace{2cm}
+	\includegraphics[width=0.9\linewidth]{title.jpg}\par\vspace{1cm}
+	\vspace{1cm}
+	{\large\itshape Jannik Schmitz, Maximilian Gertz,\\Bruno Schilling, Philipp Bönsch\par}
+	\vfill
+	
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
 \lstset{basicstyle=\ttfamily\small,breaklines=true}
+\newpage
 \tableofcontents
 \newpage
 \section{Einleitung}
 Im Rahmen der Veranstaltung GT2 Game \& Interaction Design wurde die Aufgabe gestellt kursbegleitend ein prototypisches Spiel zu entwickeln. Dazu war es initial notwendig dieses konzeptuell zu designen und anschließend zyklisch den Stand der Entwicklung in Form von Präsentationen vorzustellen. Für die Erarbeitung des Spiels standen den Teilnehmern der Veranstaltungen ein Zeitraum von etwa 3 Monaten zur Verfügung. Der Hauptaspekt des Kurses lag darin einen genauen Überblick über die einzelnen Kernbereiche des Game Design zu vermitteln, um diese anschließend in der Umsetzung des eigenen Prototyps zu adaptieren. Besonders das Elemental Tetrad\cite[~p.41]{S2014} stand dabei im Zentrum des Entwicklungsprozesses, wobei sich die Teilnehmer des Kurses genauer mit den Bereichen Mechanics, Technology, Aesthetics, Fantasy und der Experience des Spiels befassen sollten.
 Diese Dokumentation beschreibt den Entwicklungsprozess, die angewandten Verfahren im Bereich Game \& Interaction Design sowie Hürden und Lösungsansätze, welche während der Umsetzung des Spiels aufgekommen sind. Das Projektteam bestand aus vier Mitgliedern, wobei die Bereiche Programmierung, Illustration (Assets) und Gamekonzept von allen Mitgliedern ausgeübt wurden. Später erfolgte jedoch eine Spezialisierung, wobei sich die Hälfte auf die Entwicklung im Bereich Programmierung und die andere Hälfte auf das Erstellen von Illustrationen und Sounds fokussierte. Dies kam zum einem Aufgrund der Game Engine Godot (siehe Technology) zustande, welche für zwei Mitglieder erst eine gewisse Eingewöhnung abverlangte und zum anderen lag es an der Tatsache, dass die Entwicklung des Spiels zielgerichteter und schneller vorangehen sollte.
-\newpage
 
+\newpage
 \section{Konzept}
 Es wurden insgesamt drei verschiedene Spiel Konzepte ausgearbeitet, welche mit dem Professor besprochen und evaluiert wurden. Daraufhin haben wir uns auf das Konzept des Gravity Warriors geeinigt, da dieses inhaltlich am meisten überzeugt hat. Im Folgenden wird deshalb lediglich das Gravity Warrior Konzept vorgestellt. 
 
@@ -45,6 +60,7 @@ Das wichtigste Ziel des Gravity Warrior Konzepts war ein 2D gravitationsbasierte
 
 Zudem war ein Schwarzes Loch im Universum geplant, in das der Spieler nicht fallen darf. Dieses Schwarze Loch wird an einem zufälligen Ort platziert. Darüber hinaus sollten weitere gefährliche Umgebungen integriert werden. Des Weiteren sollten mehrere Spielmodi angeboten werden: Battle Royale, Competitive, Boss Fights, Coop und Hardcore. Im Rahmen des ersten Konzeptes wurde ein Moodboard erstellt, das die Farben und die einzelnen Objekte im groben skizziert (siehe \nameref{sec:appendix}).
 
+\newpage
 \section{Hauptaspekte des Spiels}
 
 \subsection{Allgemeine Spielbeschreibung}
@@ -66,10 +82,17 @@ Aufgrund der zunehmenden Anzahl der Aliens muss der Spieler geschickt mit den an
 
 Allerdings ist die Wiederbelebung nicht immer erfolgreich bzw. gestaltet sich schwer, wenn ein Spieler in einem Alienschwarm gestorben ist. Die Aliens, welche versuchen die Spieler und den von den Spielern zu beschützenden Satelliten mit ihren Projektilen zu treffen, um die Lebensenergie der Spieler zu reduzieren. Dadurch entsteht bei den Spielern eine Spannung, die um so höher wird, desto niedriger die Lebensenergie ist. Ist diese aufgebraucht, stirbt der Spieler. Sobald die Spieler eine Wave erfolgreich geschafft haben, tritt die Erleichterung beim Spieler auf, da er den riskanten Situationen erfolgreich entkommen ist. Neben den eben genannten kooperativen Aspekten, treten agonale Aspekte auf. Der Spieler möchte z.B. besser und mehr Aliens treffen als seine Mitspieler oder das Team möchte mehr Waves schaffen als andere Teams. Der agonale Aspekt könnte zukünftig noch weiter verstärkt werden, indem ein High-Score System eingeführt wird (siehe \autoref{subsec:improvements}: \nameref{subsec:improvements}). 
 
-
+\newpage
 \subsubsection{Fantasy}
 \label{subsec:fan}
 Eine militärische Forschungsgruppe bestehend aus zwei bis vier Mitgliedern wird von der Bodenstation “Mission Control” auf der Erde auf eine Mission ins Weltall geschickt, um eine bestimmte hochgravitationelle Asteroidenkonstellation im Universum zu untersuchen. Die Gravitation des stärksten Asteroiden ist allerdings so hoch, dass die Gruppe auf diesen Asteroiden notlanden muss. Dabei wird ihr Raumschiff beschädigt, sodass die Gruppe die Asteroidenkonstellation nicht mehr verlassen können. Sie können lediglich mit ihren Jetpacks von einem zum anderen Asteroiden gelangen. Die Forscher installieren einen Satelliten, damit sie von der „Mission Control“ sie orten und wieder abholen können. Daraufhin entdecken Aliens, die auf diesen Asteroiden zu Hause sind, die Eindringlinge und greifen die Forschungsgruppe an. Die Gruppe muss so lange überleben, bis das Signal des Satelliten von der Bodenstation geortet wurde, damit sie aus dem Gebiet gerettet werden können.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.8\textwidth]{comic.png}
+	\caption{Story als Comic}
+	\label{fig:comic}
+\end{figure}
 
 \subsubsection{Mechanics}
 \label{subsec:mec}
@@ -94,11 +117,11 @@ Actions beschreiben die im Spiel zum Einsatz gekommenen Funktionalitäten, die e
 \hline
 Schießen&Schießen mit Gravitation \\
 \hline
-Boosten (Jet Pack)&Projektile von Planeten abprallen lassen*\\
+Boosten (Jet Pack)&Projektile von Planeten abprallen lassen\textbf{*}\\
 \hline
 Bewegen (x,y)&Ausweichen (Bewegen \& Boosten)\\
 \hline
-Zielen (x,y)&Kettenreaktion** (Schießen auf Exploder)\\
+Zielen (x,y)&Kettenreaktion\textbf{**} (Schießen auf Exploder)\\
 \hline
 Wiederbeleben&\\
 \hline
@@ -107,10 +130,9 @@ Wiederbeleben&\\
 \label{tab:meinetabelle}
 \end{table}
 
-*Projektile abprallen lassen: Projektile können auf Planeten abgefeuert werden und prallen abschließend von diesen ab. Dies ermöglicht es Aliens zu treffen, welche andernfalls schwer zu erreichen wären.
-\newline
+\textbf{*}Projektile abprallen lassen: Projektile können auf Planeten abgefeuert werden und prallen abschließend von diesen ab. Dies ermöglicht es Aliens zu treffen, welche andernfalls schwer zu erreichen wären.
 
-**Kettenreaktion: Durch die Zerstörung eines Exploders wird eine Explosion ausgelöst, welche umliegenden Alien Schaden zufügt. Befindet sich ein weiterer Exploder mit niedrigen Lebenspunkten im Umfeld der Explosion löst dieser ebenfalls eine Explosion aus, was den Schadensausmaß vergrößert. 
+\textbf{**}Kettenreaktion: Durch die Zerstörung eines Exploders wird eine Explosion ausgelöst, welche umliegenden Alien Schaden zufügt. Befindet sich ein weiterer Exploder mit niedrigen Lebenspunkten im Umfeld der Explosion löst dieser ebenfalls eine Explosion aus, was den Schadensausmaß vergrößert. 
 
 
 \lbparagraph{Rules}
@@ -130,6 +152,8 @@ Durch die Einbindung von Audiofeedback bei der Betätigung des Boosts, dem Treff
 
 \subsubsection{Technology}
 \label{subsec:tech}
+
+\newpage
 \section{Entwicklungsprozess}
 Im Folgenden wird der zeitliche Verlauf der Ausarbeitung der Spielidee, sowie dessen Umsetzung, beschrieben. Dabei werden vor allem Herausforderungen, die während des Prozesses auftraten thematisiert, sowie die dafür entwickelten Lösungen.
 \subsection{Ideenfindung}
@@ -182,9 +206,11 @@ Das größte Problem, dass während dieser Phase auftrat war, dass die Gravitati
 Um die Experience zu verbessern und den Spieler besser über die aktuelle Spielsituation zu informieren wurden Animationen, Sounds und Controller-Feedback ins Spiel eingebaut. Geachtet wurde besonders darauf, dass wichtige Geschehnisse transportiert werden, wie das Treffen oder Töten eines Gegner, das getroffen werden von einem Gegner, sowie ein geringer Lebensstand oder das Sterben eines Spielkameraden. Auch wurde verhindert, dass ein Spieler in den Bereich außerhalb des Bildschirms fliegen kann, sowie Pfeile hinzugefügt, die nachkommende Aliens anzeigen.
 Viel Zeit wurde auch in die Anpassung des Schwierigkeitsgrades investiert. Herausfordernd an dieser Stelle war, dass die ersten Waves eine gute Lernphase für neue Spieler sein sollten, während sie für erfahrene Spieler nicht zu langweilig sein sollten. Die Idee, die dieses Problem löste war ein Regler mit dem die Spieler vor Spielstart das Schwierigkeitslevel der Angriffswellen bestimmen konnten, sowie Spieletests mit deren Hilfe die allgemeine Schwierigkeit angepasst werden konnte.
 
+\newpage
 \section{Fazit}
 \subsection{Erweiterungsmöglichkeiten}
 \label{subsec:improvements}
+\newpage
 \section{Anhang}
 \label{sec:appendix}
 \subsection{User Tests}
