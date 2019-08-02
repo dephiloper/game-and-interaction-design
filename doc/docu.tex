@@ -44,23 +44,6 @@ Im Rahmen der Veranstaltung GT2 Game \& Interaction Design wurde die Aufgabe ges
 Diese Dokumentation beschreibt den Entwicklungsprozess, die angewandten Verfahren im Bereich Game \& Interaction Design sowie Hürden und Lösungsansätze, welche während der Umsetzung des Spiels aufgekommen sind. Das Projektteam bestand aus vier Mitgliedern, wobei die Bereiche Programmierung, Illustration (Assets) und Gamekonzept von allen Mitgliedern ausgeübt wurden. Später erfolgte jedoch eine Spezialisierung, wobei sich die Hälfte auf die Entwicklung im Bereich Programmierung und die andere Hälfte auf das Erstellen von Illustrationen und Sounds fokussierte. Dies kam zum einem aufgrund der Game Engine Godot (siehe Technology) zustande, welche für zwei Mitglieder erst eine gewisse Eingewöhnung abverlangte und zum anderen lag es an der Tatsache, dass die Entwicklung des Spiels zielgerichteter und schneller vorangehen sollte.
 
 \newpage
-\section{Konzept}
-Es wurden insgesamt drei verschiedene Spiel Konzepte ausgearbeitet, welche mit dem Professor besprochen und evaluiert wurden. Daraufhin wurde sich auf das Konzept des Gravity Warriors geeinigt, da dieses inhaltlich am meisten überzeugt hat. Im Folgenden wird deshalb lediglich das Gravity Warrior Konzept vorgestellt. 
-
-Das wichtigste Ziel des Gravity Warrior Konzepts war ein 2D gravitationsbasierter Shooter in der Sideview-Optik zu entwickeln. Dabei lag der Fokus des Spiels auf der Gravitation, die von verschiedenen Planeten (später Asteroiden) ausging. Deshalb waren Projektile geplant, die von der Gravitation beeinflusst werden (siehe \autoref{fig:concept}: \nameref{fig:concept}). Zusätzlich sollte ein Wavesystem implementiert werden. Die Spieler sollten zunächst schemenhaft als Quadrat und die Gegner als Dreiecke dargestellt werden, was skizzenhaft in \autoref{fig:concept}: \nameref{fig:concept} dargestellt wird.
-
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=.3\textwidth]{sketch_01.png}\hfill
-	\includegraphics[width=.3\textwidth]{sketch_02.png}\hfill
-	\includegraphics[width=.3\textwidth]{sketch_03.png}
-	\caption{Konzeptskizze}
-	\label{fig:concept}
-\end{figure}
-
-Zudem war ein schwarzes Loch im Universum geplant, in das der Spieler nicht fallen darf. Dieses schwarze Loch wird an einem zufälligen Ort platziert. Darüber hinaus sollten weitere gefährliche Umgebungen integriert werden. Des Weiteren sollten mehrere Spielmodi angeboten werden: Battle Royale, Competitive, Boss Fights, Coop und Hardcore. Im Rahmen des ersten Konzeptes wurde ein Moodboard erstellt, das die Farben und die einzelnen Objekte im groben skizziert (siehe \nameref{sec:appendix}).
-
-\newpage
 \section{Hauptaspekte des Spiels}
 
 \subsection{Allgemeine Spielbeschreibung}
@@ -89,7 +72,7 @@ Eine militärische Forschungsgruppe bestehend aus zwei bis vier Mitgliedern wird
 
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=.8\textwidth]{comic.png}
+	\includegraphics[width=.9\textwidth]{comic.png}
 	\caption{Story als Comic}
 	\label{fig:comic}
 \end{figure}
@@ -100,8 +83,8 @@ Nachfolgend sind die im Spiel realisierten Game Mechanics, sowie die darin entha
 
 \begin{figure}[htp]
 	\centering
-	\includegraphics[width=.65\textwidth]{state_machine.png}
-	\caption{State Machine Assassine}
+	\includegraphics[width=.75\textwidth]{state_machine.png}
+	\caption{State Machine Alientyp Assassin}
 	\label{fig:state_machine}
 \end{figure}
 
@@ -115,9 +98,9 @@ Actions beschreiben die im Spiel zum Einsatz gekommenen Funktionalitäten, die e
 \hline
 \textbf{Operative Actions}&\textbf{Resultants Actions} \\
 \hline
-Schießen&Schießen mit Gravitation \\
+\nameref{fig:shoot} (siehe \autoref{fig:shoot})&Schießen mit Gravitation \\
 \hline
-Boosten (Jet Pack)&Projektile von Planeten abprallen lassen\textbf{*}\\
+\nameref{fig:boost} (Jet Pack) (siehe \autoref{fig:boost})&Projektile von Planeten abprallen lassen\textbf{*}\\
 \hline
 Bewegen (x,y)&Ausweichen (Bewegen \& Boosten)\\
 \hline
@@ -132,7 +115,30 @@ Wiederbeleben&\\
 
 \textbf{*}Projektile abprallen lassen: Projektile können auf Planeten abgefeuert werden und prallen abschließend von diesen ab. Dies ermöglicht es, Aliens zu treffen, welche andernfalls schwer zu erreichen wären.
 
-\textbf{**}Kettenreaktion: Durch die Zerstörung eines Exploders wird eine Explosion ausgelöst, welche umliegenden Alien Schaden zufügt. Befindet sich ein weiterer Exploder mit niedrigen Lebenspunkten im Umfeld der Explosion, löst dieser ebenfalls eine Explosion aus, was das Ausmaß des Schadens vergrößert. 
+\textbf{**}Kettenreaktion: Durch die Zerstörung eines Exploders wird eine Explosion ausgelöst, welche umliegenden Alien Schaden zufügt. Befindet sich ein weiterer Exploder mit niedrigen Lebenspunkten im Umfeld der Explosion, löst dieser ebenfalls eine Explosion aus, was das Ausmaß des Schadens vergrößert. \autoref{fig:explosion}: \nameref{fig:explosion} visualisert das Explodieren des Alientyps Exploder.  
+
+
+\begin{figure}[htp]
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{boost.png}
+    \caption{Boosten}
+    \label{fig:boost}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{shoot.png}
+    \caption{Schießen}
+    \label{fig:shoot}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{exploder.png}
+    \caption{Explosion Alien}
+    \label{fig:explosion}
+  \end{subfigure}
+  \caption{Actions}
+  \label{fig:actions}
+\end{figure}
 
 
 \lbparagraph{Rules}
@@ -146,7 +152,16 @@ Goals definieren in Spielen die wichtigsten Rules, da diese festlegen, was der S
 \textbf{Long term:} Spiel gewinnen, Spiel in fordernden Schwierigkeitsgraden bewältigen, Spezialisierung der Fähigkeiten eines Spielers
 
 \subsubsection{Aesthetics}
-Aufgrund des zum Anfang festgelegten Schwerpunktes auf der Gravitation der Asteroiden und der daraus resultierenden Wirkung auf den Spieler wurde es als passend beurteilt das Spiel in das Setting Weltall zu verlegen. Mithilfe der Leere und Dunkelheit der Spielwelt war es möglich, den Fokus des Spielers stärker auf die hellen Farben der zu steuernden Warrior und deren Projektile zu lenken. Des Weiteren wurde der Boost durch einen Traileffekt\footnote{Traileffekt: Ein visueller Effekt der einen Schweif hinter einem sich bewegenden Objekt erzeugt.} visualisiert um dem Spieler den temporären Geschwindigkeitsgewinn besser zu veranschaulichen. Anhand der grünen Lebensleiste des Satelliten sollte dem Spieler die Zugehörigkeit von diesem zur eigenen Mannschaft symbolisiert werden. Dasselbe Prinzip wurde bei der Regenerationszone des Satelliten angewandt, wobei diese durch die sinusähnliche Ausbreitung dem Spieler einen Bereich der Sicherheit vermitteln sollte. 
+Aufgrund des zum Anfang festgelegten Schwerpunktes auf der Gravitation der Asteroiden und der daraus resultierenden Wirkung auf den Spieler wurde es als passend beurteilt das Spiel in das Setting Weltall zu verlegen. Mithilfe der Leere und Dunkelheit der Spielwelt war es möglich, den Fokus des Spielers stärker auf die hellen Farben der zu steuernden Warrior und deren Projektile zu lenken (siehe \autoref{fig:aesthetics}: \nameref{fig:aesthetics}). Des Weiteren wurde der Boost durch einen Traileffekt\footnote{Traileffekt: Ein visueller Effekt der einen Schweif hinter einem sich bewegenden Objekt erzeugt (siehe \autoref{fig:boost}: \nameref{fig:boost}).} visualisiert um dem Spieler den temporären Geschwindigkeitsgewinn besser zu veranschaulichen. Anhand der grünen Lebensleiste des Satelliten sollte dem Spieler die Zugehörigkeit von diesem zur eigenen Mannschaft symbolisiert werden. Dasselbe Prinzip wurde bei der Regenerationszone des Satelliten angewandt, wobei diese durch die sinusähnliche Ausbreitung dem Spieler einen Bereich der Sicherheit vermitteln sollte.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{aesthetics.png}
+	\caption{Visualisierung der Spielwelt}
+	\label{fig:aesthetics}
+\end{figure}
+
+ 
 Obwohl die ersten Konzepte der Aliensprites noch detailliert umgesetzt waren, wurde sich im späteren Verlauf der Entwicklung darauf geeinigt, das gesamte Spiel in einem minimalistischen Kunststil umzusetzen. Dies wurde aufgrund der Weite der Spielwelt und dem daraus resultierenden sichtbaren Detailgrad für den Spieler festgelegt.
 Durch die Einbindung von Audiofeedback bei der Betätigung des Boosts, dem Treffen eines Aliens oder dem Verlust von eigenen Lebenspunkten konnte das Spielgefühl erneut bestärkt werden. Feinheiten wie die Heartbeat Vibration bei zu niedrigem Leben oder das leichte Zerteilen der Aliens bei deren Zerstörung wurde meist nur unterschwellig wahrgenommen. Diese wurden abschließend jedoch noch hinzugefügt, um dem Spiel einen höheren Detailgrad zu vermitteln.
 
@@ -188,8 +203,16 @@ Beim Testen des Prototypen wurde das Problem festgestellt, dass ein Alien den Sp
 Des Weiteren stellte es sich als problematisch dar, dass Aliens, die sich auf einem Asteroiden versteckten, um auf vorbeifliegende Spieler zu lauern, diese durch Projektile nur mäßig bis gar nicht zu treffen waren. Deshalb wurde ein Pathfinding Verfahren umgesetzt, sowie eine Angriffsbewegung, die ausgelöst wird, sobald sich ein Spieler in der Reichweite des Aliens befindet. Abschließend wurden weitere Aliens umgesetzt, die den neu entwickelten Satelliten angreifen. Im Verlauf der Entwicklung wurden auf Grundlage der bereits geschriebenen Basis noch weitere Abwandlungen der Aliens entwickelt.
 
 \lbparagraph{Buff-Selection}
-Durch die Buff-Selection konnten die Spieler am Ende einer Wave ihre Eigenschaften aufwerten. Eine Möglichkeit des Designs der Buff-Selection sah vor, dass alle Spieler über die zur Verfügung stehenden Buffs abstimmen, um dann den gewählten Buff zu erhalten. Die andere Variante funktionierte, indem jeder Spieler separat entscheiden konnte, welchen Buff er erhalten möchte. Die erste Annahme war, dass durch eine einheitliche Buff-Selection die Kommunikation zwischen den Spielern gefördert werden kann, weshalb dies initial präferiert wurde.
-Später kam es jedoch zur Änderung in individuelle Buffs, da sich die Spieler so besser spezialisieren können, was das Teamwork ebenfalls fördert und so Uneinigkeiten vermieden werden konnten.
+Durch die Buff-Selection können die Spieler am Ende einer Wave ihre Eigenschaften aufwerten. Eine Möglichkeit des Designs der Buff-Selection sah vor, dass alle Spieler über die zur Verfügung stehenden Buffs abstimmen, um dann den gewählten Buff zu erhalten. Die andere Variante funktionierte, indem jeder Spieler separat entscheiden konnte, welchen Buff er erhalten möchte. Die erste Annahme war, dass durch eine einheitliche Buff-Selection die Kommunikation zwischen den Spielern gefördert werden kann, weshalb dies initial präferiert wurde.
+Später kam es jedoch zur Änderung in individuelle Buffs, da sich die Spieler so besser spezialisieren können, was das Teamwork ebenfalls fördert und so Uneinigkeiten vermieden werden konnten. Nachfolgend ist die Buff-Selection in \autoref{fig:buff} visualisiert, wobei hier die Buffs \textit{schnellere Bewegungsgeschwindigkeit}, \textit{mehr Schaden} und \textit{größere Projektile} ausgewäht werden können.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{buff-selection.png}
+	\caption{Buff-Selection}
+	\label{fig:buff}
+\end{figure}
+
 
 \lbparagraph{Waffentypen}
 Zu Beginn des Spiels wurden Waffen mit unterschiedlichen Eigenschaften zufällig zwischen den Spielern aufgeteilt. Implementiert waren eine Machine Gun, eine Gatling Gun, die sich durch ihre hohe Schussrate auszeichnete, eine Rifle, was der vorherigen Standardwaffe entsprach und ein Launcher, der in einem Bereich um den Einschlagspunkt Schaden verursachen sollte. Der Launcher wurde aufgrund seiner unterschiedlichen Einsatzmöglichkeit und dem daraus resultierenden Entwicklungsaufwand nicht fertig implementiert.
