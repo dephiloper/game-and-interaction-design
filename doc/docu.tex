@@ -65,7 +65,6 @@ Aufgrund der zunehmenden Anzahl der Aliens muss der Spieler geschickt mit den an
 
 Allerdings ist die Wiederbelebung nicht immer erfolgreich bzw. gestaltet sich schwer, wenn ein Spieler in einem Alienschwarm gestorben ist. Die Aliens versuchen, die Spieler und den von den Spielern zu beschützenden Satelliten mit ihren Projektilen zu treffen, um die Lebensenergie der Spieler zu reduzieren. Dadurch entsteht bei den Spielern eine Spannung, die umso höher wird, desto niedriger die Lebensenergie sinkt. Ist diese aufgebraucht, stirbt der Spieler. Sobald die Spieler eine Wave erfolgreich geschafft haben, tritt die Erleichterung beim Spieler auf, da er den riskanten Situationen erfolgreich entkommen ist. Neben den eben genannten kooperativen Aspekten treten agonale Aspekte auf. Der Spieler möchte z. B. besser und mehr Aliens treffen als seine Mitspieler oder das Team möchte mehr Waves schaffen als andere Teams. Der agonale Aspekt könnte zukünftig noch weiter verstärkt werden, indem ein High-Score System eingeführt wird (siehe \autoref{subsec:improvements}: \nameref{subsec:improvements}). 
 
-\newpage
 \subsubsection{Fantasy}
 \label{subsec:fan}
 Eine militärische Forschungsgruppe bestehend aus zwei bis vier Mitgliedern wird von der Bodenstation “Mission Control” auf der Erde auf eine Mission ins Weltall geschickt, um eine bestimmte hochgravitationelle Asteroidenkonstellation im Universum zu untersuchen. Die Gravitation dieser Asteroiden ist allerdings so hoch, dass die Gruppe auf einen Asteroiden notlanden muss. Dabei wird ihr Raumschiff beschädigt und von der Gravitation stark angezogen, sodass die Gruppe die Asteroidenkonstellation nicht mehr verlassen können. Die Forscher können lediglich mit ihren Jet Packs von einem zum anderen Asteroiden gelangen. Die Forscher installieren einen Satelliten, damit „Mission Control“ die Gruppe orten und wieder abholen kann. Daraufhin entdecken Aliens, die auf diesen Asteroiden zu Hause sind, die Eindringlinge und greifen die Forschungsgruppe an. Die Gruppe muss so lange überleben, bis das Signal des Satelliten von der Bodenstation geortet wurde, damit diese aus dem Gebiet gerettet werden kann.
@@ -88,6 +87,7 @@ Nachfolgend sind die im Spiel realisierten Game Mechanics, sowie die darin entha
 	\label{fig:state_machine}
 \end{figure}
 
+\newpage
 \lbparagraph{Actions}
 Actions beschreiben die im Spiel zum Einsatz gekommenen Funktionalitäten, die ein Spieler ausüben kann. autoref{tab:actions} listet die im Prototyp realisierten Actions auf und kategorisiert diese in Operative Actions, die Grundhandlungen, die ein Spieler vollziehen kann und Resultant Actions, welche erst durch den Einsatz und der Kombination aus Operative Actions entstehen.
 
@@ -258,9 +258,147 @@ Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden
 \newpage
 \section{Anhang}
 \label{sec:appendix}
+
 \subsection{User Tests}
 \label{subsec:user-tests}
+
+Anhand der User Tests wurde versucht das Spiel iterativ zu verbessern. Die Usertests werden in den folgenden Tabellen beschrieben. Dabei werden die Spieler aufgrund ihrer selbst eingeschätzten Spielerfahrung in die drei Kategorien Rookie, Casual und Hardcore untergliedert. Es werden zunächst die Eckdaten der Testpersonen aufgezählt, anschließend erfolgt deren Beurteilung und Anmerkungen zum Spiel. Die nachfolgenden Usertests wurden in Mitten des Entwicklungsprozesses aufgenommen. 
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Alter} &26\\
+\hline
+\textbf{Spielertyp} &Hardcore\\
+\hline
+\textbf{Spielpräferenzen} &Moba's und Shooter\\
+\hline
+\textbf{Spielzeit} &5 bis 10 Stunden die Woche\\
+\hline
+\textbf{Anzahl Spieldurchläufe} &2 Mal durchgespielt\\
+\hline
+\textbf{Spieleranzahl} &Alleine\\
+\hline
+\textbf{Controller} &Playstation 4\\
+\hline
+\end{tabular}
+\caption{Testperson A}
+\label{tab:test-a}
+\end{table}
+
+\vspace{-6mm}
+\begin{itemize}
+\setlength{\parskip}{0pt}
+\item Instruktionsseite mit Beschreibung zum Spiel und Erklärung der Steuerung
+\item aufgrund der roten Lebensanzeige des Satelliten, dieser als Gegner betrachtet
+\item Spieler sollte bei Satellite spawnen
+\item visuelles Trefferreaktion bei Aliens und Spieler notwendig
+\item Sounds würden Spiel mehr Anreiz verleihen
+\end{itemize}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Alter} &25\\
+\hline
+\textbf{Spielertyp} &Casual\\
+\hline
+\textbf{Spielpräferenzen} &Action, RPG\\
+\hline
+\textbf{Spielzeit} &2 bis 6 Stunden die Woche\\
+\hline
+\textbf{Anzahl Spieldurchläufe} &3 Mal gespielt, 2 Mal durchgespielt\\
+\hline
+\textbf{Spieleranzahl} &Allein\\
+\hline
+\textbf{Controller} &Playstation 4\\
+\hline
+\end{tabular}
+\caption{Testperson B}
+\label{tab:test-b}
+\end{table}
+
+\begin{itemize}
+\setlength{\parskip}{0pt}
+\item Win-Screen sollte Rettungskapsel darstellen
+\item Gegnerdesign sollte detaillierter sein (aktuell Dreiecke)
+\item verschiedene Schwierigkeitsstufen implementieren
+\item Spiel alleine fast zu schwer
+\end{itemize}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Alter} &23\\
+\hline
+\textbf{Spielertyp} &Hardcore\\
+\hline
+\textbf{Spielpräferenzen} &MMORPG\\
+\hline
+\textbf{Spielzeit} &15+ Stunden die Woche\\
+\hline
+\textbf{Anzahl Spieldurchläufe} &4 Mal gespielt, 2 Mal durchgespielt\\
+\hline
+\textbf{Spieleranzahl} &2 Spieler\\
+\hline
+\textbf{Controller} &XBox One\\
+\hline
+\end{tabular}
+\caption{Testperson C}
+\label{tab:test-c}
+\end{table}
+
+\begin{itemize}
+\setlength{\parskip}{0pt}
+\item Movement fühlt sich gut an
+\item Zielen und Steuerung schwierig für nicht Konsolenspieler
+\item Hitbox bei Exploder etwas zu groß
+\item Planeten sehr karg und unschön
+\item Trefferfeedback bei Spieler und Aliens
+\end{itemize}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Alter} &24\\
+\hline
+\textbf{Spielertyp} &Rookie\\
+\hline
+\textbf{Spielpräferenzen} &Casual Handyspiele, Jump'n'Run\\
+\hline
+\textbf{Spielzeit} &2+ Stunden die Woche\\
+\hline
+\textbf{Anzahl Spieldurchläufe} &2 Mal gespielt, 1 Mal durchgespielt\\
+\hline
+\textbf{Spieleranzahl} &drei Spieler\\
+\hline
+\textbf{Controller} &XBox 360\\
+\hline
+\end{tabular}
+\caption{Testperson D}
+\label{tab:test-d}
+\end{table}
+
+\begin{itemize}
+\setlength{\parskip}{0pt}
+\item Erkärung der Steuerung und Fantasy notwendig
+\item Senderlebensanzeige grün färben
+\item Signalisieren wenn Spieler stribt
+\item Steuerung über einen Stick wäre einfacher
+\item Explosion kein gutes Feedback
+\end{itemize}
+
+\newpage
 \subsection{Repository}
+\url{https://github.com/dephiloper/game-and-interaction-design}
+\newpage
 \bibliographystyle{plain}
 \bibliography{references}
+\newpage
+\listoffigures 
+\listoftables 
 \end{document}
