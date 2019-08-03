@@ -45,7 +45,7 @@ Diese Dokumentation beschreibt den Entwicklungsprozess, die angewandten Verfahre
 
 \newpage
 \section{Game Design}
-Das Kapitel Game Design beschreibt inital das entwickelte Spiel und erläutert anschließend die Umsetzung der während der Veranstaltung thematisierten Verfahren im Projekt.
+Das Kapitel Game Design beschreibt initial das entwickelte Spiel und erläutert anschließend die Umsetzung der während der Veranstaltung thematisierten Verfahren im Projekt.
 \subsection{Allgemeine Spielbeschreibung}
 Gravity Warrior ist ein 2D Couch-Coop Twin-Stick Shooter, bei dem der Spieler einen von vier Charakteren steuert (Gravity Warrior genannt), der mit einem Jet Pack und einer Plasmapistole ausgestattet ist. Neben der Steuerung der Warrior und dem Abfeuern der Plasmapistole ist die Gravitation die Kernmechanik des Spiels. Diese wird ausgehend von den Asteroiden im Spiel erzeugt und beeinflusst dabei sowohl den Spieler als auch dessen Pistolenprojektile. Nach einem kurzen Vertrautmachen mit der Steuerung werden der Spieler und seine Mitstreiter von Wellen gegnerischer Aliens angegriffen. Anhand der Story wird dem Spieler vermittelt, dass dieser Teil eines Forschungsteams ist und, dass das Team aufgrund einer zu hohen Gravitation auf der aktuell befindlichen Asteroidenkonstellation gestrandet ist. Hilfe kann ausschließlich durch einen Satelliten gerufen werden, welcher im Laufe des Spiels ebenfalls von den anbahnenden Gegnerscharen attackiert wird. Nun müssen sich die Gravity Warrior gegen unzählige Aliens behaupten, deren Angriffen ausweichen und die Energieanzeige des Satelliten überwachen um zum Heimatplaneten zurückzukehren.
 
@@ -62,12 +62,23 @@ Deshalb wird in dem nachfolgenden \autoref{subsec:exp} die \nameref{subsec:exp} 
 Laut Schell ist die Experience aus der Sicht des Spielers der ideale Startpunkt, um ein Spiel zu designen \cite[~p. xxiii]{S2014}. Die Experience in Gravity Warrior wir ausgehend von dem erzeugten Setting des Spiels und den darin zu bestreitenden Aufgaben definiert. Mithilfe der Gravitation, die von den Asteroiden ausgeht, kann der Spieler einfach von Asteroid zu Asteroid gelangen. Dabei muss er darauf achten, nicht mit herumfliegenden Aliens zusammenzustoßen, deren Bedrohung im Verlauf des Spieles deutlich ansteigt. Mithilfe des Jet Packs kann der Spieler geschickt agieren und den Angriffen der Aliens ausweichen. Die Gravitation beeinflusst die Projektile der Waffe des Spielers, sodass dieser ein einzigartiges Erlebnis erfährt, während er auf die Gegner zielt und diese beschießt. Im Laufe des Spiels erhöht sich die Gegneranzahl je nach dem aktuellen Schwierigkeitsgrad, sodass der Spieler seine Treffsicherheit unter Beweis stellen und verbessern muss, um in eine höhere Wave zu gelangen. Dadurch erfährt der Spieler verschiedene Erfolgserlebnisse. 
 Aufgrund der zunehmenden Anzahl der Aliens muss der Spieler geschickt mit den anderen Mitspielern kooperieren und kommunizieren, um die verschiedenen Waves zu überstehen. Dabei erlangt der Spieler durch das gemeinsame verteidigen des Satelliten und das Bekämpfen der Aliens ein Gemeinschaftsgefühl. Dieses wird noch weiter verstärkt, weil die Spieler im Falle eines Spielerverlustes diesen wiederbeleben können (siehe \autoref{subsec:mec} \nameref{subsec:mec}). Dies motiviert die Spieler erneut, da sie danach wieder vollzählig gegen die Aliens kämpfen können. 
 
-Allerdings ist eine Wiederbelebung nicht immer erfolgreich bzw. gestaltet sich schwer, wenn ein Spieler in einem Alienschwarm gestorben ist. Die Aliens versuchen, die Spieler und den von den Spielern zu beschützenden Satelliten mit ihren Projektilen zu treffen, um die Lebensenergie der Spieler zu reduzieren. Dadurch entsteht bei den Spielern eine Spannung, die umso höher wird, desto niedriger die Lebensenergie sinkt. Ist diese aufgebraucht, stirbt der Spieler. Sobald die Spieler eine Wave erfolgreich bewältigt haben, tritt die Erleichterung beim Spieler ein, da dieser den riskanten Situationen erfolgreich entkommen ist. Neben den eben genannten kooperativen Aspekten treten agonale Aspekte auf. Der Spieler möchte zum Beispiel besser und mehr Aliens treffen als seine Mitspieler oder das Team möchte mehr Waves schaffen als andere Teams. Der agonale Aspekt könnte zukünftig noch weiter verstärkt werden, indem ein High-Score System eingeführt wird (siehe \autoref{subsec:improvements}: \nameref{subsec:improvements}). 
+Allerdings ist eine Wiederbelebung nicht immer erfolgreich bzw. gestaltet sich schwer,
+wenn ein Spieler in einem Alienschwarm gestorben ist. Die Aliens versuchen, die Spieler
+und den von den Spielern zu beschützenden Satelliten zu rammen, um die Lebensenergie der Spieler zu reduzieren. Dadurch entsteht bei den Spielern eine Spannung, die umso höher wird, desto niedriger die Lebensenergie sinkt. Ist diese aufgebraucht, stirbt der Spieler. Sobald die Spieler eine Wave erfolgreich bewältigt haben, tritt die Erleichterung beim Spieler ein, da dieser den riskanten Situationen erfolgreich entkommen ist. Neben den eben genannten kooperativen Aspekten treten agonale Aspekte auf. Der Spieler möchte zum Beispiel besser und mehr Aliens treffen als seine Mitspieler oder das Team möchte mehr Waves schaffen als andere Teams. Der agonale Aspekt könnte zukünftig noch weiter verstärkt werden, indem ein High-Score System eingeführt wird (siehe \autoref{subsec:improvements}: \nameref{subsec:improvements}). 
 
 \newpage
 \subsubsection{Fantasy}
 \label{subsec:fan}
-Eine militärische Forschungsgruppe bestehend aus zwei bis vier Mitgliedern wird von der Bodenstation “Ground Control” auf der Erde auf eine Mission ins Weltall geschickt, um eine bestimmte hochgravitationelle Asteroidenkonstellation im Universum zu untersuchen. Die Gravitation dieser Asteroiden ist allerdings so hoch, dass die Gruppe auf einem der Asteroiden notlanden muss. Dabei wird ihr Raumschiff beschädigt und von der Gravitation stark angezogen, sodass die Gruppe die Asteroidenkonstellation nicht mehr verlassen kann. Die Forscher können lediglich mit ihren Jet Packs von einem zum anderen Asteroiden gelangen. Daraufhin installiert die Forschungsgruppe einen Satelliten, damit „Ground Control“ die Gruppe orten und wieder abholen kann. Jedoch entdecken Aliens die auf diesen Asteroiden zu Hause sind die Gravity Warrior und sehen diese als zu bekämpfende Eindringlinge an. Die Gruppe muss Teamwork beweisen und so lange überleben, bis das Signal des Satelliten von der Bodenstation geortet wurde, damit diese aus dem Gebiet gerettet werden kann. 
+Eine militärische Forschungsgruppe bestehend aus zwei bis vier Mitgliedern wird von der
+Bodenstation “Ground Control” auf der Erde auf eine Mission ins Weltall geschickt, um eine
+bestimmte hochgravitationelle Asteroidenkonstellation im Universum zu untersuchen. Die
+Gravitation dieser Asteroiden ist allerdings so hoch, dass die Gruppe auf einem der
+Asteroiden notlanden muss. Dabei wird ihr Raumschiff beschädigt und von der Gravitation
+stark angezogen, sodass die Gruppe die Asteroidenkonstellation nicht mehr verlassen kann.
+Die Forscher können lediglich mit ihren Jet Packs von einem zum anderen Asteroiden
+gelangen. Daraufhin installiert die Forschungsgruppe einen Satelliten, damit „Ground
+Control“ die Gruppe orten und wieder abholen kann. Jedoch entdecken Aliens, die auf diesen
+Asteroiden zu Hause sind, die Gravity Warrior und sehen diese als zu bekämpfende Eindringlinge an. Die Gruppe muss Teamwork beweisen und so lange überleben, bis das Signal des Satelliten von der Bodenstation geortet wurde, damit diese aus dem Gebiet gerettet werden kann. 
 
 \begin{figure}[htp]
 	\centering
@@ -114,7 +125,8 @@ Wiederbeleben&\\
 
 \textbf{*}Projektile abprallen lassen: Projektile können auf Asteroid abgefeuert werden und prallen anschließend von diesen ab. Dies ermöglicht es, Aliens zu treffen, welche andernfalls schwer zu erreichen wären.
 
-\textbf{**}Kettenreaktion: Durch die Zerstörung eines Exploders wird eine Explosion ausgelöst, welche umliegenden Alien Schaden zufügt. Befindet sich ein weiterer Exploder mit niedrigen Lebenspunkten im Umfeld der Explosion, löst dieser ebenfalls eine Explosion aus, was das Ausmaß des Schadens vergrößert. \autoref{fig:explosion}: \nameref{fig:explosion} visualisert das Explodieren des Alientyps Exploder.  
+\textbf{**}Kettenreaktion: Durch die Zerstörung eines Exploders wird eine Explosion
+ausgelöst, welche umliegenden Aliens Schaden zufügt. Befindet sich ein weiterer Exploder mit niedrigen Lebenspunkten im Umfeld der Explosion, löst dieser ebenfalls eine Explosion aus, was das Ausmaß des Schadens vergrößert. \autoref{fig:explosion}: \nameref{fig:explosion} visualisert das Explodieren des Alientyps Exploder.  
 
 
 \begin{figure}[htp]
@@ -212,7 +224,11 @@ Des Weiteren stellte es sich als problematisch dar, dass Aliens, die sich auf ei
 
 \lbparagraph{Buff-Selection}
 Durch die Buff-Selection können die Spieler am Ende einer Wave ihre Eigenschaften aufwerten. Eine Möglichkeit des Designs der Buff-Selection sah vor, dass alle Spieler über die zur Verfügung stehenden Buffs abstimmen, um dann den gewählten Buff zu erhalten. Die andere Variante funktionierte, indem jeder Spieler separat entscheiden konnte, welchen Buff er erhalten möchte. Die erste Annahme war, dass durch eine einheitliche Buff-Selection die Kommunikation zwischen den Spielern gefördert werden kann, weshalb dies initial präferiert wurde.
-Später kam es jedoch zur Änderung in individuelle Buffs, da sich die Spieler so besser spezialisieren können, was das Teamwork ebenfalls fördert und so Uneinigkeiten vermieden werden konnten. Nachfolgend ist die Buff-Selection in \autoref{fig:buff} visualisiert, wobei hier die Buffs \textit{schnellere Bewegungsgeschwindigkeit}, \textit{mehr Schaden} und \textit{größere Projektile} ausgewäht werden können.
+Später kam es jedoch zur Änderung in individuelle Buffs, da sich die Spieler so besser
+spezialisieren können, was das Teamwork ebenfalls fördert und so Uneinigkeiten vermieden
+werden konnten. Nachfolgend ist die Buff-Selection in \autoref{fig:buff} visualisiert,
+wobei hier die Buffs \textit{schnellere Bewegungsgeschwindigkeit}, \textit{mehr Schaden}
+und \textit{größere Projektile} ausgewählt werden können.
 
 \begin{figure}[htp]
 	\centering
@@ -239,7 +255,14 @@ Das größte Problem, dass während dieser Phase auftrat, war, dass die Gravitat
 
 \subsection{Verbesserung der Experience}
 Um die Experience zu verbessern und den Spieler besser über die aktuelle Spielsituation zu informieren wurden Animationen, Sounds und Controller-Feedback in das Spiel integriert. Geachtet wurde besonders darauf, dass wichtige Geschehnisse transportiert werden, wie das Treffen oder Töten eines Gegners, das von einem Gegner Getroffen-Werden sowie ein geringer Lebensstand oder das Sterben eines Spielkameraden. Des Weiteren wurde mittels einer abstoßenden Kraft verhindert, dass ein Spieler in den Bereich außerhalb des Bildschirms fliegen kann. Um auf anbahnende, noch nicht vollständig sichtbare Aliens aufmerksam zu werden, wurden zusätzlich kleine Icons als Indikatoren am Spielfeldrand hinzugefügt.
-Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden gespielt, wobei dieser dabei iterativ verändert wurde. Herausfordernd an dieser Stelle war, dass die ersten Waves einen guten Einstieg für neue Spieler bereitstellen sollten, während sie für erfahrene Spieler nicht zu langweilig erscheinen durften. Die Ideen, die dieses Problem lösten, waren ein Regler (siehe \autoref{fig:start-screen}), mit dem die Spieler vor Spielstart den Schwierigkeitsgrad der Angriffswellen bestimmen konnten sowie Spieletests mit deren Hilfe die allgemeine Schwierigkeit angepasst wurde.
+Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden gespielt,
+wobei dieser dabei iterativ verändert wurde. Herausfordernd an dieser Stelle war, dass die
+ersten Waves einen guten Einstieg für neue Spieler bereitstellen sollten, während sie für
+erfahrene Spieler nicht zu langweilig erscheinen durften sowie, dass das Balancing für
+unterschiedliche Spielerzahlen erneut durchgeführt werden musste. Die Ideen, die dieses
+Problem lösten, waren ein Regler (siehe \autoref{fig:start-screen}), mit dem die Spieler
+vor Spielstart den Schwierigkeitsgrad der Angriffswellen bestimmen konnten sowie
+Spieletests mit deren Hilfe die allgemeine Schwierigkeit angepasst wurde.
 
 \begin{figure}[htp]
 	\centering
@@ -252,8 +275,72 @@ Für die Anpassung des Schwierigkeitsgrades wurden abschließend multiple Runden
 
 \newpage
 \section{Fazit}
+Im Rahmen dieses Projekts und dem dafür vorgesehenen Zeitraums wurde ein spielbarer
+Prototyp entwickelt, der aus grundsätzlichen Mechaniken entstanden ist, Test-Iterationen
+durchlaufen hat und dadurch einige Verbesserungen der User-Experience erfahren konnte. Es
+wurde darauf geachtet auf Nutzerfeedback entsprechend zu reagieren und die Features
+stimmig aufeinander anzupassen, um Balancing-Probleme zu vermeiden und dem Spiel eine
+Richtung vorzugeben, die sich an der Story und der Spielwelt orientiert.
+
+Regelmäßige Meetings und Absprachen innerhalb der Gruppe haben zu einer kontinuierlichen
+Weiterentwicklung des Prototypen geführt. Dabei wurde darauf geachtet individuell
+angeeignete Talente der Gruppenmitglieder zu berücksichtigen. Durch gezielte
+Aufgabenverteilung und periodische Status-Updates konnten Entwicklungsprozesse, wie dem
+ästhetischen Design, der UI-Planung und der Entwicklung der KI parallelisiert bearbeitet
+werden. Gegenseitiges Feedback wirkte sich positiv auf die Gruppenleistung aus und
+verschiedene Sichtweisen, trugen zu optimierten Lösungsansätzen bei.
+
+Ursprünglich sind mehr Features getestet worden, als in der abschließenden Version des
+Spiels enthalten sind. Ursachen dafür, waren eine ungewollte Komplexitäts\-stei\-ge\-rung,
+die sich negativ auf das Spielgefühl ausgewirkt haben. Dadurch sind Features, wie die
+Planeten-Skills oder unterschiedliche Waffentypen / Charakterklassen zunächst aus dem
+Spiel entfernt worden. Somit konnte der Fokus auf einige Kernmechaniken gelegt werden, wie
+der Gravitation und das dazugehörige Player-Movement.
+
+Aufgrund des beschränkten Zeitraums für das Projekt, entstanden aus vielen weiterführenden
+Ideen und Überlegungen lediglich Konzepte, die aus der Perspektive der Entwicklung
+wichtige Ergänzungen für den Prototypen darstellen. Im Rahmen einer weiteren Bearbeitung
+des Projekts, wurden aus Sicht der Entwickler Erweiterungs- sowie
+Verbesserungsmöglichkeiten zusammengetragen, die auf der nun gegebenen Basis aufbauen und
+dem Spiel die noch benötigte Tiefe verleihen.
+
 \subsection{Erweiterungsmöglichkeiten}
 \label{subsec:improvements}
+
+\lbparagraph{Gravitation}
+Die Grundmechanik und das Zusammenspiel von Movement und Projektilbeeinflussung durch
+Gravitation gefällt uns in der Theorie sehr gut. Allerdings ist die Gravitation noch nicht
+die zentrale Mechanik, die die Experience fundamental mitbestimmt, wie es geplant war.
+Eine Überarbeitung der Schwere für Projektile im Zusammenhang derer Basis-Geschwindigkeit
+ist noch notwendig. Das Konzept zur Beeinflussung des Movements eines Spieler durch
+Gravitation benötigt bedingt eine Anpassung.
+
+\lbparagraph{Boss Fight}
+Boss Fight
+
+\lbparagraph{Tutorial Level}
+Tutorial Level
+
+\lbparagraph{Item drops}
+Eine Erweiterungsmöglichkeit, die vor allem auf das gemeinsame Teamwork abzielt, ist es,
+den Satelliten nicht nur zu beschützen, sondern auch über die Wave hinweg aufzubauen. Dazu
+müssen Items, die bei der Zerstörung von gegnerischen Aliens auftauchen, zum Satelliten
+gebracht werden. Der Gravity Warrior, der das Item transportiert, wird durch das zu
+transportierende Item verlangsamt, was dazu führen soll, dass er durch die anderen Spieler
+eskortiert werden muss. Dadurch rückt die Teamabsprache mehr in den Mittelpunkt.
+
+\lbparagraph{Bessere Ästhetik}
+Bessere Ästhetik
+
+\lbparagraph{High Score}
+Um den agonen Aspekt des Spiels zu verstärken, liegt es nahe einen Score einzuführen, der
+jeden Spieler pro Wave für seine Spielweise bewertet. Dadurch können sich Spieler
+untereinander messen, was ebenfalls zu einer Verbesserung der Spielweise führen kann.
+Auch ein Score für das Team wäre denkbar, der beispielsweise angeben könnte, wie lange für
+die Fertigstellung der Waves gebraucht wurde. Dadurch würde stärker das Teamgefühl
+intensiviert werden, als der agone Aspekt gegeneinander.
+
+
 \newpage
 \section{Anhang}
 \label{sec:appendix}

@@ -1,3 +1,15 @@
 .import/
 *.import
 export/
+/doc/docu.aux
+/doc/docu.bbl
+/doc/docu.blg
+/doc/docu.fdb_latexmk
+/doc/docu.fls
+/doc/docu.lof
+/doc/docu.log
+/doc/docu.lot
+/doc/docu.out
+/doc/docu.pdf
+/doc/docu.synctex.gz
+/doc/docu.toc
