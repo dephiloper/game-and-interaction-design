@@ -155,6 +155,7 @@ func _start_die():
 	_die()
 
 func _die():
+	GameManager.possible_item_drop(self.position)
 	state = ASSASSIN_STATE.Dead
 	_channel_time = DIE_TIME
 	collision_mask = 0

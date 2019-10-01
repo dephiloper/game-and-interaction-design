@@ -1,6 +1,8 @@
 extends Node2D
 
 const PLAYER_SCENE = preload("res://src/Player.tscn")
+const ITEM_DROP_SCENE = preload("res://src/ItemDrop.tscn")
+const ITEM_DROP_PROBABILITY = 1.0
 
 var current_game_state = GameState.Fight
 var planets: Array = []
@@ -45,6 +47,13 @@ func setup() -> void:
 	
 	for player in players:
 		player.connect("active_changed", self, "_player_active_changed")
+
+
+func possible_item_drop(position: Vector2) -> void:
+	if randf() < ITEM_DROP_PROBABILITY:
+		var item_drop_instance = ITEM_DROP_SCENE.instance()
+		item_drop_instance.init(position)
+		get_node("/root/Main").add_child(item_drop_instance)
 
 
 func add_planet(planet: Planet) -> void:

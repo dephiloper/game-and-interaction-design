@@ -185,6 +185,7 @@ func _start_circle():
 	_channel_time = CIRCLE_DURATION
 
 func _die():
+	GameManager.possible_item_drop(self.position)
 	state = DestroyerState.Dead
 	collision_layer = 0
 	collision_mask = 0

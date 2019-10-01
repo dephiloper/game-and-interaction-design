@@ -14,6 +14,10 @@ const BORDER_BOUNDRY: int = 24
 const BORDER_BOUNDRY_PULL: int = 24
 const GRAVITATIONAL_IMPACT_FACTOR: float = 0.4 # TODO tweak the gravity here! default: 1.0
 
+const FIRE_RATE_DURATION: float = 5.5
+const MULTI_SHOT_DURATION: float = 5.0
+const SHIELD_DURATION: float = 7.5
+
 # properties
 var max_boost: float = 0.5
 var max_health: float = 100.0
@@ -44,24 +48,30 @@ var _vibration_time_elapsed: float = 0.0
 var _heartbeat_wait_time: float = 0.3
 var _heartbeat_count: int = 0
 
+# item drop buffs
+var _fire_rate_duration: float = 0
+var _multi_shot_duration: float = 0
+var _shield_duration: float = 0
+
 var _boost_audio_player = null
 
 # public methods
 func hit(damage: float) -> void:
 	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
 
-	AudioPlayer.play_player_hit_sound(-10)
+	if not _is_shield_active():
+		AudioPlayer.play_player_hit_sound(-10)
 
-	health = max(health - damage, 0)
-	Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
+		health = max(health - damage, 0)
+		Input.start_joy_vibration(controls.input_device_id, 1, 0, 0.5)
 
-	$HitTween.interpolate_property($PlayerSprites, "modulate", 
-	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$HitTween.interpolate_property($PlayerSprites, "modulate", 
+		Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
-	$HitTween.interpolate_property($PlayerSprites, "modulate", Color(1, 0, 0, 1), 
-	Color(1, 1, 1, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
+		$HitTween.interpolate_property($PlayerSprites, "modulate", Color(1, 0, 0, 1), 
+		Color(1, 1, 1, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
 
-	$HitTween.start()
+		$HitTween.start()
 
 func heal(life: float) -> void:
 	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
@@ -84,6 +94,40 @@ func apply_buff(buff_type: String) -> void:
 			_bullet_size_multiplier += 0.25
 		Buff.Types.AttackSpeed:
 			_attack_speed_multiplier += 0.25
+
+func apply_item(item):
+	match item:
+		0: # Fire Rate
+			_fire_rate_duration = FIRE_RATE_DURATION
+			$Gun.enable_fire_rate()
+		1: # Health Restore
+			health = max_health
+		2: # Multi Shot
+			_multi_shot_duration = MULTI_SHOT_DURATION
+			$Gun.enable_multi_shot()
+		3: # Shield
+			_shield_duration = SHIELD_DURATION
+			update()
+
+func _is_shield_active():
+	return _shield_duration > 0
+
+func _process_item_buffs(delta: float):
+	if _fire_rate_duration > 0:
+		_fire_rate_duration -= delta
+		if _fire_rate_duration <= 0:
+			$Gun.disable_fire_rate()
+
+	if _multi_shot_duration > 0:
+		_multi_shot_duration -= delta
+		if _multi_shot_duration <= 0:
+			$Gun.disable_multi_shot()
+
+	if _shield_duration > 0:
+		_shield_duration -= delta
+		if _shield_duration <= 0:
+			update()
+		
 
 func _init() -> void:
 	add_to_group("Player")
@@ -114,11 +158,11 @@ func start_boost_sound():
 func on_end_wave():
 	stop_boost_sound()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	$Hud.set_health_value(health, max_health)
 	$Hud.set_boost_value(boost, max_boost)
 	if health > 0 and health < max_health / 4:
-		_trigger_heartbeat_vibration(_delta)
+		_trigger_heartbeat_vibration(delta)
 		
 	if health <= 0.0 and not is_inactive:
 		is_inactive = true
@@ -139,10 +183,13 @@ func _process(_delta: float) -> void:
 	if not is_inactive and _is_cooldown:
 		$PlayerSprites.modulate.a = (sin($CooldownTimer.time_left * 16) + 1) / 2
 
+
 func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
 		return
-	
+
+	_process_item_buffs(delta)
+
 	$Trail.emitting = false
 	# we are on planet
 	if _is_on_planet == true:
@@ -275,3 +322,9 @@ func _on_ReviveArea_body_entered(body: PhysicsBody2D) -> void:
 			$PlayerSprites/body.modulate = color
 			$PlayerSprites/head.modulate = color
 			$Gun.visible = true
+
+func _draw():
+	if _is_shield_active():
+		var color = Color.green
+		color.a = 0.3
+		draw_circle(Vector2(0, -7), 39.0, color)
