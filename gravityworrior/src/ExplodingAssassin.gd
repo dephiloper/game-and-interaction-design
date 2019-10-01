@@ -13,7 +13,7 @@ func _get_speed_scale():
 
 func _do_explosion():
 	for player in _get_players_in_damage_range():
-		player.hit(EXPLOSION_DAMAGE)
+		player.hit(EXPLOSION_DAMAGE, _velocity.normalized())
 	for assassin in _get_assassins_in_damage_range():
 		assassin.hit(EXPLOSION_DAMAGE, null)
 	AudioPlayer.play_stream(AudioPlayer.explosion, 0)

@@ -4,6 +4,8 @@ const PLAYER_SCENE = preload("res://src/Player.tscn")
 const ITEM_DROP_SCENE = preload("res://src/ItemDrop.tscn")
 const ITEM_DROP_PROBABILITY = 1.0
 
+var screen_size: Vector2
+
 var current_game_state = GameState.Fight
 var planets: Array = []
 var players: Array = []
@@ -12,6 +14,7 @@ var exploding_assassins: Array = []
 var destroyers: Array = []
 var big_destroyers: Array = []
 var enemies: Array = []
+var boss_spawn_areas: Array = []
 var satellite: Satellite
 
 # 6 difficulty level
@@ -30,6 +33,7 @@ enum GameState {
 }
 
 func setup() -> void:
+	screen_size = get_viewport().get_visible_rect().size
 	_game_over_timer = Timer.new()
 	_game_over_timer.wait_time = 0.3
 	_game_over_timer.one_shot = true
@@ -47,7 +51,7 @@ func setup() -> void:
 	
 	for player in players:
 		player.connect("active_changed", self, "_player_active_changed")
-
+	
 
 func possible_item_drop(position: Vector2) -> void:
 	if randf() < ITEM_DROP_PROBABILITY:
@@ -59,9 +63,20 @@ func possible_item_drop(position: Vector2) -> void:
 func add_planet(planet: Planet) -> void:
 	planets.append(planet)
 
+func add_boss_spawn_areas(area: Area2D) -> void:
+	boss_spawn_areas.append(area)
+
+func get_empty_boss_spawn_areas() -> Array:
+	var empty_spawns: Array = []
+	for area in boss_spawn_areas:
+		if len(area.get_overlapping_bodies()) <= 0:
+			empty_spawns.append(area)
+
+	return empty_spawns
+
 func register_player(player: Player) -> int:
 	players.append(player)
-	return len(players) - 1
+	return len(players) - 1	
 
 func create_players() -> void:
 	var spawn_points = get_node("/root/Main/SpawnPoints") 

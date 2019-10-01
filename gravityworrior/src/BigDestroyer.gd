@@ -62,7 +62,7 @@ func _shoot(direction):
 	if $ShootCast.is_colliding():
 		var collider = $ShootCast.get_collider()
 		if collider.is_in_group("Player"):
-			collider.hit(SHOOT_DAMAGE)
+			collider.hit(SHOOT_DAMAGE, direction.normalized() * 2)
 		if collider.is_in_group("Satellite"):
 			collider.damage(SHOOT_DAMAGE*4)
 

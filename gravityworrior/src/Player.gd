@@ -28,6 +28,7 @@ var boost: float = max_boost
 var is_inactive: bool = false
 var is_healing: bool = false
 var color: Color
+var dealt_damage: float = 0.0
 
 # fields
 var _velocity = Vector2()
@@ -58,7 +59,7 @@ var collected_item_drops = []
 var _boost_audio_player = null
 
 # public methods
-func hit(damage: float) -> void:
+func hit(damage: float, force: Vector2) -> void:
 	if is_inactive or GameManager.current_game_state != GameManager.GameState.Fight: return
 
 	if not _is_shield_active():
@@ -73,6 +74,7 @@ func hit(damage: float) -> void:
 		$HitTween.interpolate_property($PlayerSprites, "modulate", Color(1, 0, 0, 1), 
 		Color(1, 1, 1, 1), 0.2, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
 
+		_velocity += force * 2
 		$HitTween.start()
 
 func heal(life: float) -> void:
@@ -251,12 +253,14 @@ func _physics_process(delta: float) -> void:
 		var pull: Vector2 = _calculate_gravitational_pull() * GRAVITATIONAL_IMPACT_FACTOR
 		var collision = move_and_collide(_velocity * delta)
 		if collision:
-			if collision.collider.is_in_group("Planet"):
+			var collider = collision.collider
+			if collider.is_in_group("Planet"):
 				_is_on_planet = true
-			if collision.collider.is_in_group("Player") or collision.collider.is_in_group("Destroyer"):
+			if collider.is_in_group("Player") or collider.is_in_group("Destroyer") or collider.is_in_group("Boss"):
 				_velocity = _velocity.bounce(collision.normal)
 				position += _velocity * 0.02
 				_velocity *= 0.7
+				
 
 		# applying pull only when player is not boosting!
 		elif not _is_boosting or _is_cooldown: 
