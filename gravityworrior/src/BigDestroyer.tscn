@@ -49,3 +49,4 @@ autostart = true
 [node name="ShootCast" type="RayCast2D" parent="."]
 cast_to = Vector2( 1000, 0 )
 collision_mask = 7
+

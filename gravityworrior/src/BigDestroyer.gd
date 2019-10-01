@@ -11,8 +11,6 @@ const SHOOT_DURATION: float = 10.0
 const MAX_SHOOT_COUNTER: float = SHOOT_CHANNEL_TIME + SHOOT_DURATION
 const SHOOT_SOUND_START = 120
 
-var _destroyer_bullet_scene = preload("res://src/DestroyerBullet.tscn")
-
 var _shoot_counter = -1
 var shoot_directions = []
 

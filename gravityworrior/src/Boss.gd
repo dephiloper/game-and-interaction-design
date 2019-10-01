@@ -7,11 +7,19 @@ enum State {
 	DEATH_FIELDS
 }
 
+const SHOOT_DAMAGE = 15
+const SHOOT_CHANNEL_TIME: float = 250.0
+const SHOOT_RANGE = 1800
+const SHOOT_DURATION: float = 10.0
+const MAX_SHOOT_COUNTER: float = SHOOT_CHANNEL_TIME + SHOOT_DURATION
+const SHOOT_SOUND_START = 120
+
 var _state = State.IDLE
 var _elapsed_time: float = 0
 var _state_change_counter: float = 2.0
 var _target: Vector2
 var _velocity: Vector2
+var _shoot_counter: int = -1
 
 var shock_wave_instance = preload("res://src/ShockWave.tscn")
 
@@ -26,9 +34,7 @@ func _physics_process(delta):
 		self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 		if _state_change_counter <= 0:
 			_set_random_position()
-			_state = State.DASH
-			_state_change_counter = 0.8
-	
+			_start_laser()
 	
 	if _state == State.DASH:
 		if _target.distance_to(self.global_position) < 10: # target reached
@@ -49,12 +55,31 @@ func _physics_process(delta):
 					collision.collider.hit(20, _velocity * 0.5)
 
 	if _state == State.LASER:
-		_state = State.IDLE
-		_state_change_counter = 2.0
+		_process_laser()
 	
 	if _state == State.DEATH_FIELDS:
 		pass
-		
+
+
+func _start_laser():
+	_state = State.LASER
+	_shoot_counter = 0
+	_state_change_counter = 4.5
+
+
+func _process_laser():
+	if _state_change_counter < 0:
+		_state = State.IDLE
+		_state_change_counter = 2.0
+	elif _shoot_counter >= 0:
+		_shoot_counter += 1
+		if _shoot_counter == SHOOT_SOUND_START:
+			AudioPlayer.play_stream(AudioPlayer.destroyer_laser_fade, -22)
+		if _shoot_counter == SHOOT_CHANNEL_TIME:
+			_do_shoot()
+		if _shoot_counter >= MAX_SHOOT_COUNTER:
+			_shoot_counter = -1
+		update()
 
 func _appear():
 	$AppearanceTween.interpolate_property(self, "scale",
@@ -84,3 +109,54 @@ func _set_random_position():
 	
 	self.position = closest_area.position
 	_appear()
+	
+func _do_shoot():
+	GameManager.trigger_camera_shake()
+	for player in GameManager.players:
+		var direction = (player.position - position).normalized()
+		_shoot(direction)
+
+func _shoot(direction):
+	$ShootCast.cast_to = direction * SHOOT_RANGE
+	$ShootCast.force_raycast_update()
+	if $ShootCast.is_colliding():
+		var collider = $ShootCast.get_collider()
+		if collider.is_in_group("Player"):
+			collider.hit(SHOOT_DAMAGE, direction.normalized() * 2)
+		if collider.is_in_group("Satellite"):
+			collider.damage(SHOOT_DAMAGE*4)
+
+func shoot_color():
+	var color = Color.red
+	if _shoot_counter > SHOOT_CHANNEL_TIME:
+		if (int(_shoot_counter / 3)) % 2 == 0:
+			color = Color.orange
+		color.a = 0.45
+	color.a = pow(_shoot_counter / SHOOT_CHANNEL_TIME, 5) * 0.2
+	return color
+
+func _draw_shoot(direction):
+	var shoot_to = direction * SHOOT_RANGE
+
+	$ShootCast.cast_to = direction * SHOOT_RANGE
+	$ShootCast.force_raycast_update()
+	if $ShootCast.is_colliding():
+		shoot_to = get_global_transform().xform_inv($ShootCast.get_collision_point())
+
+	var width_add = 0
+	if _shoot_counter > SHOOT_CHANNEL_TIME:
+		width_add = 1
+
+	var color = shoot_color()
+	color.a = color.a
+	draw_line(Vector2.ZERO, shoot_to, color, 3+width_add, true)
+
+	color = shoot_color()
+	color.a = min(color.a * 2.0, 1.0)
+	draw_line(Vector2.ZERO, shoot_to, color, 1+width_add, true)
+
+func _draw():
+	if _shoot_counter > 0:
+		for player in GameManager.players:
+			var direction = (player.position - position).normalized()
+			_draw_shoot(direction)

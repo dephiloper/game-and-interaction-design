@@ -20,3 +20,7 @@ polygon = PoolVector2Array( -57.0235, -24.0904, -60.1229, -40.7496, -55.6676, -4
 
 [node name="StateTimer" type="Timer" parent="."]
 autostart = true
+
+[node name="ShootCast" type="RayCast2D" parent="."]
+collision_mask = 7
+
