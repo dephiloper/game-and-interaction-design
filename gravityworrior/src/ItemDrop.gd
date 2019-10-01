@@ -89,6 +89,14 @@ func is_dead():
 	return _state == ItemDropState.Dead
 
 
+func is_collected():
+	return _state == ItemDropState.Collected
+
+
+func is_levitated():
+	return _state == ItemDropState.Levitated
+
+
 func collected(target_point):
 	_state = ItemDropState.Collected
 	_target_point = target_point

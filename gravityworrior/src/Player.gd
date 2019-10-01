@@ -114,10 +114,13 @@ func apply_item(item):
 			update()
 
 func item_drop_collected(item_drop):
-	for index in range(len(collected_item_drops)):
+	var index = 0
+	while index < len(collected_item_drops):
 		if collected_item_drops[index].get_item_kind() == item_drop.get_item_kind():
 			collected_item_drops[index].queue_free()
 			collected_item_drops.remove(index)
+		else:
+			index += 1
 
 	apply_item(item_drop.get_item_kind())
 	collected_item_drops.append(item_drop)

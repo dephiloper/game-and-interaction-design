@@ -5,5 +5,6 @@ func _ready() -> void:
 
 func _on_body_entered(player):
 	if player.is_in_group("Player"):
-		get_parent().collected(player.position)
-		player.item_drop_collected(get_parent())
+		if get_parent().is_levitated():
+			get_parent().collected(player.position)
+			player.item_drop_collected(get_parent())
