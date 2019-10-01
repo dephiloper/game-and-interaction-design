@@ -5,6 +5,7 @@ class_name Gun
 const BULLET_SCENE = preload("res://src/Bullet.tscn")
 const CROSS_HAIR_DISTANCE: int = 128
 const GUN_POINTER_COLOR: Color = Color(1, 0, 0, 0.25)
+const MULTI_SHOT_DEVIATION = 0.15
 
 var shoot_dir = Vector2.RIGHT
 var can_shoot: bool = true
@@ -14,21 +15,28 @@ var _controls: Controls
 var _offset: Vector2 = Vector2(4,2)
 var _alternative_aiming_enabled: bool = false
 var _alternative_aiming_pressed_time: float = 0
+var multi_shot_enabled = false
 
 var _show_laser_pointer: bool = true
 
 func set_controls(controls: Controls) -> void:
 	_controls = controls
 
+func send_bullet(shoot_direction, _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier):
+	var b: Bullet = BULLET_SCENE.instance()
+	b.init(shoot_direction, _base_damage * _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
+	b.position = $GunSprite/BarrelPosition.global_position
+	$"/root/Main".add_child(b)
+
 func shoot(_damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier) -> void: 
 	if not can_shoot: return
 	
 	if ($FirerateTimer.get_time_left() == 0):
 		AudioPlayer.play_stream(AudioPlayer.player_shot, -18)
-		var b: Bullet = BULLET_SCENE.instance()
-		b.init(shoot_dir, _base_damage * _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
-		b.position = $GunSprite/BarrelPosition.global_position
-		$"/root/Main".add_child(b)
+		send_bullet(shoot_dir, _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
+		if multi_shot_enabled:
+			send_bullet(shoot_dir.rotated(MULTI_SHOT_DEVIATION), _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
+			send_bullet(shoot_dir.rotated(-MULTI_SHOT_DEVIATION), _damage_buff, _bullet_size_multiplier, _bullet_speed_multiplier)
 		$FirerateTimer.start()
 
 func _physics_process(delta: float) -> void:
@@ -49,7 +57,7 @@ func _physics_process(delta: float) -> void:
 
 	shoot_dir = _caculate_cross_hair_direction()
 	$CrosshairSprite.visible = false if shoot_dir == Vector2.ZERO else true
-	$CrosshairSprite.position = shoot_dir * CROSS_HAIR_DISTANCE 
+	$CrosshairSprite.position = shoot_dir * CROSS_HAIR_DISTANCE
 	$GunSprite.rotation = shoot_dir.angle()
 	$GunSprite.set_flip_v(shoot_dir.x < 0)
 	$GunSprite/BarrelPosition.position.y = 10 if (shoot_dir.x < 0) else -10 
@@ -77,6 +85,18 @@ func _caculate_cross_hair_direction() -> Vector2:
 		
 	return direction
 
+func enable_fire_rate():
+	$FirerateTimer.wait_time = 1.0 / (_fire_rate * 2)
+
+func disable_fire_rate():
+	$FirerateTimer.wait_time = 1.0 / _fire_rate
+
+func enable_multi_shot():
+	multi_shot_enabled = true
+
+func disable_multi_shot():
+	multi_shot_enabled = false
+
 func _ready():
-	$FirerateTimer.wait_time = 1/_fire_rate
+	$FirerateTimer.wait_time = 1.0 / _fire_rate
 	$FirerateTimer.set_one_shot(true)
