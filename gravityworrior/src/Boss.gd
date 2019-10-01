@@ -14,6 +14,7 @@ var _target: Vector2
 var _velocity: Vector2
 
 var shock_wave_instance = preload("res://src/ShockWave.tscn")
+var death_field_instance = preload("res://src/DeathField.tscn")
 
 func _init():
 	add_to_group("Boss")
@@ -53,8 +54,13 @@ func _physics_process(delta):
 		_state_change_counter = 2.0
 	
 	if _state == State.DEATH_FIELDS:
-		pass
+		for i in range(10):
+			var death_field = death_field_instance.instance()
+			death_field.position = Vector2(rand_range(0, GameManager.screen_size.x), rand_range(0, GameManager.screen_size.y))
+			get_node("/root/Main").add(death_field)
 		
+		_state = State.IDLE
+		_state_change_counter = 5.0
 
 func _appear():
 	$AppearanceTween.interpolate_property(self, "scale",
