@@ -2,12 +2,16 @@ extends Node2D
 
 const TIME_TO_FREE = 10.0
 const BLINK_DURATION = 1.02
+const DRAG = 0.5
 
 var _free_counter
 var _item_drop_kind
 var _start_position
 var _state
 var _target_point
+var _velocity
+var _locked = false
+var _acceleration
 
 enum ItemDropKind {
 	FireRate,
@@ -60,7 +64,7 @@ func _get_duration():
 	if _item_drop_kind == ItemDropKind.FireRate:
 		return 5.5
 	elif _item_drop_kind == ItemDropKind.HealthRestore:
-		return 0.5
+		return 1.2
 	elif _item_drop_kind == ItemDropKind.MultiShot:
 		return 5.0
 	elif _item_drop_kind == ItemDropKind.Shield:
@@ -69,6 +73,7 @@ func _get_duration():
 
 
 func init(position: Vector2):
+	_velocity = Vector2.ZERO
 	_state = ItemDropState.Levitated
 	_free_counter = TIME_TO_FREE
 	add_to_group("ItemDrop")
@@ -77,6 +82,7 @@ func init(position: Vector2):
 	_set_position()
 	_item_drop_kind = _random_kind()
 	_set_sprite()
+	_acceleration = 0.02
 
 
 func is_dead():
@@ -93,6 +99,20 @@ func set_target_point(target_point):
 	_target_point = target_point
 
 
+func _move_to_target_point():
+	if (_target_point - position).length_squared() < 16.0:
+		_locked = true
+
+	if _locked:
+		position = _target_point
+	else:
+		var impact = (_target_point - position)*_acceleration
+		_velocity += impact
+		_velocity *= DRAG
+		position += _velocity
+		_acceleration += 0.009
+
+
 func _physics_process(delta: float) -> void:
 	_free_counter -= delta
 	if _state == ItemDropState.Levitated:
@@ -102,7 +122,7 @@ func _physics_process(delta: float) -> void:
 		_set_position()
 
 	if _state == ItemDropState.Collected:
-		position = _target_point
+		_move_to_target_point()
 		if _free_counter < BLINK_DURATION:
 			modulate.a = (sin(_free_counter*20)+1)/2.0
 		if _free_counter <= 0:

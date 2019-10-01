@@ -90,6 +90,7 @@ func hit(damage, collision):
 	if health <= 0:
 		health = 0
 		AudioPlayer.play_enemy_sound(-8)
+		GameManager.possible_item_drop(self.position)
 		_die()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:
@@ -185,7 +186,6 @@ func _start_circle():
 	_channel_time = CIRCLE_DURATION
 
 func _die():
-	GameManager.possible_item_drop(self.position)
 	state = DestroyerState.Dead
 	collision_layer = 0
 	collision_mask = 0

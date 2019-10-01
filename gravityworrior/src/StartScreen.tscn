@@ -82,3 +82,4 @@ texture = ExtResource( 5 )
 position = Vector2( 1094, 482 )
 scale = Vector2( 0.35, 0.35 )
 frames = SubResource( 4 )
+

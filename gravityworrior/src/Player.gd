@@ -235,8 +235,6 @@ func _physics_process(delta: float) -> void:
 	if GameManager.current_game_state != GameManager.GameState.Fight:
 		return
 
-	_process_item_buffs(delta)
-
 	$Trail.emitting = false
 	# we are on planet
 	if _is_on_planet == true:
@@ -293,6 +291,9 @@ func _physics_process(delta: float) -> void:
 	if not _is_boosting and $CooldownTimer.is_stopped():
 			# recharge boost
 			boost = min(boost + BOOST_RECHARGE_VALUE * delta, max_boost)
+
+	_process_item_buffs(delta)
+
 
 func _calculate_gravitational_pull() -> Vector2:
 	var pull: Vector2 = Vector2()

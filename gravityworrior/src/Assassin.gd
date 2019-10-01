@@ -139,6 +139,7 @@ func hit(damage: float, _collision) -> bool:
 	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
+		GameManager.possible_item_drop(self.position)
 		_start_die()
 	
 	$HitTween.interpolate_property($Sprite, "modulate", 
@@ -155,7 +156,6 @@ func _start_die():
 	_die()
 
 func _die():
-	GameManager.possible_item_drop(self.position)
 	state = ASSASSIN_STATE.Dead
 	_channel_time = DIE_TIME
 	collision_mask = 0
