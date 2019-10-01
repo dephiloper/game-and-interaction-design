@@ -522,7 +522,7 @@ func _process_collision(collision):
 	var collider = collision.collider
 	if collider.has_method("hit") and collider.is_in_group("Player"):
 		if _should_collide_damage_player():
-			collider.hit(_damage)
+			collider.hit(_damage, _velocity)
 		_start_die()
 	if collider.is_in_group("Satellite"):
 		collider.damage(_damageSatellite)
