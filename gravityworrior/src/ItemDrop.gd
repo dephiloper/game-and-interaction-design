@@ -1,15 +1,25 @@
 extends Node2D
 
-const TIME_TO_FREE = 200
+const TIME_TO_FREE = 10.0
+const BLINK_DURATION = 1.02
 
 var _free_counter
 var _item_drop_kind
+var _start_position
+var _state
+var _target_point
 
 enum ItemDropKind {
 	FireRate,
 	HealthRestore,
 	MultiShot,
 	Shield
+}
+
+enum ItemDropState {
+	Levitated,
+	Collected,
+	Dead
 }
 
 
@@ -27,11 +37,11 @@ func _random_kind():
 
 
 func get_item_kind():
-	return self._item_drop_kind
+	return _item_drop_kind
 
 
 func _set_sprite():
-	match self._item_drop_kind:
+	match _item_drop_kind:
 		ItemDropKind.FireRate:
 			$AnimatedSprite.play("FireRate")
 		ItemDropKind.HealthRestore:
@@ -42,17 +52,58 @@ func _set_sprite():
 			$AnimatedSprite.play("Shield")
 
 
+func _set_position():
+	position = _start_position + Vector2(sin(_free_counter*1.3), cos(_free_counter + 0.1))*2
+
+
+func _get_duration():
+	if _item_drop_kind == ItemDropKind.FireRate:
+		return 5.5
+	elif _item_drop_kind == ItemDropKind.HealthRestore:
+		return 0.5
+	elif _item_drop_kind == ItemDropKind.MultiShot:
+		return 5.0
+	elif _item_drop_kind == ItemDropKind.Shield:
+		return 7.5
+	return 0.0
+
+
 func init(position: Vector2):
+	_state = ItemDropState.Levitated
+	_free_counter = TIME_TO_FREE
 	add_to_group("ItemDrop")
 	$ItemDropCollisionArea.add_to_group("ItemDrop")
-	self.position = position
-	self._item_drop_kind = _random_kind()
-	self._set_sprite()
-	self._free_counter = TIME_TO_FREE
+	_start_position = position
+	_set_position()
+	_item_drop_kind = _random_kind()
+	_set_sprite()
 
 
-func _physics_process(_delta: float) -> void:
-	self._free_counter -= 1
-	if self._free_counter <= 0: 
-		queue_free()
-		return
+func is_dead():
+	return _state == ItemDropState.Dead
+
+
+func collected(target_point):
+	_state = ItemDropState.Collected
+	_target_point = target_point
+	_free_counter = _get_duration()
+
+
+func set_target_point(target_point):
+	_target_point = target_point
+
+
+func _physics_process(delta: float) -> void:
+	_free_counter -= delta
+	if _state == ItemDropState.Levitated:
+		if _free_counter <= 0:
+			_state = ItemDropState.Dead
+			queue_free()
+		_set_position()
+
+	if _state == ItemDropState.Collected:
+		position = _target_point
+		if _free_counter < BLINK_DURATION:
+			modulate.a = (sin(_free_counter*20)+1)/2.0
+		if _free_counter <= 0:
+			_state = ItemDropState.Dead

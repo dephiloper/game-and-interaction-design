@@ -53,6 +53,8 @@ var _fire_rate_duration: float = 0
 var _multi_shot_duration: float = 0
 var _shield_duration: float = 0
 
+var collected_item_drops = []
+
 var _boost_audio_player = null
 
 # public methods
@@ -109,6 +111,48 @@ func apply_item(item):
 			_shield_duration = SHIELD_DURATION
 			update()
 
+func item_drop_collected(item_drop):
+	for index in range(len(collected_item_drops)):
+		if collected_item_drops[index].get_item_kind() == item_drop.get_item_kind():
+			collected_item_drops[index].queue_free()
+			collected_item_drops.remove(index)
+
+	apply_item(item_drop.get_item_kind())
+	collected_item_drops.append(item_drop)
+
+func get_item_drop_angles():
+	var start = -len(collected_item_drops) + 1
+	var positions = []
+	for i in range(len(collected_item_drops)):
+		positions.append(start)
+		start += 2
+	return positions
+
+func _remove_old_item_drops():
+	var index = 0
+	while index < len(collected_item_drops):
+		var item_drop = collected_item_drops[index]
+		if item_drop.is_dead():
+			collected_item_drops.remove(index)
+			item_drop.queue_free()
+		else:
+			index += 1
+
+func update_item_drop_positions():
+	_remove_old_item_drops()
+
+	for item_drop in collected_item_drops:
+		if item_drop.is_dead():
+			collected_item_drops.remove(item_drop)
+			break
+
+	var item_drop_positions = get_item_drop_angles()
+	var index = 0
+	for collected_item_drop in collected_item_drops:
+		var rel_pos = Vector2(0, -50).rotated(item_drop_positions[index]*0.25)
+		collected_item_drop.set_target_point(position + rel_pos)
+		index += 1
+
 func _is_shield_active():
 	return _shield_duration > 0
 
@@ -127,7 +171,8 @@ func _process_item_buffs(delta: float):
 		_shield_duration -= delta
 		if _shield_duration <= 0:
 			update()
-		
+
+	update_item_drop_positions()
 
 func _init() -> void:
 	add_to_group("Player")
