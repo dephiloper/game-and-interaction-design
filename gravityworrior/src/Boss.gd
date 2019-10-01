@@ -2,7 +2,9 @@ extends KinematicBody2D
 
 enum State {
 	IDLE,
-	DASH
+	DASH,
+	LASER,
+	DEATH_FIELDS
 }
 
 var _state = State.IDLE
@@ -45,10 +47,16 @@ func _physics_process(delta):
 					get_node("/root/Main").add_child(shock_wave)
 				if collision.collider.is_in_group("Player"):
 					collision.collider.hit(20, _velocity * 0.5)
-				
-				
-			
-			
+
+	if _state == State.LASER:
+		_state = State.IDLE
+		_state_change_counter = 2.0
+	
+	if _state == State.DEATH_FIELDS:
+		_state = State.IDLE
+		_state_change_counter = 2.0
+		
+
 func _appear():
 	$AppearanceTween.interpolate_property(self, "scale",
 		Vector2(0, 0), Vector2(1, 1), 0.4,
