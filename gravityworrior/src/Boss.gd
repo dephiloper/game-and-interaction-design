@@ -53,8 +53,7 @@ func _physics_process(delta):
 		_state_change_counter = 2.0
 	
 	if _state == State.DEATH_FIELDS:
-		_state = State.IDLE
-		_state_change_counter = 2.0
+		pass
 		
 
 func _appear():
