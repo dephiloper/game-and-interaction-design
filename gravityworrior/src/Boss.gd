@@ -22,6 +22,7 @@ var _velocity: Vector2
 var _shoot_counter: int = -1
 
 var shock_wave_instance = preload("res://src/ShockWave.tscn")
+var death_field_instance = preload("res://src/DeathField.tscn")
 
 func _init():
 	add_to_group("Boss")
@@ -33,9 +34,18 @@ func _physics_process(delta):
 	if _state == State.IDLE:
 		self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 		if _state_change_counter <= 0:
-			_set_random_position()
-			_start_laser()
-	
+			var index = randi() % 3
+			if index == 0:
+				_set_random_position(true)
+				_state = State.DASH
+				_state_change_counter = 2.0
+			elif index == 1:
+				_start_laser()
+			elif index == 2:
+				_set_random_position(false)
+				_state = State.DEATH_FIELDS
+				_state_change_counter = 2.0
+
 	if _state == State.DASH:
 		if _target.distance_to(self.global_position) < 10: # target reached
 			_state = State.IDLE
@@ -58,7 +68,13 @@ func _physics_process(delta):
 		_process_laser()
 	
 	if _state == State.DEATH_FIELDS:
-		pass
+		for player in GameManager.players:
+			var death_field = death_field_instance.instance()
+			death_field.position = player.position + player.get_velocity() / 2.5
+			get_node("/root/Main").add_child(death_field)
+		
+		_state = State.IDLE
+		_state_change_counter = 2.0
 
 
 func _start_laser():
@@ -81,6 +97,7 @@ func _process_laser():
 			_shoot_counter = -1
 		update()
 
+
 func _appear():
 	$AppearanceTween.interpolate_property(self, "scale",
 		Vector2(0, 0), Vector2(1, 1), 0.4,
@@ -95,21 +112,27 @@ func _dissapear():
 		
 	$AppearanceTween.start()
 
-func _set_random_position():
+func _set_random_position(near_player: bool):
 	var areas = GameManager.get_empty_boss_spawn_areas()
-	var closest_area: Area2D = areas[0]
-	var shortest_distance: float = INF
-	var players: Array = GameManager.players
-	_target = players[randi() % len(players)].global_position
-	for area in areas:
-		var distance = area.global_position.distance_to(_target)
-		if  distance < shortest_distance:
-			closest_area = area
-			shortest_distance = distance
+
+	if near_player: # position near the player
+		var closest_area: Area2D = areas[0]
+		var shortest_distance: float = INF
+		var players: Array = GameManager.players
+		_target = players[randi() % len(players)].global_position
+		for area in areas:
+			var distance = area.global_position.distance_to(_target)
+			if  distance < shortest_distance:
+				closest_area = area
+				shortest_distance = distance
+		self.position = closest_area.position
 	
-	self.position = closest_area.position
+	else: # random new position
+		self.position = areas[randi() % len(areas)].position
+	
 	_appear()
-	
+
+
 func _do_shoot():
 	GameManager.trigger_camera_shake()
 	for player in GameManager.players:
