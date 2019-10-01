@@ -26,10 +26,9 @@ func _physics_process(delta):
 	if _state == State.IDLE:
 		self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 		if _state_change_counter <= 0:
-			_set_random_position()
-			_state = State.DASH
-			_state_change_counter = 0.8
-	
+			_set_random_position(false)
+			_state = State.DEATH_FIELDS
+			_state_change_counter = 2.0
 	
 	if _state == State.DASH:
 		if _target.distance_to(self.global_position) < 10: # target reached
@@ -54,13 +53,13 @@ func _physics_process(delta):
 		_state_change_counter = 2.0
 	
 	if _state == State.DEATH_FIELDS:
-		for i in range(10):
+		for player in GameManager.players:
 			var death_field = death_field_instance.instance()
-			death_field.position = Vector2(rand_range(0, GameManager.screen_size.x), rand_range(0, GameManager.screen_size.y))
-			get_node("/root/Main").add(death_field)
+			death_field.position = player.position + player.get_velocity() / 2.5
+			get_node("/root/Main").add_child(death_field)
 		
 		_state = State.IDLE
-		_state_change_counter = 5.0
+		_state_change_counter = 2.0
 
 func _appear():
 	$AppearanceTween.interpolate_property(self, "scale",
@@ -76,17 +75,22 @@ func _dissapear():
 		
 	$AppearanceTween.start()
 
-func _set_random_position():
+func _set_random_position(near_player: bool):
 	var areas = GameManager.get_empty_boss_spawn_areas()
-	var closest_area: Area2D = areas[0]
-	var shortest_distance: float = INF
-	var players: Array = GameManager.players
-	_target = players[randi() % len(players)].global_position
-	for area in areas:
-		var distance = area.global_position.distance_to(_target)
-		if  distance < shortest_distance:
-			closest_area = area
-			shortest_distance = distance
 	
-	self.position = closest_area.position
+	if near_player: # position near the player
+		var closest_area: Area2D = areas[0]
+		var shortest_distance: float = INF
+		var players: Array = GameManager.players
+		_target = players[randi() % len(players)].global_position
+		for area in areas:
+			var distance = area.global_position.distance_to(_target)
+			if  distance < shortest_distance:
+				closest_area = area
+				shortest_distance = distance
+		self.position = closest_area.position
+	
+	else: # random new position
+		self.position = areas[randi() % len(areas)].position
+	
 	_appear()

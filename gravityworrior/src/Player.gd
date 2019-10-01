@@ -358,6 +358,9 @@ func _trigger_heartbeat_vibration(delta: float) -> void:
 	else:
 		_vibration_time_elapsed += delta
 
+func get_velocity() -> Vector2:
+	return _velocity
+
 func _on_CooldownTimer_timeout() -> void:
 	boost = max_boost
 	_is_cooldown = false
