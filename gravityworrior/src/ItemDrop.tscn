@@ -2,8 +2,8 @@
 
 [ext_resource path="res://src/ItemDrop.gd" type="Script" id=1]
 [ext_resource path="res://img/itemdrop/ItemDrop_Health.png" type="Texture" id=2]
-[ext_resource path="res://img/itemdrop/ItemDrop_NewWeapon.png" type="Texture" id=3]
-[ext_resource path="res://img/itemdrop/ItemDrop_Shield.png" type="Texture" id=4]
+[ext_resource path="res://img/itemdrop/ItemDrop_Shield.png" type="Texture" id=3]
+[ext_resource path="res://img/itemdrop/ItemDrop_NewWeapon.png" type="Texture" id=4]
 [ext_resource path="res://img/itemdrop/ItemDrop_HigherFirerate.png" type="Texture" id=5]
 [ext_resource path="res://src/ItemDropCollisionArea.gd" type="Script" id=6]
 
@@ -16,12 +16,12 @@ animations = [ {
 }, {
 "frames": [ ExtResource( 3 ) ],
 "loop": true,
-"name": "MultiShot",
+"name": "Shield",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ) ],
 "loop": true,
-"name": "Shield",
+"name": "MultiShot",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 5 ) ],
@@ -46,6 +46,6 @@ collision_mask = 2
 script = ExtResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ItemDropCollisionArea"]
-scale = Vector2( 7, 7 )
+scale = Vector2( 20, 20 )
 shape = SubResource( 2 )
 
