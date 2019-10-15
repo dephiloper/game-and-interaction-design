@@ -4,6 +4,7 @@ var _assassin_scene = preload("res://src/Assassin.tscn")
 var _exploding_assassin_scene = preload("res://src/ExplodingAssassin.tscn")
 var _destroyer_scene = preload("res://src/Destroyer.tscn")
 var _big_destroyer_scene = preload("res://src/BigDestroyer.tscn")
+const _boss_scene = preload("res://src/Boss.tscn")
 
 var _enemy_wave_class = preload("res://src/EnemyWave.gd")
 
@@ -21,13 +22,14 @@ class WaveSetting:
 		global_spawn_rate_gain = gsrg
 
 var wave_settings = [
-	#WaveSetting.new(20.0, [0.0, 0.0, 20.0, 0.0], 0.0), # Test Wave
-	WaveSetting.new(2.0, [0.0, 0.0, 20.0, 0.0], 0.0),
-	WaveSetting.new(3.7, [0.8, 0.0, 0.5, 0.0], 0.02),
-	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0], 0.2),
-	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0], 0.25),
-	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1], 0.3),
-	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25], 0.35)
+	WaveSetting.new(1.0, [0.0, 0.0, 0.0, 0.0, 20.0], 0.0), # Test Wave
+	WaveSetting.new(2.0, [0.0, 0.0, 20.0, 0.0, 0.0], 0.0),
+	WaveSetting.new(3.7, [0.8, 0.0, 0.5, 0.0, 0.0], 0.02),
+	WaveSetting.new(8.0, [0.8, 0.3, 0.6, 0.0, 0.0], 0.2),
+	WaveSetting.new(11.0, [0.8, 0.4, 0.8, 0.0, 0.0], 0.25),
+	WaveSetting.new(15.0, [1.0, 0.5, 0.8, 0.1, 0.0], 0.3),
+	WaveSetting.new(25.0, [1.1, 0.6, 0.8, 0.25, 0.0], 0.35),
+	WaveSetting.new(25.0, [0, 0.0, 0.0, 0.0, 0.1], 0.35)
 ]
 
 func _on_attack_player(player):
@@ -86,6 +88,10 @@ func _create_big_destroyer():
 	GameManager.big_destroyers.append(destroyer)
 	destroyer.connect("destroyer_got_attacked", self, "_on_destroyer_got_attacked")
 
+func _create_boss():
+	var boss = _create_enemy_by_scene(_boss_scene)
+	GameManager.boss = boss
+
 func _create_enemy_by_scene(scene):
 	$SpawnPath/SpawnPathLocation.set_offset(randi())
 	var enemy = scene.instance()
@@ -115,6 +121,7 @@ func _spawn_enemies(delta):
 			1: _create_exploding_assassin()
 			2: _create_destroyer()
 			3: _create_big_destroyer()
+			4: _create_boss()
 
 	if current_wave.finished():
 		for player in GameManager.players:

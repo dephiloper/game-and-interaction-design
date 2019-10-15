@@ -27,7 +27,7 @@ func _init() -> void:
 func is_dead():
 	return health <= 0
 
-func _get_max_health():
+func get_max_health():
 	return MAX_HEALTH
 
 func _ready() -> void:

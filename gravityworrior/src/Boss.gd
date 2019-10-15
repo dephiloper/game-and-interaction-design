@@ -1,5 +1,9 @@
 extends KinematicBody2D
 
+class_name Boss
+
+const HealthBarScene = preload("res://src/HealthBar.tscn")
+
 enum State {
 	IDLE,
 	DASH,
@@ -7,6 +11,7 @@ enum State {
 	DEATH_FIELDS
 }
 
+const MAX_HEALTH: float = 5000.0
 const SHOOT_DAMAGE = 15
 const SHOOT_CHANNEL_TIME: float = 250.0
 const SHOOT_RANGE = 1800
@@ -17,15 +22,61 @@ const SHOOT_SOUND_START = 120
 var _state = State.IDLE
 var _elapsed_time: float = 0
 var _state_change_counter: float = 2.0
-var _target: Vector2
+var _target: Player
 var _velocity: Vector2
 var _shoot_counter: int = -1
+var health: float = MAX_HEALTH
+var _health_bar
+
+# three phases -> first phase one attack & slow
+# second phase two attacks and faster
+# thrid phase three attacks and ultra fast
+var _patterns: Array = [[0], [0, 0, 0, 1], [1, 1, 0, 2, 2, 2, 2]]
+var _phase: int = 0
+var _current_attack: int = 0
+var _attack_speed: float = 1.0
 
 var shock_wave_instance = preload("res://src/ShockWave.tscn")
 var death_field_instance = preload("res://src/DeathField.tscn")
 
+func hit(damage: float, collision) -> bool:
+	if is_dead():
+		AudioPlayer.play_enemy_sound(-8)
+		collision_layer = 0
+		collision_mask = 0
+		queue_free()
+		return false
+		
+	health -= damage
+	
+	if _phase != 1 and health <= MAX_HEALTH * 0.8:
+		_phase = 1
+		_current_attack = 0
+		_attack_speed = 1.2
+	elif _phase != 2 and health <= MAX_HEALTH * 0.4:
+		_phase = 2
+		_attack_speed = 1.4
+		_current_attack = 0
+	
+	return true
+
+func has_to_be_removed():
+	return health <= 0
+	
+func get_max_health() -> float:
+	return MAX_HEALTH
+	
+func is_dead() -> bool:
+	return health <= 0
+
 func _init():
 	add_to_group("Boss")
+
+func _ready():
+	_health_bar = HealthBarScene.instance()
+	_health_bar.transform = _health_bar.transform.scaled(Vector2(2, 2))
+	_health_bar.init(self,  Vector2(-30, 0))
+	get_parent().call_deferred("add_child", _health_bar)
 
 func _physics_process(delta):
 	_elapsed_time += delta
@@ -34,7 +85,8 @@ func _physics_process(delta):
 	if _state == State.IDLE:
 		self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 		if _state_change_counter <= 0:
-			var index = randi() % 3
+			var index = _patterns[_phase][_current_attack]
+			_current_attack = (_current_attack + 1) % len(_patterns[_phase])
 			if index == 0:
 				_set_random_position(true)
 				_state = State.DASH
@@ -47,11 +99,11 @@ func _physics_process(delta):
 				_state_change_counter = 2.0
 
 	if _state == State.DASH:
-		if _target.distance_to(self.global_position) < 10: # target reached
+		if _target.global_position.distance_to(self.global_position) < 10: # target reached or time is up?
 			_state = State.IDLE
 			_state_change_counter = 2.0
 		elif _state_change_counter <= 0:
-			_velocity = (_target - self.global_position).normalized() * 600
+			_velocity = (_target.global_position - self.global_position).normalized() * 500 * _attack_speed
 			var collision = self.move_and_collide(_velocity * delta)
 			if collision:
 				_state = State.IDLE
@@ -82,7 +134,6 @@ func _start_laser():
 	_shoot_counter = 0
 	_state_change_counter = 4.5
 
-
 func _process_laser():
 	if _state_change_counter < 0:
 		_state = State.IDLE
@@ -96,7 +147,6 @@ func _process_laser():
 		if _shoot_counter >= MAX_SHOOT_COUNTER:
 			_shoot_counter = -1
 		update()
-
 
 func _appear():
 	$AppearanceTween.interpolate_property(self, "scale",
@@ -119,9 +169,9 @@ func _set_random_position(near_player: bool):
 		var closest_area: Area2D = areas[0]
 		var shortest_distance: float = INF
 		var players: Array = GameManager.players
-		_target = players[randi() % len(players)].global_position
+		_target = players[randi() % len(players)]
 		for area in areas:
-			var distance = area.global_position.distance_to(_target)
+			var distance = area.global_position.distance_to(_target.global_position)
 			if  distance < shortest_distance:
 				closest_area = area
 				shortest_distance = distance
@@ -131,7 +181,6 @@ func _set_random_position(near_player: bool):
 		self.position = areas[randi() % len(areas)].position
 	
 	_appear()
-
 
 func _do_shoot():
 	GameManager.trigger_camera_shake()

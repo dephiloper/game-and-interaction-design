@@ -53,7 +53,7 @@ var _arrow
 func _get_damage_scale():
 	return 1.0
 
-func _get_max_health():
+func get_max_health():
 	return MAX_HEALTH
 
 func _get_healthbar_scale():
@@ -113,7 +113,7 @@ func hit(damage, collision):
 	return true
 
 func _ready():
-	health = _get_max_health()
+	health = get_max_health()
 	_target_point = GameManager.satellite.position
 	_satellite_planet = _get_nearest_planet(_target_point)
 	_start_fly_to_sender()

@@ -24,7 +24,7 @@ func _create_arrow():
 	_arrow.play("exploder")
 	get_parent().add_child(_arrow)
 
-func _get_max_health():
+func get_max_health():
 	return EXPLODING_MAX_HEALTH
 
 func _start_attack_player():

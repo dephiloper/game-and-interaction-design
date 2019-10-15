@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/Main.gd" type="Script" id=1]
 [ext_resource path="res://src/MainCamera.tscn" type="PackedScene" id=2]
@@ -8,9 +8,7 @@
 [ext_resource path="res://src/Satellite.tscn" type="PackedScene" id=6]
 [ext_resource path="res://img/godot_background.png" type="Texture" id=7]
 [ext_resource path="res://src/AudioPlayer.tscn" type="PackedScene" id=8]
-[ext_resource path="res://src/Boss.tscn" type="PackedScene" id=9]
-[ext_resource path="res://src/BossSpawnArea.tscn" type="PackedScene" id=10]
-
+[ext_resource path="res://src/BossSpawnArea.tscn" type="PackedScene" id=9]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
@@ -82,37 +80,35 @@ texture = ExtResource( 7 )
 
 [node name="AudioPlayer" parent="." instance=ExtResource( 8 )]
 
-[node name="Boss" parent="." instance=ExtResource( 9 )]
-position = Vector2( 100, 100 )
-
 [node name="BossSpawnAreas" type="Node2D" parent="."]
+editor/display_folded = true
 
-[node name="BossSpawnArea" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 651, 80 )
 
-[node name="BossSpawnArea2" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea2" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 90, 400 )
 
-[node name="BossSpawnArea3" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea3" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 440, 640 )
 
-[node name="BossSpawnArea8" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea8" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 400, 300 )
 
-[node name="BossSpawnArea4" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea4" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 470, 500 )
 
-[node name="BossSpawnArea5" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea5" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 940, 280 )
 
-[node name="BossSpawnArea10" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea10" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 857.978, 351.229 )
 
-[node name="BossSpawnArea6" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea6" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 1200, 70 )
 
-[node name="BossSpawnArea7" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea7" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 890, 540 )
 
-[node name="BossSpawnArea9" parent="BossSpawnAreas" instance=ExtResource( 10 )]
+[node name="BossSpawnArea9" parent="BossSpawnAreas" instance=ExtResource( 9 )]
 position = Vector2( 1180, 450 )

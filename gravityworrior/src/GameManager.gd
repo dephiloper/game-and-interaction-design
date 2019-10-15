@@ -16,6 +16,7 @@ var big_destroyers: Array = []
 var enemies: Array = []
 var boss_spawn_areas: Array = []
 var satellite: Satellite
+var boss: Boss
 
 # 6 difficulty level
 var max_difficulty = 5

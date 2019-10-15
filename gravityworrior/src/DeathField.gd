@@ -1,8 +1,8 @@
 extends Node2D
 
-const DURATION_TIL_DEATH: float = 0.65
-const DURATION_DEATH_SHOWN: float = 0.2
-const RADIUS: float = 65.0
+const DURATION_TIL_DEATH: float = 0.85
+const DURATION_DEATH_SHOWN: float = 0.3
+const RADIUS: float = 85.0
 
 var _color = Color(0.6, 0.6, 0.6, 0.4)
 var _elapsed_time: float = 0.0

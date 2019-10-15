@@ -2,14 +2,15 @@ extends Node
 
 class_name EnemyWave
 
-const NUM_ENEMY_TYPES: int = 4
+const NUM_ENEMY_TYPES: int = 5
 const NUM_ENEMIES_EPSILON: float = 0.1
 
 enum EnemyType {
 	ASSASSIN,
 	EXPLODING_ASSASSIN,
 	DESTROYER,
-	BIG_DESTROYER
+	BIG_DESTROYER,
+	BOSS
 }
 
 # the amount of points that must accumulate to complete the wave
@@ -29,10 +30,10 @@ func _reset_spawn_values():
 		_spawn_values.append(0.0)
 
 func _get_default_taken_space_values():
-	return [0.07, 0.3, 0.6, 1.0]
+	return [0.07, 0.3, 0.6, 1.0, 1.0]
 
 func _get_default_spawn_amounts():
-	return [0.1, 0.25, 0.7, 1.0]
+	return [0.1, 0.25, 0.7, 1.0, 1.0]
 
 func _init(spawn_amount: float, spawn_rates: Array, global_spawn_rate_gain):
 	_spawn_amount = spawn_amount
@@ -53,6 +54,8 @@ func _get_num_enemies_of_type(enemy_type):
 			return len(GameManager.destroyers)
 		EnemyType.BIG_DESTROYER:
 			return len(GameManager.big_destroyers)
+		EnemyType.BOSS:
+			return int(GameManager.boss != null)
 	return 0
 
 func _get_spawn_value_gain(enemy_type):

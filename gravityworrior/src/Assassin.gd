@@ -94,7 +94,7 @@ func state_to_str(s):
 			return 'Dead'
 
 func _ready() -> void:
-	health = _get_max_health()
+	health = get_max_health()
 
 	_start_guard_destroyer()
 
@@ -118,7 +118,7 @@ func _get_healthbar_scale():
 func _get_healthbar_offset():
 	return Vector2(-10, 3)
 
-func _get_max_health():
+func get_max_health():
 	return MAX_HEALTH
 
 func _get_speed_scale():

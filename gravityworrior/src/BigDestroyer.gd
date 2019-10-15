@@ -30,7 +30,7 @@ func do_init():
 func _get_damage_scale():
 	return 2.0
 
-func _get_max_health():
+func get_max_health():
 	return BIG_MAX_HEALTH
 
 func _get_healthbar_scale():

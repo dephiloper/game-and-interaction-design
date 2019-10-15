@@ -17,7 +17,7 @@ var color: Color = Color.red
 
 func init(entity, offset):
 	_entity = entity
-	_max_health = _entity._get_max_health()
+	_max_health = _entity.get_max_health()
 	_delayed_health = _entity.health
 	_offset = offset
 
