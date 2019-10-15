@@ -59,6 +59,7 @@ func _draw() -> void:
 
 	draw_rect(Rect2(BAR_OFFSET.x, BAR_OFFSET.y, BAR_WIDTH, BAR_HEIGHT), background_color)
 	var width: float = ((BAR_WIDTH - 2*BAR_BORDER_SIZE) * health) / _max_health
+	width = max(width, 0)
 	draw_rect(
 		Rect2(
 			BAR_BORDER_SIZE + BAR_OFFSET.x,
@@ -73,6 +74,7 @@ func _draw() -> void:
 		delayed_color.a = alpha
 		var delayed_width: float = ((BAR_WIDTH - 2*BAR_BORDER_SIZE) * _delayed_health) / _max_health
 		delayed_width -= width
+		delayed_width = max(delayed_width, 0)
 		draw_rect(
 			Rect2(
 				width,

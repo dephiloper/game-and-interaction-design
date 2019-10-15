@@ -118,20 +118,21 @@ func _move_to_target_point():
 		_velocity += impact
 		_velocity *= DRAG
 		position += _velocity
-		_acceleration += 0.009
+		_acceleration += 0.007
 
 
 func _physics_process(delta: float) -> void:
-	_free_counter -= delta
-	if _state == ItemDropState.Levitated:
-		if _free_counter <= 0:
-			_state = ItemDropState.Dead
-			queue_free()
-		_set_position()
+	if GameManager.current_game_state == GameManager.GameState.Fight:
+		_free_counter -= delta
+		if _state == ItemDropState.Levitated:
+			if _free_counter <= 0:
+				_state = ItemDropState.Dead
+				queue_free()
+			_set_position()
 
-	if _state == ItemDropState.Collected:
-		_move_to_target_point()
-		if _free_counter < BLINK_DURATION:
-			modulate.a = (sin(_free_counter*20)+1)/2.0
-		if _free_counter <= 0:
-			_state = ItemDropState.Dead
+		if _state == ItemDropState.Collected:
+			_move_to_target_point()
+			if _free_counter < BLINK_DURATION:
+				modulate.a = (sin(_free_counter*20)+1)/2.0
+			if _free_counter <= 0:
+				_state = ItemDropState.Dead

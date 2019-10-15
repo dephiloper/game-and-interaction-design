@@ -134,22 +134,22 @@ func _should_collide_damage_player():
 	return true
 
 func hit(damage: float, _collision) -> bool:
-	if is_dead():
+	if is_dead() or health < 0:
 		return false
 	emit_signal("assassin_got_attacked", _get_nearest_player(position))
 	health -= damage
 	if health <= 0.0:
 		GameManager.possible_item_drop(self.position)
 		_start_die()
-	
+
 	$HitTween.interpolate_property($Sprite, "modulate", 
 	Color(1, 1, 1, 1), Color(1, 0, 0, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
 
 	$HitTween.interpolate_property($Sprite, "modulate", Color(1, 0, 0, 1), 
 	Color(1, 1, 1, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.1)
-	
+
 	$HitTween.start()
-		
+
 	return true
 
 func _start_die():

@@ -91,6 +91,7 @@ func hit(damage, collision):
 		health = 0
 		AudioPlayer.play_enemy_sound(-8)
 		GameManager.possible_item_drop(self.position)
+		GameManager.possible_item_drop(self.position + Vector2(randf()*5, randf()*5))
 		_die()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:
