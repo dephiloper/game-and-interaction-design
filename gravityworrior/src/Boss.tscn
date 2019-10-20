@@ -4,12 +4,14 @@
 [ext_resource path="res://img/endboss.png" type="Texture" id=2]
 
 [node name="Boss" type="KinematicBody2D"]
+z_index = 1
 collision_layer = 512
 collision_mask = 3
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( 0.15, 0.15 )
+z_index = 1
 texture = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
@@ -24,3 +26,4 @@ autostart = true
 [node name="ShootCast" type="RayCast2D" parent="."]
 collision_mask = 7
 
+[node name="HitTween" type="Tween" parent="."]

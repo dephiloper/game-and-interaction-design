@@ -13,11 +13,13 @@ enum State {
 
 const MAX_HEALTH: float = 5000.0
 const SHOOT_DAMAGE = 15
-const SHOOT_CHANNEL_TIME: float = 250.0
+const SHOOT_CHANNEL_TIME: float = 125.0
 const SHOOT_RANGE = 1800
 const SHOOT_DURATION: float = 10.0
 const MAX_SHOOT_COUNTER: float = SHOOT_CHANNEL_TIME + SHOOT_DURATION
-const SHOOT_SOUND_START = 120
+const SHOOT_SOUND_START = 60
+const DASH_TIME = 0.4
+const DASH_SPEED = 600
 
 var _state = State.IDLE
 var _elapsed_time: float = 0
@@ -31,7 +33,7 @@ var _health_bar
 # three phases -> first phase one attack & slow
 # second phase two attacks and faster
 # thrid phase three attacks and ultra fast
-var _patterns: Array = [[0], [0, 0, 0, 1], [1, 1, 0, 2, 2, 2, 2]]
+var _patterns: Array = [[0, 1], [0, 0, 0, 1], [1, 1, 0, 2, 2, 2, 2]]
 var _phase: int = 0
 var _current_attack: int = 0
 var _attack_speed: float = 1.0
@@ -40,6 +42,14 @@ var shock_wave_instance = preload("res://src/ShockWave.tscn")
 var death_field_instance = preload("res://src/DeathField.tscn")
 
 func hit(damage: float, collision) -> bool:
+	$HitTween.interpolate_property($Sprite, "modulate", 
+		Color(1, 1, 1, 1), Color(0.7, 0.7, 0.7, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN)
+
+	$HitTween.interpolate_property($Sprite, "modulate", Color(0.7, 0.7, 0.7, 1), 
+		Color(1, 1, 1, 1), 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.1)
+	
+	$HitTween.start()
+	
 	if is_dead():
 		AudioPlayer.play_enemy_sound(-8)
 		collision_layer = 0
@@ -81,16 +91,16 @@ func _ready():
 func _physics_process(delta):
 	_elapsed_time += delta
 	_state_change_counter -= delta
-	
+	_do_hover()
+
 	if _state == State.IDLE:
-		self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 		if _state_change_counter <= 0:
 			var index = _patterns[_phase][_current_attack]
 			_current_attack = (_current_attack + 1) % len(_patterns[_phase])
 			if index == 0:
 				_set_random_position(true)
 				_state = State.DASH
-				_state_change_counter = 2.0
+				_state_change_counter = 1.0
 			elif index == 1:
 				_start_laser()
 			elif index == 2:
@@ -99,22 +109,28 @@ func _physics_process(delta):
 				_state_change_counter = 2.0
 
 	if _state == State.DASH:
-		if _target.global_position.distance_to(self.global_position) < 10: # target reached or time is up?
+		if _target.global_position.distance_to(self.global_position) < 10 or _state_change_counter <= -DASH_TIME:
 			_state = State.IDLE
 			_state_change_counter = 2.0
 		elif _state_change_counter <= 0:
-			_velocity = (_target.global_position - self.global_position).normalized() * 500 * _attack_speed
+			_velocity = (_target.global_position - self.global_position).normalized() * DASH_SPEED * _attack_speed
 			var collision = self.move_and_collide(_velocity * delta)
 			if collision:
+				var collider = collision.collider
+				if collider.is_in_group("Bullet"):
+					return
+					
 				_state = State.IDLE
 				_state_change_counter = 2.0
-				if collision.collider.is_in_group("Planet"):
+				if collider.is_in_group("Planet"):
 					var shock_wave = shock_wave_instance.instance()
 					shock_wave.position = self.position
 					shock_wave.set_direction(_velocity.normalized())
 					get_node("/root/Main").add_child(shock_wave)
-				if collision.collider.is_in_group("Player"):
-					collision.collider.hit(20, _velocity * 0.5)
+					GameManager.trigger_camera_shake()
+					AudioPlayer.play_stream(AudioPlayer.boss_collide, 0)
+				if collider.is_in_group("Player"):
+					collider.hit(20, _velocity * 0.5)
 
 	if _state == State.LASER:
 		_process_laser()
@@ -128,11 +144,13 @@ func _physics_process(delta):
 		_state = State.IDLE
 		_state_change_counter = 2.0
 
+func _do_hover():
+	self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 
 func _start_laser():
 	_state = State.LASER
 	_shoot_counter = 0
-	_state_change_counter = 4.5
+	_state_change_counter = 2.5
 
 func _process_laser():
 	if _state_change_counter < 0:
@@ -141,7 +159,7 @@ func _process_laser():
 	elif _shoot_counter >= 0:
 		_shoot_counter += 1
 		if _shoot_counter == SHOOT_SOUND_START:
-			AudioPlayer.play_stream(AudioPlayer.destroyer_laser_fade, -22)
+			AudioPlayer.play_stream(AudioPlayer.boss_laser_fade, -10)
 		if _shoot_counter == SHOOT_CHANNEL_TIME:
 			_do_shoot()
 		if _shoot_counter >= MAX_SHOOT_COUNTER:
@@ -169,7 +187,7 @@ func _set_random_position(near_player: bool):
 		var closest_area: Area2D = areas[0]
 		var shortest_distance: float = INF
 		var players: Array = GameManager.players
-		_target = players[randi() % len(players)]
+		_target = players[randi() % len(players)] # choose random player
 		for area in areas:
 			var distance = area.global_position.distance_to(_target.global_position)
 			if  distance < shortest_distance:
@@ -181,6 +199,7 @@ func _set_random_position(near_player: bool):
 		self.position = areas[randi() % len(areas)].position
 	
 	_appear()
+	AudioPlayer.play_stream(AudioPlayer.boss_warp, -8)
 
 func _do_shoot():
 	GameManager.trigger_camera_shake()

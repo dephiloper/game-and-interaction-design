@@ -37,6 +37,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 		
 func init(dir: Vector2, damage: float, bullet_size_multiplier: float = 1.0, attack_speed_multiplier: float = 1.0):
+	add_to_group("Bullet")
 	_speed *= attack_speed_multiplier
 	_damage = damage
 	_velocity = dir * _speed

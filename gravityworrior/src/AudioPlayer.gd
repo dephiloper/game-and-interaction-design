@@ -1,5 +1,8 @@
 extends Node
 
+var boss_laser_fade = preload("res://audio/boss_laser_fade.ogg")
+var boss_warp = preload("res://audio/boss_warp.ogg")
+var boss_collide = preload("res://audio/boss_collide.ogg")
 var enemy_hit = preload("res://audio/enemy_hit.ogg")
 var destroyer_laser_fade = preload("res://audio/destroyer_laser_fade.ogg")
 var destroyer_laser_attack = preload("res://audio/destroyer_laser_attack.ogg")
