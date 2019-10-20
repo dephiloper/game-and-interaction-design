@@ -2,7 +2,7 @@ extends Node2D
 
 const PLAYER_SCENE = preload("res://src/Player.tscn")
 const ITEM_DROP_SCENE = preload("res://src/ItemDrop.tscn")
-const ITEM_DROP_PROBABILITY = 1.0
+const ITEM_DROP_PROBABILITY = 0.1
 
 var screen_size: Vector2
 
