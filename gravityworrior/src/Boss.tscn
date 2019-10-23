@@ -4,7 +4,7 @@
 [ext_resource path="res://img/endboss.png" type="Texture" id=2]
 
 [node name="Boss" type="KinematicBody2D"]
-z_index = 1
+z_index = 3
 collision_layer = 512
 collision_mask = 3
 script = ExtResource( 1 )
@@ -27,3 +27,4 @@ autostart = true
 collision_mask = 7
 
 [node name="HitTween" type="Tween" parent="."]
+

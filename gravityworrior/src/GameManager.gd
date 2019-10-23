@@ -54,8 +54,10 @@ func setup() -> void:
 		player.connect("active_changed", self, "_player_active_changed")
 	
 
-func possible_item_drop(position: Vector2) -> void:
-	if randf() < ITEM_DROP_PROBABILITY:
+func possible_item_drop(position: Vector2, probability=null) -> void:
+	if probability == null:
+		probability = ITEM_DROP_PROBABILITY
+	if randf() < probability:
 		var item_drop_instance = ITEM_DROP_SCENE.instance()
 		item_drop_instance.init(position)
 		get_node("/root/Main").add_child(item_drop_instance)

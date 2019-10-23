@@ -11,13 +11,13 @@ enum State {
 	DEATH_FIELDS
 }
 
-const MAX_HEALTH: float = 5000.0
+const MAX_HEALTH: float = 10000.0
 const SHOOT_DAMAGE = 15
-const SHOOT_CHANNEL_TIME: float = 125.0
+const SHOOT_CHANNEL_TIME: float = 160.0
 const SHOOT_RANGE = 1800
 const SHOOT_DURATION: float = 10.0
 const MAX_SHOOT_COUNTER: float = SHOOT_CHANNEL_TIME + SHOOT_DURATION
-const SHOOT_SOUND_START = 60
+const SHOOT_SOUND_START = 100
 const DASH_TIME = 0.4
 const DASH_SPEED = 600
 
@@ -29,11 +29,12 @@ var _velocity: Vector2
 var _shoot_counter: int = -1
 var health: float = MAX_HEALTH
 var _health_bar
+var difficulty_multiplier
 
 # three phases -> first phase one attack & slow
 # second phase two attacks and faster
 # thrid phase three attacks and ultra fast
-var _patterns: Array = [[0, 1], [0, 0, 0, 1], [1, 1, 0, 2, 2, 2, 2]]
+var _patterns: Array = [[0], [0, 1], [2, 1, 0, 2]]
 var _phase: int = 0
 var _current_attack: int = 0
 var _attack_speed: float = 1.0
@@ -59,11 +60,11 @@ func hit(damage: float, collision) -> bool:
 		
 	health -= damage
 	
-	if _phase != 1 and health <= MAX_HEALTH * 0.8:
+	if _phase == 0 and health <= MAX_HEALTH * 0.8:
 		_phase = 1
 		_current_attack = 0
 		_attack_speed = 1.2
-	elif _phase != 2 and health <= MAX_HEALTH * 0.4:
+	elif _phase == 1 and health <= MAX_HEALTH * 0.4:
 		_phase = 2
 		_attack_speed = 1.4
 		_current_attack = 0
@@ -87,6 +88,7 @@ func _ready():
 	_health_bar.transform = _health_bar.transform.scaled(Vector2(2, 2))
 	_health_bar.init(self,  Vector2(-30, 0))
 	get_parent().call_deferred("add_child", _health_bar)
+	difficulty_multiplier = (1 + GameManager.difficulty / 3)
 
 func _physics_process(delta):
 	_elapsed_time += delta
@@ -106,7 +108,6 @@ func _physics_process(delta):
 			elif index == 2:
 				_set_random_position(false)
 				_state = State.DEATH_FIELDS
-				_state_change_counter = 2.0
 
 	if _state == State.DASH:
 		if _target.global_position.distance_to(self.global_position) < 10 or _state_change_counter <= -DASH_TIME:
@@ -123,6 +124,7 @@ func _physics_process(delta):
 				_state = State.IDLE
 				_state_change_counter = 2.0
 				if collider.is_in_group("Planet"):
+					GameManager.possible_item_drop(self.position, 0.5)
 					var shock_wave = shock_wave_instance.instance()
 					shock_wave.position = self.position
 					shock_wave.set_direction(_velocity.normalized())
@@ -130,7 +132,7 @@ func _physics_process(delta):
 					GameManager.trigger_camera_shake()
 					AudioPlayer.play_stream(AudioPlayer.boss_collide, 0)
 				if collider.is_in_group("Player"):
-					collider.hit(20, _velocity * 0.5)
+					collider.hit(15 * difficulty_multiplier, _velocity * 0.5)
 
 	if _state == State.LASER:
 		_process_laser()
@@ -142,20 +144,21 @@ func _physics_process(delta):
 			get_node("/root/Main").add_child(death_field)
 		
 		_state = State.IDLE
-		_state_change_counter = 2.0
+		_state_change_counter = 3.0
 
 func _do_hover():
 	self.position = Vector2(position.x, position.y + sin(_elapsed_time * 5)*0.2)
 
 func _start_laser():
+	_set_random_position(false)
 	_state = State.LASER
 	_shoot_counter = 0
-	_state_change_counter = 2.5
+	_state_change_counter = 3.0
 
 func _process_laser():
 	if _state_change_counter < 0:
 		_state = State.IDLE
-		_state_change_counter = 2.0
+		_state_change_counter = 1.0
 	elif _shoot_counter >= 0:
 		_shoot_counter += 1
 		if _shoot_counter == SHOOT_SOUND_START:
@@ -202,6 +205,7 @@ func _set_random_position(near_player: bool):
 	AudioPlayer.play_stream(AudioPlayer.boss_warp, -8)
 
 func _do_shoot():
+	AudioPlayer.play_stream(AudioPlayer.destroyer_laser_attack, -5)
 	GameManager.trigger_camera_shake()
 	for player in GameManager.players:
 		var direction = (player.position - position).normalized()
@@ -213,9 +217,12 @@ func _shoot(direction):
 	if $ShootCast.is_colliding():
 		var collider = $ShootCast.get_collider()
 		if collider.is_in_group("Player"):
-			collider.hit(SHOOT_DAMAGE, direction.normalized() * 2)
-		if collider.is_in_group("Satellite"):
-			collider.damage(SHOOT_DAMAGE*4)
+			collider.hit(SHOOT_DAMAGE * difficulty_multiplier, direction.normalized())
+		elif collider.is_in_group("Satellite"):
+			collider.damage(SHOOT_DAMAGE * 4 * difficulty_multiplier)
+		elif collider.is_in_group("Planet"):
+			var to_boss = (self.position - $ShootCast.get_collision_point()).normalized() * 15
+			GameManager.possible_item_drop($ShootCast.get_collision_point() + to_boss, 0.5)
 
 func shoot_color():
 	var color = Color.red
@@ -223,7 +230,7 @@ func shoot_color():
 		if (int(_shoot_counter / 3)) % 2 == 0:
 			color = Color.orange
 		color.a = 0.45
-	color.a = pow(_shoot_counter / SHOOT_CHANNEL_TIME, 5) * 0.2
+	color.a = pow(_shoot_counter / SHOOT_CHANNEL_TIME, 3) * 0.2 + 0.05
 	return color
 
 func _draw_shoot(direction):

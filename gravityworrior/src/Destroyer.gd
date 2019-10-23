@@ -74,6 +74,9 @@ func _get_speed():
 func _with_probability(probability):
 	return randf() < probability
 
+func _item_drop():
+	GameManager.possible_item_drop(self.position, 0.2)
+
 func hit(damage, collision):
 	# uncomment to make destroyer head invulnerable
 	"""
@@ -90,8 +93,7 @@ func hit(damage, collision):
 	if health <= 0:
 		health = 0
 		AudioPlayer.play_enemy_sound(-8)
-		GameManager.possible_item_drop(self.position)
-		GameManager.possible_item_drop(self.position + Vector2(randf()*5, randf()*5))
+		_item_drop()
 		_die()
 
 	if state == DestroyerState.FlyToSender or state == DestroyerState.ChannelAttack or state == DestroyerState.CircleSender:

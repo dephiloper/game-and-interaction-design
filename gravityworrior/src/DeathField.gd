@@ -1,13 +1,14 @@
 extends Node2D
 
-const DURATION_TIL_DEATH: float = 0.85
-const DURATION_DEATH_SHOWN: float = 0.3
+const DURATION_TIL_DEATH: float = 1.0
+const DURATION_DEATH_SHOWN: float = 0.35
 const RADIUS: float = 85.0
 
 var _color = Color(0.6, 0.6, 0.6, 0.4)
 var _elapsed_time: float = 0.0
 var _death_enabled: bool = false
 var _damaged_bodies: Array = []
+var _field_triggered = false
 
 func _ready():
 	$Area2D.connect("body_entered", self, "_on_Area2D_body_entered")
@@ -29,10 +30,13 @@ func _process(delta):
 			_death_enabled = true
 			_elapsed_time = 0
 	else:
-		GameManager.trigger_camera_shake()
+		if not _field_triggered:
+			_field_triggered = true
+			AudioPlayer.play_stream(AudioPlayer.explosion, -10)
+			GameManager.trigger_camera_shake()
 		self.scale *= 1.01
 		for body in _damaged_bodies:
-			body.hit(10, Vector2.ZERO)
+			body.hit(20 * (1 + GameManager.difficulty / 3), Vector2.ZERO)
 			_damaged_bodies.erase(body)
 		if _elapsed_time > DURATION_DEATH_SHOWN:
 			queue_free()

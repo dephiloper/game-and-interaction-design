@@ -14,6 +14,10 @@ const SHOOT_SOUND_START = 120
 var _shoot_counter = -1
 var shoot_directions = []
 
+func _item_drop():
+	GameManager.possible_item_drop(self.position, 0.2)
+	GameManager.possible_item_drop(self.position, 0.2)
+	
 func do_init():
 	var direction = Vector2(1, 0)
 	shoot_directions.append(direction)
