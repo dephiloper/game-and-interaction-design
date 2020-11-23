@@ -31,12 +31,12 @@ func _draw() -> void:
 
 # duplicate
 func draw_circle_arc_poly(center: Vector2, radius: float, angle_from: float, angle_to: float, color: Color):
-    var nb_points = 32
-    var points_arc = PoolVector2Array()
-    points_arc.push_back(center)
-    var colors = PoolColorArray([color])
+	var nb_points = 32
+	var points_arc = PoolVector2Array()
+	points_arc.push_back(center)
+	var colors = PoolColorArray([color])
 
-    for i in range(nb_points + 1):
-        var angle_point = deg2rad(angle_from + i * (angle_to - angle_from) / nb_points - 90)
-        points_arc.push_back(center + Vector2(cos(angle_point), sin(angle_point)) * (radius - 4))
-    draw_polygon(points_arc, colors)
+	for i in range(nb_points + 1):
+		var angle_point = deg2rad(angle_from + i * (angle_to - angle_from) / nb_points - 90)
+		points_arc.push_back(center + Vector2(cos(angle_point), sin(angle_point)) * (radius - 4))
+	draw_polygon(points_arc, colors)

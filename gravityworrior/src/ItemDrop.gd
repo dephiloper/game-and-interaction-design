@@ -37,7 +37,7 @@ func _random_kind():
 		return ItemDropKind.MultiShot
 	elif index == 3:
 		return ItemDropKind.Shield
-	assert false
+	assert(false)
 
 
 func get_item_kind():

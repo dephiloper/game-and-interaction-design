@@ -23,7 +23,7 @@ var max_difficulty = 5
 var difficulty = 1
 
 var _game_over_timer: Timer
-var _max_players: int = 4
+var _max_players: int = 3
 var _player_colors: Array = ["#FDD400","#B8FB3C","#FF2079","#03DDDC"]
 var _is_game_over = false
 var _camera: Camera2D

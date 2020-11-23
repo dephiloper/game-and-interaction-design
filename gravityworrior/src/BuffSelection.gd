@@ -82,7 +82,7 @@ func _switch_to_right_buff(player: int) -> void:
 	_select_buff(_player_selections[player], player)
 
 func _select_buff(index: int, player: int) -> void:
-	assert index < len(_buffs)
+	assert(index < len(_buffs))
 	
 	# deselect player on other buffs
 	for child in _buffs:

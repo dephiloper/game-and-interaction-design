@@ -33,7 +33,7 @@ func _input(event: InputEvent) -> void:
 					_input_map[action] = event.get_action_strength(action)
 					
 func pressed(action: String) -> float:
-	assert _input_map.has(action)
+	assert(_input_map.has(action))
 	return _input_map[action]
 	
 func just_pressed(action: String) -> float:
